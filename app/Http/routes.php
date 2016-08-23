@@ -15,6 +15,11 @@ Route::get('/', function () {
     return view('index');
 });
 
+Route::post('/', function () {
+    return view('welcome');
+});
+
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes

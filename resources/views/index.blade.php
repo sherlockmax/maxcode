@@ -67,7 +67,7 @@
                 </div>
 
                 <div class="panel-body" style="text-align: center;">
-                    <form action="" method="POST" class="form-horizontal">
+                    <form action="{{ url('/') }}" method="POST" class="form-horizontal">
                         <div class="form-group">
                             <div>
                                 <label class="control-label">Method 1 : Try to guess Round Code is Odd or Even?</label>
@@ -102,7 +102,7 @@
                             <button style="width: 200px; margin-right: 5px;" type="button" id="btn_reset" class="btn btn-warning">
                                 <i class="fa fa-btn fa-refresh"></i>Reset
                             </button>
-                            <button style="width: 200px" type="button" id="btn_reset" class="btn btn-success">
+                            <button style="width: 200px" type="submit" id="btn_reset" class="btn btn-success">
                                 <i class="fa fa-btn fa-paper-plane"></i>Submit
                             </button>
                         </div>
