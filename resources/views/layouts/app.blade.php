@@ -18,6 +18,8 @@
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
     <style>
         body {
+            padding: 0px;
+            margin: 0 auto;
             font-family: 'Lato';
         }
         .fa-btn {

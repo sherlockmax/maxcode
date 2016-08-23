@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <div class="col-sm-offset-2 col-sm-8">
-            <div class="panel panel-default">
+            <div class="panel panel-info">
                 <div class="panel-heading">
                     Information
                 </div>
@@ -49,7 +49,7 @@
         </div>
 
         <div class="col-sm-offset-2 col-sm-8">
-            <div class="panel panel-default">
+            <div class="panel panel-success">
                 <div class="panel-heading">
                     Status
                 </div>
@@ -61,7 +61,7 @@
         </div>
 
 `       <div class="col-sm-offset-2 col-sm-8">
-            <div class="panel panel-default">
+            <div class="panel panel-primary">
                 <div class="panel-heading">
                     Controller
                 </div>
@@ -70,7 +70,7 @@
                     <form action="" method="POST" class="form-horizontal">
                         <div class="form-group">
                             <div>
-                                <label class="control-label">Method 1 : Choose Odd or Even</label>
+                                <label class="control-label">Method 1 : Try to guess Round Code is Odd or Even?</label>
                             </div>
                             <div id="numTypeController">
                                 <label style="width: 200px; margin-right: 5px" class="btn btn-default">
@@ -83,7 +83,7 @@
                         </div>
                         <div class="form-group">
                             <div>
-                                <label class="control-label">Method 2 : Choose a number</label>
+                                <label class="control-label">Method 2 : Try to guess Final Code</label>
                             </div>
                             <div id="numbersController">
                                 @for ($i = 1; $i <= 40; $i++)
