@@ -63,7 +63,7 @@
 `       <div class="col-sm-offset-2 col-sm-8">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    Controller
+                    Playing
                 </div>
 
                 <div class="panel-body" style="text-align: center;">
@@ -71,8 +71,9 @@
                         <div class="form-group">
                             <div>
                                 <label class="btn btn-default">
-                                    <i class="fa fa-btn fa-plus"></i>bet：
+                                    <i class="fa fa-btn fa-money"></i>Bet：
                                     <input type="number" name="betAmount" id="betAmount" min="1000" max="10000" step="1000" value="1000">
+                                    &nbsp;/&nbsp;<span id="maxPrice">10000</span>
                                 </label>
                             </div>
                         </div>

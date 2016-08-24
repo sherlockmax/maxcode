@@ -4,10 +4,7 @@ body {
     font-family: 'Lato';
 }
 .fa-btn {
-    margin-right: 6px;
-}
-.btn-default:checked{
-    background-color: red !important;
+    margin-right: 10px;
 }
 input[type=radio]{
     display: none;
@@ -15,4 +12,13 @@ input[type=radio]{
 .active{
     background-color: slategray !important;
     color: #FFFF00 !important;
+}
+input[type=number]{
+    padding-left: 13px;
+    margin: 0 auto;
+    font-family: 'Lato';
+    text-align: center;
+    width: 100px;
+    font-weight: bold;
+    font-size: medium;
 }
