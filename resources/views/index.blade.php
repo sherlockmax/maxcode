@@ -67,11 +67,11 @@
                 </div>
 
                 <div class="panel-body" style="text-align: center;">
-                    <form action="{{ url('/') }}" method="POST" class="form-horizontal">
+                    <form action="{{ url('/bet') }}" method="POST" class="form-horizontal">
                         <div class="form-group">
                             <div>
                                 <label class="btn btn-default">
-                                    <i class="fa fa-btn fa-money"></i>Bet：
+                                    <i class="fa fa-btn fa-dollar"></i>Bet：
                                     <input type="number" name="betAmount" id="betAmount" min="1000" max="10000" step="1000" value="1000">
                                     &nbsp;/&nbsp;<span id="maxPrice">10000</span>
                                 </label>
@@ -79,7 +79,7 @@
                         </div>
                         <div class="form-group">
                             <div>
-                                <label class="control-label">Part 1：Try to guess Round Code is Odd or Even?</label>
+                                <label>Part 1：Try to guess Round Code is Odd or Even?</label>
                             </div>
                             <div id="numTypeController">
                                 <label style="width: 200px; margin-right: 5px" class="btn btn-default">
@@ -92,7 +92,7 @@
                         </div>
                         <div class="form-group">
                             <div>
-                                <label class="control-label">Part 2：Try to guess Final Code</label>
+                                <label>Part 2：Try to guess Final Code</label>
                             </div>
                             <div id="numbersController">
                                 @for ($i = 1; $i <= 40; $i++)
@@ -109,10 +109,48 @@
                         </div>
                         <div class="form-group">
                             <button style="width: 200px; margin-right: 5px;" type="button" id="btn_reset" class="btn btn-warning">
-                                <i class="fa fa-btn fa-refresh"></i>Reset
+                                <i class="fa fa-btn fa-refresh"></i>Clear Choose
                             </button>
                             <button style="width: 200px" type="submit" id="btn_reset" class="btn btn-success">
                                 <i class="fa fa-btn fa-paper-plane"></i>Submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-offset-2 col-sm-8">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Login
+                </div>
+
+                <div class="panel-body" style="text-align: center;">
+                    <form action="{{ url('/login') }}" method="POST" class="form-horizontal">
+                        <div class="form-group">
+                            <div>
+                                <label>Log in to play...</label>
+                            </div>
+                            <div>
+                                <label class="btn btn-default">
+                                    <label for="account" style="width: 150px"><i class="fa fa-btn fa-user"></i>Account</label>
+                                    <input id="account" type="text" name="account" value="">
+                                </label>
+                            </div>
+                            <div>
+                                <label class="btn btn-default">
+                                    <label for="password" style="width: 150px"><i class="fa fa-btn fa-yelp"></i>Password</label>
+                                    <input id="password" type="password" name="password" value="">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button style="width: 200px; margin-right: 5px;" type="reset" class="btn btn-warning">
+                                <i class="fa fa-btn fa-refresh"></i>Reset
+                            </button>
+                            <button style="width: 200px" type="submit" id="btn_reset" class="btn btn-success">
+                                <i class="fa fa-btn fa-sign-in"></i>Log in
                             </button>
                         </div>
                     </form>
