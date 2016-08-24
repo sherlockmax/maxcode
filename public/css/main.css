@@ -1,0 +1,18 @@
+body {
+    padding: 0px;
+    margin: 0 auto;
+    font-family: 'Lato';
+}
+.fa-btn {
+    margin-right: 6px;
+}
+.btn-default:checked{
+    background-color: red !important;
+}
+input[type=radio]{
+    display: none;
+}
+.active{
+    background-color: slategray !important;
+    color: #FFFF00 !important;
+}
