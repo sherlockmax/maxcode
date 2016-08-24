@@ -12,13 +12,11 @@
 */
 
 Route::get('/', function () {
-    return view('index');
+    $user = ['id' => 'Not yet login', 'cash' => '?'];
+    return view('index', [
+        'user' => (object) $user,
+    ]);
 });
-
-Route::post('/', function () {
-    return view('welcome');
-});
-
 
 /*
 |--------------------------------------------------------------------------
