@@ -13,6 +13,7 @@ class CreateBetDetailsTable extends Migration
     public function up()
     {
         Schema::create('bet_details', function (Blueprint $table) {
+            $table->increments('id');
             $table->string('games_no');
             $table->integer('round');
             $table->string('user_id');
@@ -22,7 +23,7 @@ class CreateBetDetailsTable extends Migration
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 
-            $table->primary(['games_no', 'round', 'user_id']);
+            $table->unique(['games_no', 'round', 'user_id']);
         });
     }
 
