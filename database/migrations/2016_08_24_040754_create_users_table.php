@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->string('password', 60);
             $table->string('name', 10);
             $table->integer('cash')->unsigned();
-            $table->string('remember_token');
+            $table->rememberToken();
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 
