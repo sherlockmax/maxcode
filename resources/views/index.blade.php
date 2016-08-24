@@ -70,7 +70,15 @@
                     <form action="{{ url('/') }}" method="POST" class="form-horizontal">
                         <div class="form-group">
                             <div>
-                                <label class="control-label">Method 1 : Try to guess Round Code is Odd or Even?</label>
+                                <label class="btn btn-default">
+                                    <i class="fa fa-btn fa-plus"></i>bet：
+                                    <input type="number" name="betAmount" id="betAmount" min="1000" max="10000" step="1000" value="1000">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <label class="control-label">Part 1：Try to guess Round Code is Odd or Even?</label>
                             </div>
                             <div id="numTypeController">
                                 <label style="width: 200px; margin-right: 5px" class="btn btn-default">
@@ -83,7 +91,7 @@
                         </div>
                         <div class="form-group">
                             <div>
-                                <label class="control-label">Method 2 : Try to guess Final Code</label>
+                                <label class="control-label">Part 2：Try to guess Final Code</label>
                             </div>
                             <div id="numbersController">
                                 @for ($i = 1; $i <= 40; $i++)

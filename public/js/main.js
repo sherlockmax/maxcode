@@ -21,4 +21,8 @@ $(document).ready(function(){
         //reset all label (removeClass "active")
         $('div[id*=Controller]').find("label").removeClass("active");
     });
+
+    $('input[type=number]').keydown( function(e) {
+        return false;
+    });
 });
