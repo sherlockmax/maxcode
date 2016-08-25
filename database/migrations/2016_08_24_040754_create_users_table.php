@@ -13,7 +13,8 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->string('id', 10);
+            $table->increments('id');
+            $table->string('account', 10);
             $table->string('password', 60);
             $table->string('name', 10);
             $table->integer('cash')->unsigned();
@@ -21,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 
-            $table->primary('id');
+            $table->unique('account');
         });
     }
 
