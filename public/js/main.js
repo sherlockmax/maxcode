@@ -30,4 +30,8 @@ $(document).ready(function(){
     $('input[type=number]').keydown( function(e) {
         return false;
     });
+
+    $('.fa-btn').each(function(){
+        $(this).addClass('fa-lg');
+    });
 });
