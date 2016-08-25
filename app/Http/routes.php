@@ -11,13 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    $user = ['id' => 'Not yet login', 'cash' => '?'];
-    return view('index', [
-        'user' => (object) $user,
-    ]);
-});
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -29,6 +22,10 @@ Route::get('/', function () {
 |
 */
 
-Route::group(['middleware' => ['web']], function () {
-    //
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/', 'HomeController@index');
 });
+
+Route::get('login', 'LoginController@index');
+Route::post('login', 'LoginController@login');
+Route::get('logout', 'LoginController@logout');
