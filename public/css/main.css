@@ -23,8 +23,9 @@ input[type=number]{
     font-size: medium;
 }
 
-#numberController{
+#numbersController{
     max-width: 600px;
+    margin: 0 auto;
 }
 
 .panel{
