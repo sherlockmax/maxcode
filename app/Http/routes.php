@@ -24,6 +24,7 @@
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', 'HomeController@index');
+    Route::get('/setCash/{cash}', 'HomeController@setCash');
 });
 
 Route::get('login', 'LoginController@index');
