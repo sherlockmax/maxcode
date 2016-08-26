@@ -22,3 +22,12 @@ input[type=number]{
     font-weight: bold;
     font-size: medium;
 }
+
+#numberController{
+    max-width: 600px;
+}
+
+.panel{
+    margin-top: 3px !important;
+    margin-bottom: 3px !important;
+}

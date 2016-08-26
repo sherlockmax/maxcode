@@ -5,24 +5,40 @@
         <div class="col-sm-offset-2 col-sm-8">
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    Information
+                    Game _ 201608220001
                 </div>
 
                 <div class="panel-body">
-
-                    <div>
-                        <label class="col-xs-5 control-label">No.</label>
-                        <label class="control-label">201608220001</label>
-                    </div>
 
                     <div>
                         <label class="col-xs-5 control-label">Create Time.</label>
                         <label class="control-label">{{Date("Y-m-d H:i:s")}}</label>
                     </div>
 
+
                     <div>
-                        <label class="col-xs-5 control-label">Round.</label>
-                        <label class="control-label">1/3</label>
+                        <label class="col-xs-5 control-label">Final Code.</label>
+                        <label class="control-label">?</label>
+                    </div>
+
+                    <div>
+                        <label class="col-xs-5 control-label">Current range.</label>
+                        <label class="control-label">1-40</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-offset-2 col-sm-8">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    Round 1
+                </div>
+
+                <div class="panel-body">
+                    <div>
+                        <label class="col-xs-5 control-label">Round Code.</label>
+                        <label class="control-label">?</label>
                     </div>
 
                     <div>
@@ -34,28 +50,20 @@
                         <label class="col-xs-5 control-label">End Time.</label>
                         <label class="control-label">2016-08-22 13:01:00</label>
                     </div>
-
-                    <div>
-                        <label class="col-xs-5 control-label">Round Code.</label>
-                        <label class="control-label">2/?/?</label>
-                    </div>
-
-                    <div>
-                        <label class="col-xs-5 control-label">Final Code.</label>
-                        <label class="control-label">20</label>
-                    </div>
                 </div>
             </div>
         </div>
 
         <div class="col-sm-offset-2 col-sm-8">
-            <div class="panel panel-success">
+            <div class="panel panel-danger">
                 <div class="panel-heading">
-                    Status
+                    This round will end in
                 </div>
 
                 <div class="panel-body">
-                    <div style="text-align: center">Loading...</div>
+                    <div style="color: orangered; font-size: x-large; text-align: center">
+                        <label class="control-label">20 sec.</label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -115,9 +123,16 @@
                             <button style="width: 200px; margin-right: 5px;" type="button" id="btn_reset" class="btn btn-warning">
                                 <i class="fa fa-btn fa-refresh"></i>Clear Choose
                             </button>
-                            <button style="width: 200px" type="submit" id="btn_reset" class="btn btn-success">
-                                <i class="fa fa-btn fa-paper-plane"></i>Submit
-                            </button>
+                            @if (Auth::user()->cash < 1000)
+                                <button style="width: 200px" type="submit" id="btn_reset" class="btn btn-success" disabled>
+                                    <i class="fa fa-btn fa-paper-plane"></i>Submit
+                                </button>
+                            @else
+                                <button style="width: 200px" type="submit" id="btn_reset" class="btn btn-success">
+                                    <i class="fa fa-btn fa-paper-plane"></i>Submit
+                                </button>
+                            @endif
+
                         </div>
                     </form>
                 </div>
