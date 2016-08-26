@@ -24,7 +24,7 @@ $(document).ready(function(){
         $('div[id*=Controller]').find("label").removeClass("active");
 
         //reset betAmount to init value (1000)
-        $('input[name=betAmount]').val(1000);
+        $('input[name*=bet_]').val(1000);
     });
 
     $('input[type=number]').keydown( function(e) {
@@ -33,5 +33,20 @@ $(document).ready(function(){
 
     $('.fa-btn').each(function(){
         $(this).addClass('fa-lg');
+    });
+
+    $('input[name*=bet_]').change(function(){
+        var maxCash = parseInt($('#userCash').text());
+        var bet1 = parseInt($('input[name=bet_part1]').val());
+        var bet2 = parseInt($('input[name=bet_part2]').val());
+
+        if(bet1 + bet2 > maxCash){
+            var otherBet = bet1;
+            if($(this).attr('name') != 'bet_part2'){
+                otherBet = bet2;
+            }
+
+            $(this).val( maxCash - otherBet );
+        }
     });
 });

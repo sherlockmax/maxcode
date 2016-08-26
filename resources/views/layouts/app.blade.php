@@ -30,7 +30,7 @@
         <ul class="nav navbar-nav navbar-right">
             @if(Auth::check())
                 <li><a href="javascript:void(0);"><i class="fa fa-btn fa-user"></i>{{ Auth::user()->name}}.</a></li>
-                <li><a href="javascript:void(0);"><i class="fa fa-btn fa-dollar"></i>{{ Auth::user()->cash}}</a></li>
+                <li><a href="javascript:void(0);"><i class="fa fa-btn fa-dollar"></i><span id="userCash">{{ Auth::user()->cash}}</span></a></li>
                 <li><a href="/logout"><i class="fa fa-btn fa-sign-out"></i>Log out</a></li>
             @else
                 <li><a href="/login"><i class="fa fa-btn fa-sign-in"></i>Log in</a></li>

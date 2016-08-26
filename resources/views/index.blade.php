@@ -79,12 +79,21 @@
                         <div class="form-group">
                             <div>
                                 <label class="btn btn-default">
-                                    <i class="fa fa-btn fa-dollar"></i>Bet：
+                                    <i class="fa fa-btn fa-dollar"></i>Bet for part 1：
                                     @if (Auth::user()->cash < 1000)
                                         <label style="color: darkred">Insufficient balance</label>
                                     @else
-                                        <input type="number" name="betAmount" id="betAmount" min="1000" max="{{ Auth::user()->cash}}" step="1000" value="1000">
-                                        &nbsp;/&nbsp;<span id="maxPrice">{{ Auth::user()->cash}}</span>
+                                        <input type="number" name="bet_part1" min="1000" step="1000" value="1000">
+                                    @endif
+                                </label>
+                            </div>
+                            <div>
+                                <label class="btn btn-default">
+                                    <i class="fa fa-btn fa-dollar"></i>Bet for part 2：
+                                    @if (Auth::user()->cash < 1000)
+                                        <label style="color: darkred">Insufficient balance</label>
+                                    @else
+                                        <input type="number" name="bet_part2" min="1000" step="1000" value="1000">
                                     @endif
                                 </label>
                             </div>
