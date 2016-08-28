@@ -30,7 +30,7 @@ class GameServer
         $this->game_data = null;
         if($this->game_date != Date('Ymd')) {
             $this->game_date = Date('Ymd');
-            $gameIndex = 1;
+            $this->gameIndex = 1;
         }
 
         $game_full_index = str_pad($this->game_index, 4, "0", STR_PAD_LEFT);
@@ -49,7 +49,23 @@ class GameServer
         $game->state = $this->game_data['state'];
         $game->save();
 
+        $this->closeLastGame();
+
         $this->game_index++;
+    }
+
+    private function closeLastGame(){
+
+        if(Game::all()->count() > 0) {
+            $game_date = $this->game_date;
+            $game_index = str_pad($this->game_index - 1, 4, "0", STR_PAD_LEFT);
+            $game = Game::where('no', $game_date . $game_index);
+            if ($this->game_index <= 1) {
+                $game_date = Date("Ymd", strtotime("-1 days"));
+                $game = Game::where('no', 'like', $game_date . '%')->orderBy('no', 'desc');
+            }
+            $game->update(['state' => 3]);
+        }
     }
 
     private function createNewRound(){
@@ -99,8 +115,17 @@ class GameServer
         }
     }
 
-    public function run()
+    private function init()
     {
+        if(Game::all()->count() > 0) {
+            $today = Date("Ymd");
+            $game = Game::where('no', 'like', $today . '%')->orderBy('no', 'desc')->first();
+            $maxIndex = ((int)str_replace($today, '', $game->no)) + 1;
+            $this->game_index = $maxIndex;
+        }
+    }
+
+    private function startServer(){
         $this->createNewGame();
 
         $this->echoGameData("New Game");
@@ -110,6 +135,13 @@ class GameServer
         $this->echoGameData("Game END");
 
         sleep(self::GAME_INTERVAL);
-        $this->run();
+        $this->startServer();
+    }
+
+    public function run()
+    {
+        $this->init();
+
+        $this->startServer();
     }
 }
