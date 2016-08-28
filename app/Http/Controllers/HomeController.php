@@ -22,4 +22,8 @@ class HomeController extends Controller
 
         return Redirect::intended('/');
     }
+
+    public function getRunningGame(){
+        $game = Game::where('state', '1');
+    }
 }
