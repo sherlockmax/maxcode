@@ -1,6 +1,7 @@
 /**
  * Created by max on 16年8月24日.
  */
+
 $(document).ready(function(){
     $('input[type=radio]').click(function(){
         var element_name = $(this).attr("name");

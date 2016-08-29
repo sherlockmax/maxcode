@@ -9,6 +9,7 @@
     <link rel="icon" href="favicon.png" type="image/x-icon" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="{{ URL::asset('js/main.js') }}"></script>
+    @yield('gameScript')
 
     <!-- Fonts -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
