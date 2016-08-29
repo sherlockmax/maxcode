@@ -9,4 +9,5 @@ class Round extends Model
     //
 
     public $timestamps = false;
+
 }

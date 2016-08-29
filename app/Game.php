@@ -8,4 +8,6 @@ class Game extends Model
 {
     //
     protected $primaryKey = 'no';
+
+    //protected $hidden = ['final_code'];
 }

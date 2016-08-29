@@ -2,19 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Redirect;
 use Auth;
-use App\Http\Requests;
 use App\User;
+use App\Game;
+use App\Round;
+use App\Http\Requests;
+use Illuminate\Support\Facades\Redirect;
 
 class HomeController extends Controller
 {
+    const STATE_RUNNING = 0;
+    const STATE_CLOSING = 1;
+    const STATE_CLOSED = 2;
+
     public function index()
     {
         return view('index');
     }
 
-    public function setCash($cash){
+    public function setCash($cash)
+    {
         $user = User::where('account', Auth::user()->account)->firstOrFail();
         $user->cash = $cash;
 
@@ -23,7 +30,22 @@ class HomeController extends Controller
         return Redirect::intended('/');
     }
 
-    public function getRunningGame(){
-        $game = Game::where('state', '1');
+    public function getRunningGame()
+    {
+        $today = Date('Ymd');
+        $game = Game
+            ::where('no', 'like', "$today%")
+            ->orderBy('no', 'desc')->first();
+
+        $round = Round
+            ::where('games_no', $game->no)
+            ->orderBy('round', 'asc')->get();
+
+        $game->round = $round;
+
+        $game->now = Date('Y-m-d H:i:s');
+        $game->round_interval = config('gameset.ROUND_INTERVAL');
+        $game->game_interval = config('gameset.GAME_INTERVAL');
+        return json_encode($game);
     }
 }
