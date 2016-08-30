@@ -16,18 +16,6 @@ $(document).ready(function(){
         $('#' + radioId).parent("label").addClass("active");
     });
 
-    $('#btn_reset').click(function(){
-
-        //reset all radio (unchecked)
-        $('input[type=radio]').attr('checked', false);
-
-        //reset all label (removeClass "active")
-        $('div[id*=Controller]').find("label").removeClass("active");
-
-        //reset betAmount to init value (1000)
-        $('input[name*=bet_]').val(1000);
-    });
-
     $('input[type=number]').keydown( function(e) {
         return false;
     });

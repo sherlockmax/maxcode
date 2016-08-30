@@ -7,14 +7,13 @@
 @section('content')
     <div class="container">
         <div class="col-sm-offset-2 col-sm-8">
-            <div class="panel panel-info">
+            <div class="panel panel-primary">
                 <div class="panel-heading">
                     Game _ <span id="gamesNo">000000000000</span>
                 </div>
 
                 <div class="panel-body">
                     <div class="row">
-
                         <div id="round1" class="col-xs-4 panel panel-success">
                             <div class="panel-heading">
                                 Round 1
@@ -24,7 +23,7 @@
                                 <div style="width: 100%; text-align: center">
                                     <label class="control-label">Round Code.</label>
                                 </div>
-                                <div style="width: 100%; text-align: center">
+                                <div style="font-size:20px; width: 100%; text-align: center; color: orangered;">
                                     <label id="roundCode" class="control-label">?</label>
                                 </div>
                                 <div style="width: 100%; text-align: center">
@@ -48,7 +47,7 @@
                                 <div style="width: 100%; text-align: center">
                                     <label class="control-label">Round Code.</label>
                                 </div>
-                                <div style="width: 100%; text-align: center">
+                                <div style="font-size:20px; width: 100%; text-align: center; color: orangered;">
                                     <label id="roundCode" class="control-label">?</label>
                                 </div>
                                 <div style="width: 100%; text-align: center">
@@ -72,7 +71,7 @@
                                 <div style="width: 100%; text-align: center">
                                     <label class="control-label">Round Code.</label>
                                 </div>
-                                <div style="width: 100%; text-align: center">
+                                <div style="font-size:20px; width: 100%; text-align: center; color: orangered;">
                                     <label id="roundCode" class="control-label">?</label>
                                 </div>
                                 <div style="width: 100%; text-align: center">
@@ -89,7 +88,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-xs-12 panel panel-danger">
+                        <div class="col-xs-8 panel panel-danger">
                             <div class="panel-heading">
                                 Current state
                             </div>
@@ -97,6 +96,17 @@
                             <div class="panel-body">
                                 <div style="color: orangered; font-size: x-large; text-align: center">
                                     <label id="leftTime" class="control-label">20 sec.</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 panel panel-primary">
+                            <div class="panel-heading">
+                                Final code
+                            </div>
+
+                            <div class="panel-body">
+                                <div style="color: orangered; font-size: x-large; text-align: center">
+                                    <label id="finalCode" class="control-label">?</label>
                                 </div>
                             </div>
                         </div>
@@ -127,13 +137,15 @@
                                     @endif
                                 </label>
                             </div>
-                            <div id="numTypeController">
-                                <label style="width: 200px; margin-right: 5px" class="btn btn-default">
-                                    <input type="radio" name="numType" id="num_odd" value="odd"><i class="fa fa-btn fa-venus"></i>Odd
-                                </label>
-                                <label style="width: 200px" class="btn btn-default">
-                                    <input type="radio" name="numType" id="num_even" value="even"><i class="fa fa-btn fa-venus-double"></i>Even
-                                </label>
+                            <div id="numTypeController" class="row">
+                                <div class="col-xs-12 col-xs-offset-2">
+                                    <label class="col-xs-4 btn btn-default">
+                                        <input type="radio" name="numType" id="num_odd" value="odd"><i class="fa fa-btn fa-hand-pointer-o"></i>Odd
+                                    </label>
+                                    <label class="col-xs-4 btn btn-default">
+                                        <input type="radio" name="numType" id="num_even" value="even"><i class="fa fa-btn  fa-hand-peace-o"></i>Even
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -151,7 +163,7 @@
                                 </label>
                             </div>
                             <div id="numbersController">
-                                @for ($i = 1; $i <= 40; $i++)
+                                @for ($i = config('gameset.CODE_RANGE_MIN'); $i <= config('gameset.CODE_RANGE_MAX'); $i++)
                                     <label style="width: 55px;margin-top: 3px" class="btn btn-default">
                                         <input type="radio" name="numbers" id="num_{{$i}}" value="{{$i}}">
                                         @if($i < 10)
@@ -163,20 +175,21 @@
                                 @endfor
                             </div>
                         </div>
-                        <div class="form-group">
-                            <button style="width: 200px; margin-right: 5px;" type="button" id="btn_reset" class="btn btn-warning">
-                                <i class="fa fa-btn fa-refresh"></i>Clear Choose
-                            </button>
-                            @if (Auth::user()->cash < 1000)
-                                <button style="width: 200px" type="submit" id="btn_reset" class="btn btn-success" disabled>
-                                    <i class="fa fa-btn fa-paper-plane"></i>Submit
+                        <div class="row form-group">
+                            <div class="col-xs-12 col-xs-offset-2">
+                                <button type="button" id="btn_reset" class="col-xs-4 btn btn-warning">
+                                    <i class="fa fa-btn fa-refresh"></i>Reset
                                 </button>
-                            @else
-                                <button style="width: 200px" type="submit" id="btn_submit" class="btn btn-success">
-                                    <i class="fa fa-btn fa-paper-plane"></i>Submit
-                                </button>
-                            @endif
-
+                                @if (Auth::user()->cash < 1000)
+                                    <button type="submit" id="btn_reset" class="btn btn-success" disabled>
+                                        <i class="fa fa-btn fa-paper-plane"></i>Submit
+                                    </button>
+                                @else
+                                    <button type="submit" id="btn_submit" class="col-xs-4 btn btn-success">
+                                        <i class="fa fa-btn fa-paper-plane"></i>Submit
+                                    </button>
+                                @endif
+                            </div>
                         </div>
                     </form>
                 </div>
