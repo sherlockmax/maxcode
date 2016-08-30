@@ -14,13 +14,21 @@ class GameServer
     private $game_date;
     private $game_index = 1;
 
-    private function getRandCode()
+    private function getRandCode($min = 0, $max = 0)
     {
-        return rand(config('gameset.CODE_RANGE_MIN'), config('gameset.CODE_RANGE_MAX'));
+        if($min == 0){
+            $min = config('gameset.CODE_RANGE_MIN');
+        }
+        if($max == 0){
+            $max = config('gameset.CODE_RANGE_MAX');
+        }
+        return rand($min, $max);
     }
 
     private function gameStart()
     {
+        $final_code = $this->getRandCode();
+
         $this->game_data = null;
         if ($this->game_date != Date('Ymd')) {
             $this->game_date = Date('Ymd');
@@ -32,15 +40,19 @@ class GameServer
 
         $this->game_data = [
             'no' => $game_full_no,
-            'final_code' => $this->getRandCode(),
+            'final_code' => $final_code,
             'state' => config('gameset.STATE_RUNNING'),
+            'current_min' => config('gameset.CODE_RANGE_MIN'),
+            'current_max' => config('gameset.CODE_RANGE_MAX'),
             'round' => [],
         ];
 
         $game = new Game;
         $game->no = $this->game_data['no'];
-        $game->final_code = $this->game_data['final_code'];
+        $game->final_code = $final_code;
         $game->state = config('gameset.STATE_RUNNING');
+        $game->current_min = config('gameset.CODE_RANGE_MIN') - 1;
+        $game->current_max = config('gameset.CODE_RANGE_MAX') + 1;
         $game->save();
 
         $this->game_index++;
@@ -53,7 +65,7 @@ class GameServer
         $game_date = $this->game_date;
         $game_index = str_pad($this->game_index - 1, 4, "0", STR_PAD_LEFT);
         $game = Game::where('no', $game_date . $game_index);
-        $game->update(['state' => config('gameset.STATE_CLOSED')]);
+        $game->update(['state' => config('gameset.STATE_CLOSED'), 'memo' => 'no winner']);
     }
 
     private function roundStart()
@@ -81,8 +93,12 @@ class GameServer
 
     private function roundClosed()
     {
+        $rand_min = $this->game_data['current_min'] + 1;
+        $rand_max = $this->game_data['current_max'] - 1;
+
+        $round_code = $this->getRandCode($rand_min, $rand_max);
         $round_count = sizeof($this->game_data['round']);
-        $this->game_data['round'][$round_count - 1]['code'] = $this->getRandCode();
+        $this->game_data['round'][$round_count - 1]['code'] = $round_code;
         $this->game_data['round'][$round_count - 1]['state'] = config('gameset.STATE_CLOSED');
 
         $round = Round
@@ -90,8 +106,10 @@ class GameServer
             ->where('round', $round_count);
         $round->update([
             'state' => config('gameset.STATE_CLOSED'),
-            'round_code' => $this->game_data['round'][$round_count - 1]['code']
+            'round_code' => $round_code
         ]);
+
+        return $round_code;
     }
 
     private function init()
@@ -122,8 +140,34 @@ class GameServer
 
             sleep(config('gameset.TIME_OF_ROUND'));
 
-            $this->roundClosed();
+            $round_code = $this->roundClosed();
             $this->echoGameData("Round Closed");
+
+            if($round_code == $this->game_data['final_code']){
+                Game::where('no', $this->game_data['no'])
+                    ->update(['memo' => 'round code eq final code']);
+                break;
+            }
+
+            if($round_code < $this->game_data['final_code']){
+                $this->game_data['current_min'] = $round_code;
+
+                Game::where('no', $this->game_data['no'])
+                    ->update(['current_min' => $round_code]);
+            }
+
+            if($round_code > $this->game_data['final_code']){
+                $this->game_data['current_max'] = $round_code;
+
+                Game::where('no', $this->game_data['no'])
+                    ->update(['current_max' => $round_code]);
+            }
+
+            if($this->game_data['current_max'] - $this->game_data['current_min'] <= 2){
+                Game::where('no', $this->game_data['no'])
+                    ->update(['memo' => 'current max and min code\'s range are less 2 numbers']);
+                break;
+            }
 
             if (sizeof($this->game_data['round']) < config('gameset.ROUND_PER_GAME')) {
                 sleep(config('gameset.ROUND_INTERVAL'));
