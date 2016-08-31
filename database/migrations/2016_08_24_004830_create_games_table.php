@@ -13,16 +13,14 @@ class CreateGamesTable extends Migration
     public function up()
     {
         Schema::create('games', function (Blueprint $table) {
+            $table->increments('id');
             $table->string('no', 12);
             $table->integer('final_code');
-            $table->integer('current_min');
-            $table->integer('current_max');
             $table->integer('state')->comment = '0:running / 1:closing / 2:closed';
-            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
-            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->integer('start_at');
             $table->string('memo')->nullable();
 
-            $table->primary('no');
+            $table->unique('no');
         });
     }
 

@@ -17,8 +17,8 @@ class CreateRoundsTable extends Migration
             $table->integer('round');
             $table->integer('round_code');
             $table->integer('state')->comment = '0:running / 1:closing / 2:closed';
-            $table->timestamp('start_at')->default('0000-00-00 00:00:00');
-            $table->timestamp('end_at')->default('0000-00-00 00:00:00');
+            $table->integer('start_at');
+            $table->integer('end_at');
 
             $table->primary(['games_no', 'round']);
         });
