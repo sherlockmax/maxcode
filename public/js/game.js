@@ -4,6 +4,7 @@
 
 var lastRoundEndAt = 0;
 var isRunning = true;
+var is_first_round = true;
 
 $(document).ready(function () {
 
@@ -27,6 +28,12 @@ $(document).ready(function () {
                 return dtEnd.getFullYear() - this.getFullYear();
         }
     };
+
+    function toggleRoundTimes(){
+        $('.roundTimes').slideToggle("slow");
+    }
+
+    $('div[id^=round]').click(function(){ toggleRoundTimes();});
 
     function clearChoose(){
         //reset all radio (unchecked)
@@ -90,7 +97,11 @@ $(document).ready(function () {
         $('#numbersController').find('label').removeClass('disabled');
         var button_max = $('#numbersController').find('input[id^=num_]').length;
         for(var i = 1; i <= button_max; i++){
-            if( i <= min || i >= max){
+            if(is_first_round){
+                min = min - 1;
+                max = max + 1;
+            }
+            if( i <= min || i >= max ){
                 $('#numbersController #num_'+i).attr('disabled', 'disabled');
                 $('#numbersController #num_'+i).closest('label').addClass('disabled');
             }
@@ -141,6 +152,11 @@ $(document).ready(function () {
                             $('#leftTime').text('Round ' + (roundObj.round + 1) + ' will start in ' + leftTime + " sec.");
                         } else {
                             setRoundPanelHighLight(roundObj.round);
+                            if(roundObj.round != 1){
+                                is_first_round = false;
+                            }else{
+                                is_first_round = true;
+                            }
                             $('#leftTime').text('Round ' + roundObj.round + ' will end in ' + leftTime + " sec.");
                         }
                     }
@@ -190,6 +206,7 @@ $(document).ready(function () {
         });
     }
 
+    toggleRoundTimes();
     clearRoundData();
     getGameData();
 });
