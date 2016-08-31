@@ -4,15 +4,18 @@ namespace App\Console\Commands;
 
 use App\Game;
 use App\Round;
+use Carbon\Carbon;
 use \DB;
 
 class GameServer
 {
-    const IS_DEBUG_MODE = true;
+    const IS_DEBUG_MODE = false;
 
-    private $game_data;
     private $game_date;
     private $game_index = 1;
+    private $game_no;
+    private $current_min;
+    private $current_max;
     private $memo;
 
     private function getRandCode($min = 0, $max = 0)
@@ -28,44 +31,30 @@ class GameServer
 
     private function gameStart()
     {
-        $final_code = $this->getRandCode();
-
-        $this->game_data = null;
         if ($this->game_date != Date('Ymd')) {
             $this->game_date = Date('Ymd');
             $this->game_index = 1;
         }
 
         $game_full_index = str_pad($this->game_index, 4, "0", STR_PAD_LEFT);
-        $game_full_no = $this->game_date . $game_full_index;
-
-        $this->game_data = [
-            'no' => $game_full_no,
-            'final_code' => $final_code,
-            'state' => config('gameset.STATE_RUNNING'),
-            'current_min' => config('gameset.CODE_RANGE_MIN'),
-            'current_max' => config('gameset.CODE_RANGE_MAX'),
-            'round' => [],
-        ];
+        $this->game_no = $this->game_date . $game_full_index;
 
         $game = new Game;
-        $game->no = $this->game_data['no'];
-        $game->final_code = $final_code;
+        $game->no = $this->game_no;
+        $game->final_code = $this->getRandCode();
         $game->state = config('gameset.STATE_RUNNING');
-        $game->current_min = config('gameset.CODE_RANGE_MIN');
-        $game->current_max = config('gameset.CODE_RANGE_MAX');
+        $game->start_at = time();
+        $game->memo = '';
         $game->save();
 
         $this->game_index++;
+
+        return $game->final_code;
     }
 
     private function gameClosed()
     {
-        $this->game_data['state'] = config('gameset.STATE_CLOSED');
-
-        $game_date = $this->game_date;
-        $game_index = str_pad($this->game_index - 1, 4, "0", STR_PAD_LEFT);
-        $game = Game::where('no', $game_date . $game_index);
+        $game = Game::where('no', $this->game_no);
         if(is_null($this->memo)){
             $this->memo = 'no winner';
         }
@@ -76,39 +65,31 @@ class GameServer
     private function roundStart()
     {
         $start_timestamp = time();
-        $end_timestamp = time() + config('gameset.TIME_OF_ROUND');
+        $end_timestamp = $start_timestamp + config('gameset.TIME_OF_ROUND');
 
-        $this->game_data['round'][] = [
-            'round_no' => sizeof($this->game_data['round']) + 1,
-            'start_at' => Date("Y-m-d H:i:s", $start_timestamp),
-            'end_at' => Date("Y-m-d H:i:s", $end_timestamp),
-            'code' => 0,
-            'state' => config('gameset.STATE_RUNNING'),
-        ];
+        $round_no = Round::where('games_no', $this->game_no)->count();
 
         $round = new Round;
-        $round->games_no = $this->game_data['no'];
-        $round->round = $this->game_data['round'][sizeof($this->game_data['round']) - 1]['round_no'];
+        $round->games_no = $this->game_no;
+        $round->round = $round_no + 1;
         $round->state = config('gameset.STATE_RUNNING');
-        $round->round_code = $this->game_data['round'][sizeof($this->game_data['round']) - 1]['code'];
-        $round->start_at = $this->game_data['round'][sizeof($this->game_data['round']) - 1]['start_at'];
-        $round->end_at = $this->game_data['round'][sizeof($this->game_data['round']) - 1]['end_at'];
+        $round->round_code = 0;
+        $round->start_at = $start_timestamp;
+        $round->end_at = $end_timestamp;
         $round->save();
     }
 
     private function roundClosed()
     {
-        $rand_min = $this->game_data['current_min'] + 1;
-        $rand_max = $this->game_data['current_max'] - 1;
+        $rand_min = $this->current_min + 1;
+        $rand_max = $this->current_max - 1;
 
         $round_code = $this->getRandCode($rand_min, $rand_max);
-        $round_count = sizeof($this->game_data['round']);
-        $this->game_data['round'][$round_count - 1]['code'] = $round_code;
-        $this->game_data['round'][$round_count - 1]['state'] = config('gameset.STATE_CLOSED');
+        $round_no = Round::where('games_no', $this->game_no)->count();
 
         $round = Round
-            ::where('games_no', $this->game_data['no'])
-            ->where('round', $round_count);
+            ::where('games_no', $this->game_no)
+            ->where('round', $round_no);
         $round->update([
             'state' => config('gameset.STATE_CLOSED'),
             'round_code' => $round_code
@@ -136,10 +117,16 @@ class GameServer
 
     private function startServer()
     {
-        $this->gameStart();
+        $final_code = $this->gameStart();
         $this->echoGameData("Game Start");
 
-        while (sizeof($this->game_data['round']) < config('gameset.ROUND_PER_GAME')) {
+        $this->current_min = config('gameset.CODE_RANGE_MIN');
+        $this->current_max = config('gameset.CODE_RANGE_MAX');
+
+        $round_count = 0;
+
+        while ($round_count < config('gameset.ROUND_PER_GAME')) {
+
             $this->roundStart();
             $this->echoGameData("Round Start");
 
@@ -148,31 +135,27 @@ class GameServer
             $round_code = $this->roundClosed();
             $this->echoGameData("Round Closed");
 
-            if($round_code == $this->game_data['final_code']){
+            if($round_code == $final_code){
                 $this->memo = 'round code eq final code';
                 break;
             }
 
-            if($round_code < $this->game_data['final_code']){
-                $this->game_data['current_min'] = $round_code;
-
-                Game::where('no', $this->game_data['no'])
-                    ->update(['current_min' => $round_code]);
+            if($round_code < $final_code){
+                $this->current_min = $round_code;
             }
 
-            if($round_code > $this->game_data['final_code']){
-                $this->game_data['current_max'] = $round_code;
-
-                Game::where('no', $this->game_data['no'])
-                    ->update(['current_max' => $round_code]);
+            if($round_code > $final_code){
+                $this->current_max = $round_code;
             }
 
-            if($this->game_data['current_max'] - $this->game_data['current_min'] <= 1){
+            if($this->current_max - $this->current_min <= 1){
                 $this->memo = 'current max and min code\'s range are left 1 numbers';
                 break;
             }
 
-            if (sizeof($this->game_data['round']) < config('gameset.ROUND_PER_GAME')) {
+            $round_count = Round::where('games_no', $this->game_no)->count();
+
+            if ($round_count < config('gameset.ROUND_PER_GAME')) {
                 sleep(config('gameset.ROUND_INTERVAL'));
             }
         }
@@ -194,10 +177,32 @@ class GameServer
     private function echoGameData($title = "")
     {
         if (self::IS_DEBUG_MODE) {
+            system('clear');
             print("$title " . Date("Y-m-d H:i:s") . " -------------\n");
-            print_r($this->game_data);
-            print("---$title " . Date("Y-m-d H:i:s") . " -------------\n");
+            $game = Game::where('no', $this->game_no)->first();
+            $rounds = Round::where('games_no', $this->game_no)->get();
+
+            if($game) {
+                print("  game $game->no -------------\n");
+                print("  final code: $game->final_code\n");
+                print("  state:      $game->state\n");
+                print("  start at:   $game->start_at\n");
+                print("  memo:       $game->memo\n");
+                print("  {\n");
+
+                foreach ($rounds as $round) {
+                    print("    Round $round->round -------------\n");
+                    print("    round code: $round->round_code\n");
+                    print("    state:      $round->state\n");
+                    print("    start at:   $round->start_at\n");
+                    print("    end at:     $round->end_at\n");
+                    print("    -------------------------------\n");
+                }
+                print("  }\n");
+            }
             flush();
+        }else{
+            print("$title " . Date("Y-m-d H:i:s") . " -------------\n");
         }
     }
 }
