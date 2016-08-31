@@ -122,6 +122,7 @@ $(document).ready(function () {
                 console.log(xhr);
             },
             success: function (response) {
+                console.log(parseInt($.now()/1000));
                 var isCanInput = true;
                 var leftTime = -1;
                 //console.log(response);
