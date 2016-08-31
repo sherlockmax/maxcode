@@ -13,6 +13,7 @@ class GameServer
     private $game_data;
     private $game_date;
     private $game_index = 1;
+    private $memo;
 
     private function getRandCode($min = 0, $max = 0)
     {
@@ -51,8 +52,8 @@ class GameServer
         $game->no = $this->game_data['no'];
         $game->final_code = $final_code;
         $game->state = config('gameset.STATE_RUNNING');
-        $game->current_min = config('gameset.CODE_RANGE_MIN') - 1;
-        $game->current_max = config('gameset.CODE_RANGE_MAX') + 1;
+        $game->current_min = config('gameset.CODE_RANGE_MIN');
+        $game->current_max = config('gameset.CODE_RANGE_MAX');
         $game->save();
 
         $this->game_index++;
@@ -65,7 +66,11 @@ class GameServer
         $game_date = $this->game_date;
         $game_index = str_pad($this->game_index - 1, 4, "0", STR_PAD_LEFT);
         $game = Game::where('no', $game_date . $game_index);
-        $game->update(['state' => config('gameset.STATE_CLOSED'), 'memo' => 'no winner']);
+        if(is_null($this->memo)){
+            $this->memo = 'no winner';
+        }
+        $game->update(['state' => config('gameset.STATE_CLOSED'), 'memo' => $this->memo]);
+        $this->memo = null;
     }
 
     private function roundStart()
@@ -144,8 +149,7 @@ class GameServer
             $this->echoGameData("Round Closed");
 
             if($round_code == $this->game_data['final_code']){
-                Game::where('no', $this->game_data['no'])
-                    ->update(['memo' => 'round code eq final code']);
+                $this->memo = 'round code eq final code';
                 break;
             }
 
@@ -163,9 +167,8 @@ class GameServer
                     ->update(['current_max' => $round_code]);
             }
 
-            if($this->game_data['current_max'] - $this->game_data['current_min'] <= 2){
-                Game::where('no', $this->game_data['no'])
-                    ->update(['memo' => 'current max and min code\'s range are less 2 numbers']);
+            if($this->game_data['current_max'] - $this->game_data['current_min'] <= 1){
+                $this->memo = 'current max and min code\'s range are left 1 numbers';
                 break;
             }
 
