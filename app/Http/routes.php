@@ -25,7 +25,8 @@
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', 'HomeController@index');
     Route::get('/setCash/{cash}', 'HomeController@setCash');
-    Route::post('/gameData', 'HomeController@getRunningGame');
+    Route::post('/gameData', 'HomeController@getGameData');
+    Route::post('/finalcode/{games_no}', 'HomeController@getFinalCode');
 });
 
 Route::get('login', 'LoginController@index');

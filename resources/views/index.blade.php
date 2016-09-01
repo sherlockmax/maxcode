@@ -11,7 +11,7 @@
                 <div class="row">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            Game _ <span id="gamesNo">000000000000</span>
+                            Game&nbsp;&nbsp;&nbsp;<span id="gamesNo">000000000000</span>
                         </div>
 
                         <div class="panel-body">
@@ -103,7 +103,7 @@
 
                                     <div class="panel-body">
                                         <div style="color: orangered; font-size: x-large; text-align: center">
-                                            <label id="leftTime" class="control-label">20 sec.</label>
+                                            <label id="gameState" class="control-label">THE GAME IS NOT RUNNING</label>
                                         </div>
                                     </div>
                                 </div>
@@ -141,7 +141,7 @@
                                             @if (Auth::user()->cash < 1000)
                                                 <label style="color: darkred">Insufficient balance</label>
                                             @else
-                                                <input type="number" name="bet_part1" min="1000" step="1000" value="1000">
+                                                <input type="number" name="bet_part1" min="0" step="1000" value="0">
                                             @endif
                                         </label>
                                     </div>
@@ -149,9 +149,11 @@
                                         <div class="col-xs-12 col-xs-offset-2">
                                             <label class="col-xs-4 btn btn-default">
                                                 <input type="radio" name="numType" id="num_odd" value="odd"><i class="fa fa-btn fa-hand-pointer-o"></i>Odd
+                                                &nbsp;&nbsp;<span id="odds_odd" style="font-size: 14px; color: palevioletred">?</span>
                                             </label>
                                             <label class="col-xs-4 btn btn-default">
                                                 <input type="radio" name="numType" id="num_even" value="even"><i class="fa fa-btn  fa-hand-peace-o"></i>Even
+                                                &nbsp;&nbsp;<span id="odds_even" style="font-size: 14px; color: palevioletred">?</span>
                                             </label>
                                         </div>
                                     </div>
@@ -160,13 +162,16 @@
                                     <div>
                                         <label>Part 2：Try to guess Final Code</label>
                                     </div>
+                                    <div>
+                                        Odds：<label id="odds_numbers" style="font-size: 14px; color: palevioletred">?</label>
+                                    </div>
                                     <div style="margin-bottom: 5px;">
                                         <label class="btn btn-default">
                                             <i class="fa fa-btn fa-dollar"></i>Bet：
                                             @if (Auth::user()->cash < 1000)
                                                 <label style="color: darkred">Insufficient balance</label>
                                             @else
-                                                <input type="number" name="bet_part2" min="1000" step="1000" value="1000">
+                                                <input type="number" name="bet_part2" min="0" step="1000" value="0">
                                             @endif
                                         </label>
                                     </div>
@@ -184,20 +189,18 @@
                                     </div>
                                 </div>
                                 <div class="row form-group">
-                                    <div class="col-xs-12 col-xs-offset-2">
-                                        <button type="button" id="btn_reset" class="col-xs-4 btn btn-warning">
-                                            <i class="fa fa-btn fa-refresh"></i>Reset
-                                        </button>
-                                        @if (Auth::user()->cash < 1000)
-                                            <button type="submit" id="btn_reset" class="btn btn-success" disabled>
-                                                <i class="fa fa-btn fa-paper-plane"></i>Submit
+                                    @if (Auth::user()->cash < 1000)
+                                        <label style="color: orangered; font-size: large">Your cash must greater than $ 1000</label>
+                                    @else
+                                        <div class="col-xs-12 col-xs-offset-2">
+                                            <button type="button" id="btn_reset" class="col-xs-4 btn btn-warning">
+                                                <i class="fa fa-btn fa-refresh"></i>Reset
                                             </button>
-                                        @else
                                             <button type="submit" id="btn_submit" class="col-xs-4 btn btn-success">
                                                 <i class="fa fa-btn fa-paper-plane"></i>Submit
                                             </button>
-                                        @endif
-                                    </div>
+                                        </div>
+                                    @endif
                                 </div>
                             </form>
                         </div>

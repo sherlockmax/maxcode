@@ -1,39 +1,84 @@
 /**
- * Created by max on 16年8月29日.
+ * Created by max on 2016/8/31.
  */
-
-var lastRoundEndAt = 0;
-var isRunning = true;
-var is_first_round = true;
-
 $(document).ready(function () {
 
-    Date.prototype.dateDiff = function (interval, objDate) {
-        var dtEnd = new Date(objDate);
-        if (isNaN(dtEnd)) return undefined;
-        switch (interval) {
-            case "s":
-                return parseInt((dtEnd - this) / 1000);
-            case "n":
-                return parseInt((dtEnd - this) / 60000);
-            case "h":
-                return parseInt((dtEnd - this) / 3600000);
-            case "d":
-                return parseInt((dtEnd - this) / 86400000);
-            case "w":
-                return parseInt((dtEnd - this) / (86400000 * 7));
-            case "m":
-                return (dtEnd.getMonth() + 1) + ((dtEnd.getFullYear() - this.getFullYear()) * 12) - (this.getMonth() + 1);
-            case "y":
-                return dtEnd.getFullYear() - this.getFullYear();
-        }
-    };
+    //define element to use
+    var element_game_no = $('#gamesNo');
+    var element_final_code = $('#finalCode');
+    var element_state = $('#gameState');
 
-    function toggleRoundTimes(){
+    var element_all_round = $('div[id^=round]');
+
+    var element_all_radio = $('input');
+    var element_all_label = $('input').closest('label');
+    var element_all_button = $('button');
+
+    $('.roundTimes').hide();
+    blockAllInput();
+    getGameData();
+
+    $('#btn_reset').click(function(){
+        clearChoose();
+    });
+
+    element_all_round.click(function(){
         $('.roundTimes').slideToggle("slow");
+    });
+
+    function pad (str, max) {
+        str = str.toString();
+        return str.length < max ? pad("0" + str, max) : str;
     }
 
-    $('div[id^=round]').click(function(){ toggleRoundTimes();});
+    function transferTimestamp(timestamp){
+        var date = new Date(timestamp*1000);
+        var y = pad(date.getFullYear(), 4);
+        var m = pad(date.getMonth()+1, 2);
+        var d = pad(date.getDate(), 2);
+        var H = pad(date.getHours(), 2);
+        var i = pad(date.getMinutes(), 2);
+        var s = pad(date.getSeconds(), 2);
+
+        return y + "-" + m + "-" + d + " " + H + ":" + i + ":" + s;
+    }
+
+    function blockAllInput(){
+        element_all_radio.attr('disabled', 'disabled');
+        element_all_button.attr('disabled', 'disabled');
+        element_all_label.addClass('disabled');
+    }
+
+    function unblockAllInput(){
+        element_all_radio.attr('disabled', false);
+        element_all_button.attr('disabled', false);
+        element_all_label.removeClass('disabled');
+    }
+
+    function resetAllPanelHighLight() {
+        //reset all
+        element_all_round.each(function () {
+            $(this).removeClass('panel-danger');
+            $(this).addClass('panel-success');
+        });
+    }
+
+    function setRoundPanelHighLight(roundIndex) {
+        resetAllPanelHighLight();
+
+        $('#round' + roundIndex).removeClass('panel-success');
+        $('#round' + roundIndex).addClass('panel-danger');
+    }
+
+    function clearRoundData() {
+        element_all_round.each(function () {
+            $(this).find('#startTime').text('0000-00-00 00:00:00');
+            $(this).find('#endTime').text('0000-00-00 00:00:00');
+            $(this).find('#roundCode').text('?');
+        });
+
+        element_final_code.text('?');
+    }
 
     function clearChoose(){
         //reset all radio (unchecked)
@@ -43,53 +88,7 @@ $(document).ready(function () {
         $('div[id*=Controller]').find("label").removeClass("active");
 
         //reset betAmount to init value (1000)
-        $('input[name*=bet_]').val(1000);
-    }
-
-    function closeInput() {
-        $('input').attr('disabled', 'disabled');
-        $('button').attr('disabled', 'disabled');
-        $('input').closest('label').addClass('disabled');
-        clearChoose();
-        resetAllPanelHighLight();
-    }
-
-    function openInput() {
-        $('input').attr('disabled', false);
-        $('button').attr('disabled', false);
-        $('input').closest('label').removeClass('disabled');
-    }
-
-    function getLeftTime(datetime, interval) {
-        var now = new Date(datetime);
-        var end = new Date(lastRoundEndAt);
-        end.setSeconds(end.getSeconds() + interval);
-
-        return now.dateDiff('s', end);
-    }
-
-    function clearRoundData() {
-        $('div[id^=round]').each(function () {
-            $(this).find('#startTime').text('0000-00-00 00:00:00');
-            $(this).find('#endTime').text('0000-00-00 00:00:00');
-            $(this).find('#roundCode').text('?');
-        });
-    }
-
-    function resetAllPanelHighLight() {
-        //reset all
-        $('div[id^=round]').each(function () {
-            $(this).removeClass('panel-danger');
-            $(this).addClass('panel-success');
-        });
-    }
-
-    function setRoundPanelHighLight(roundIndex) {
-        resetAllPanelHighLight();
-
-        //set round
-        $('#round' + roundIndex).removeClass('panel-success');
-        $('#round' + roundIndex).addClass('panel-danger');
+        $('input[name*=bet_]').val(0);
     }
 
     function openNumbersByRange(min, max){
@@ -97,117 +96,104 @@ $(document).ready(function () {
         $('#numbersController').find('label').removeClass('disabled');
         var button_max = $('#numbersController').find('input[id^=num_]').length;
         for(var i = 1; i <= button_max; i++){
-            if(is_first_round){
-                min = min - 1;
-                max = max + 1;
-            }
-            if( i <= min || i >= max ){
+            if( i < min || i > max ){
                 $('#numbersController #num_'+i).attr('disabled', 'disabled');
                 $('#numbersController #num_'+i).closest('label').addClass('disabled');
             }
         }
     }
 
-    $('#btn_reset').click(function(){
-        clearChoose();
-    });
+    function setTimer(seconds, msg, next_step_function){
+        if(seconds >= 0){
+            seconds--;
+            var new_msg = msg.replace("{sec}", seconds + 1);
+            element_state.text(new_msg);
+            setTimeout(function() {
+                setTimer(seconds, msg, next_step_function);
+            }, 1000);
+        }else{
+            next_step_function();
+        }
+    }
 
-    function getGameData() {
+    function getGameData(){
         $.ajax({
             url: '/gameData',
             type: 'post',
             error: function (xhr) {
-                $('#leftTime').text('Something wrong!! The game is not running!');
-                isRunning = false;
                 console.log(xhr);
             },
             success: function (response) {
-                console.log(parseInt($.now()/1000));
-                var isCanInput = true;
-                var leftTime = -1;
-                //console.log(response);
                 var gameObj = jQuery.parseJSON(response);
+                console.log(response);
 
-                if (gameObj.state != 0) {
-                    isCanInput = false;
-                    leftTime = getLeftTime(gameObj.now, gameObj.game_interval);
-                    $('#leftTime').text('New game will start in ' + leftTime + " sec.");
-                    $('#finalCode').text(gameObj.final_code);
-                } else {
-                    $('#gamesNo').text(gameObj.no);
-                    $('#finalCode').text('?');
+                if(gameObj.timer > -1) {
 
-                    if (gameObj.round != null) {
-                        var roundCount = gameObj.round.length - 1;
+                    element_game_no.text(gameObj.no);
 
-                        var roundObj = gameObj.round[roundCount];
-                        lastRoundEndAt = roundObj.end_at;
+                    $.each(gameObj.round, function (key, roundObj) {
+                        var roundNo = roundObj.round;
+                        var roundCode = roundObj.round_code;
 
-                        var now = new Date(gameObj.now);
-                        var end = new Date(roundObj.end_at);
-
-                        leftTime = now.dateDiff('s', end);
-                        if (parseInt(leftTime) < 0) {
-                            isCanInput = false;
-                            leftTime = getLeftTime(now, gameObj.round_interval);
-                            $('#leftTime').text('Round ' + (roundObj.round + 1) + ' will start in ' + leftTime + " sec.");
-                        } else {
-                            setRoundPanelHighLight(roundObj.round);
-                            if(roundObj.round != 1){
-                                is_first_round = false;
-                            }else{
-                                is_first_round = true;
-                            }
-                            $('#leftTime').text('Round ' + roundObj.round + ' will end in ' + leftTime + " sec.");
+                        if(roundNo == 1 && roundCode == 0){
+                            clearRoundData();
                         }
+
+                        if (roundCode != 0) {
+                            resetAllPanelHighLight();
+                            $('#round' + roundNo + ' #roundCode').text(roundCode);
+                        }
+                        if(roundCode == 0){
+                            setRoundPanelHighLight(roundNo);
+                        }
+
+                        var start_at = transferTimestamp(roundObj.start_at);
+                        var end_at = transferTimestamp(roundObj.end_at);
+                        $('#round' + roundNo + ' #startTime').text(start_at);
+                        $('#round' + roundNo + ' #endTime').text(end_at);
+
+                        if(gameObj.msg.indexOf('will end in') >= 0){
+                            unblockAllInput();
+                            if(roundObj.round_code == 0){
+                                openNumbersByRange(roundObj.current_min, roundObj.current_max);
+                            }
+                        }
+                    });
+
+                    if(gameObj.msg.indexOf('New game will start in') >= 0){
+                        showFinalCode(gameObj.no);
                     }
-                }
 
-                clearRoundData();
-                $.each(gameObj.round, function (key, roundObj) {
-                    var roundNo = roundObj.round;
-                    var roundCode = roundObj.round_code;
-                    if (roundCode == 0) {
-                        roundCode = '?';
+                    if(gameObj.msg.indexOf('New game will start in') >= 0 ||
+                        gameObj.msg.indexOf('will start in') >= 0){
+                        blockAllInput();
+                        clearChoose();
                     }
-                    $('#round' + roundNo + ' #startTime').text(roundObj.start_at);
-                    $('#round' + roundNo + ' #endTime').text(roundObj.end_at);
-                    $('#round' + roundNo + ' #roundCode').text(roundCode);
-                });
 
-                if(leftTime < 0){
-                    $('#leftTime').text('The game is not running!');
-                    isRunning = false;
-                }
+                    $('#odds_numbers').text(gameObj.odds.numbers);
+                    $('#odds_odd').text(gameObj.odds.odd);
+                    $('#odds_even').text(gameObj.odds.even);
 
-                if(isCanInput){
-                    openInput();
-                    openNumbersByRange(gameObj.current_min, gameObj.current_max);
+                    setTimer(gameObj.timer, gameObj.msg, getGameData);
                 }else{
-                    closeInput();
-                }
-
-                if(isRunning){
-                    setTimeout(getGameData, 1000);
+                    element_state.text('The game is not running!');
                 }
             }
         });
+
+        function showFinalCode(games_no){
+            $.ajax({
+                url: '/finalcode/'+games_no,
+                type: 'post',
+                error: function (xhr) {
+                    console.log(xhr);
+                    setTimeout(function(){showFinalCode(games_no);}, 1000);
+                },
+                success: function (response) {
+                    console.log(response);
+                    element_final_code.text(response);
+                }
+            });
+        }
     }
-
-    function getFinalCode(game_no){
-        $.ajax({
-            url: '/finalcode/'+game_no,
-            type: 'post',
-            error: function (xhr) {
-                console.log(xhr);
-            },
-            success: function (response) {
-
-            }
-        });
-    }
-
-    toggleRoundTimes();
-    clearRoundData();
-    getGameData();
 });

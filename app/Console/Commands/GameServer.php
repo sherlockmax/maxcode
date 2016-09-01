@@ -9,7 +9,7 @@ use \DB;
 
 class GameServer
 {
-    const IS_DEBUG_MODE = false;
+    const IS_DEBUG_MODE = true;
 
     private $game_date;
     private $game_index = 1;
@@ -26,7 +26,7 @@ class GameServer
         if($max == 0){
             $max = config('gameset.CODE_RANGE_MAX');
         }
-        return rand($min, $max);
+        return mt_rand($min, $max);
     }
 
     private function gameStart()
@@ -74,6 +74,8 @@ class GameServer
         $round->round = $round_no + 1;
         $round->state = config('gameset.STATE_RUNNING');
         $round->round_code = 0;
+        $round->current_min = $this->current_min;
+        $round->current_max = $this->current_max;
         $round->start_at = $start_timestamp;
         $round->end_at = $end_timestamp;
         $round->save();
@@ -81,8 +83,8 @@ class GameServer
 
     private function roundClosed()
     {
-        $rand_min = $this->current_min + 1;
-        $rand_max = $this->current_max - 1;
+        $rand_min = $this->current_min;
+        $rand_max = $this->current_max;
 
         $round_code = $this->getRandCode($rand_min, $rand_max);
         $round_no = Round::where('games_no', $this->game_no)->count();
@@ -141,11 +143,11 @@ class GameServer
             }
 
             if($round_code < $final_code){
-                $this->current_min = $round_code;
+                $this->current_min = $round_code + 1;
             }
 
             if($round_code > $final_code){
-                $this->current_max = $round_code;
+                $this->current_max = $round_code - 1;
             }
 
             if($this->current_max - $this->current_min <= 1){
@@ -192,10 +194,12 @@ class GameServer
 
                 foreach ($rounds as $round) {
                     print("    Round $round->round -------------\n");
-                    print("    round code: $round->round_code\n");
-                    print("    state:      $round->state\n");
-                    print("    start at:   $round->start_at\n");
-                    print("    end at:     $round->end_at\n");
+                    print("    round code:  $round->round_code\n");
+                    print("    state:       $round->state\n");
+                    print("    current min: $round->current_min\n");
+                    print("    current max: $round->current_max\n");
+                    print("    start at:    $round->start_at\n");
+                    print("    end at:      $round->end_at\n");
                     print("    -------------------------------\n");
                 }
                 print("  }\n");

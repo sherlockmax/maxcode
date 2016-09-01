@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'TIME_OF_ROUND' => 60,
+    'TIME_OF_ROUND' => 20,
 
     'ROUND_PER_GAME' => 3,
 
