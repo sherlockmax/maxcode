@@ -15,4 +15,11 @@ class Round extends Model
             ::where('games_no', $game_no)
             ->orderBy('round', 'asc')->get();
     }
+
+    public function getRoundByGameNoRound($game_no, $round){
+        return Round
+            ::where('games_no', $game_no)
+            ->orderBy('round', $round)
+            ->first();
+    }
 }

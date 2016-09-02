@@ -44,8 +44,8 @@ if( ! function_exists('calcOdds')){
         $one_of_even_odd = floor_dec($numTypeCounts['even'] / $numbers_count, 2);
 
         $result['numbers'] = floor_dec(1 / $one_of_numbers_odd * 0.92, 2);
-        $result['odd'] = fill_zero(1 / $one_of_odd_odd * 0.92, 2);
-        $result['even'] = fill_zero(1 / $one_of_even_odd * 0.92, 2);
+        $result['odd'] = fill_zero(1 / $one_of_odd_odd * config('gameset.STANDARD_ODDS'), 2);
+        $result['even'] = fill_zero(1 / $one_of_even_odd * config('gameset.STANDARD_ODDS'), 2);
 
         return $result;
     }

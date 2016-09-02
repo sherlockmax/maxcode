@@ -28,6 +28,9 @@
                 Final Code
             </a>
         </div>
+        <ul class="nav navbar-nav navbar-left">
+            <li><a href="javascript:void(0);"><i class="fa fa-btn fa-user"></i>play rule</a></li>
+        </ul>
         <ul class="nav navbar-nav navbar-right">
             @if(Auth::check())
                 <li><a href="javascript:void(0);"><i class="fa fa-btn fa-user"></i>{{ Auth::user()->name}}.</a></li>

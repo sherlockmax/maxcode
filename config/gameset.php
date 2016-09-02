@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'TIME_OF_ROUND' => 20,
+    'TIME_OF_ROUND' => 60,
 
     'ROUND_PER_GAME' => 3,
 
@@ -18,4 +18,6 @@ return [
     'STATE_CLOSING' => 1,
 
     'STATE_CLOSED' => 2,
+
+    'STANDARD_ODDS' => 0.92,
 ];

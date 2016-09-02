@@ -3,9 +3,17 @@
  */
 
 $(document).ready(function(){
+
+    function auroReplace(str){
+        return str.replace("]", "").replace("[", "");
+    }
+
     $('input[type=radio]').click(function(){
-        var element_name = $(this).attr("name");
+        var element_name = auroReplace($(this).attr("name"));
         var radioId = "num_" + $(this).val();
+        if(element_name != 'numbers'){
+            radioId = "numType_" + $(this).val();
+        }
 
         //reset all radio (unchecked)
         $('input[name='+element_name+']').attr('checked', false);

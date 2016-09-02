@@ -17,6 +17,7 @@ $(document).ready(function () {
     $('.roundTimes').hide();
     blockAllInput();
     getGameData();
+    showBetHistory();
 
     $('#btn_reset').click(function(){
         clearChoose();
@@ -116,6 +117,94 @@ $(document).ready(function () {
         }
     }
 
+    function showFinalCode(games_no){
+        $.ajax({
+            url: '/finalCode/'+games_no,
+            type: 'post',
+            error: function (xhr) {
+                console.log(xhr);
+                setTimeout(function(){showFinalCode(games_no);}, 1000);
+            },
+            success: function (response) {
+                //console.log(response);
+                element_final_code.text(response);
+            }
+        });
+    }
+
+    function billing(type){
+        if(type == 'round'){
+            $.ajax({
+                url: '/billingRound',
+                type: 'get',
+                success: function (response) {
+                    showBetHistory();
+                }
+            });
+        }else{
+            $.ajax({
+                url: '/billingGame',
+                type: 'get',
+                success: function (response) {
+                    showBetHistory();
+                }
+            });
+        }
+    }
+
+    function showBetHistory(){
+        $.ajax({
+            url: '/betHistory',
+            type: 'post',
+            error: function (xhr) {
+                console.log(xhr);
+            },
+            success: function (response) {
+                //console.log(response);
+                $('#bet_history_box').html("");
+                var bet_detail = jQuery.parseJSON(response);
+                $('#userCash').text(bet_detail.cash);
+                $.each(bet_detail, function(key, bet){
+                    if(key != 'cash') {
+                        var bet_detail_box = $('#bet_details_ex').clone();
+                        bet_detail_box.removeAttr('id');
+                        if (bet.win_cash == 0) {
+                            bet_detail_box.find('div:first()').addClass('bg-success');
+                        }
+                        if (bet.win_cash > 0) {
+                            bet_detail_box.find('div:first()').addClass('bg-info');
+                        }
+                        if (bet.win_cash < 0) {
+                            bet_detail_box.find('div:first()').addClass('bg-danger');
+                        }
+
+                        bet_detail_box.find('#games_no').text(bet.games_no);
+                        bet_detail_box.find('#round').text('Round ' + bet.round);
+                        bet_detail_box.find('#bet').text('$ ' + bet.bet);
+                        bet_detail_box.find('#win_cash').text('$ ' + bet.win_cash);
+                        if (bet.part == 1) {
+                            bet_detail_box.find('#code').text(bet.round_code);
+                        } else {
+                            bet_detail_box.find('#code').text('[' + bet.final_code + ']');
+                        }
+                        if (bet.part == 1) {
+                            if (bet.guess % 2 == 0) {
+                                bet_detail_box.find('#guess').text('Even');
+                            } else {
+                                bet_detail_box.find('#guess').text('Odd');
+                            }
+                        } else {
+                            bet_detail_box.find('#guess').text(bet.guess);
+                        }
+
+                        $('#bet_history_box').append(bet_detail_box);
+                        bet_detail_box.show();
+                    }
+                });
+            }
+        });
+    }
+
     function getGameData(){
         $.ajax({
             url: '/gameData',
@@ -125,11 +214,11 @@ $(document).ready(function () {
             },
             success: function (response) {
                 var gameObj = jQuery.parseJSON(response);
-                console.log(response);
+                //console.log(response);
 
                 if(gameObj.timer > -1) {
-
                     element_game_no.text(gameObj.no);
+                    $('input[name=games_no]').val(gameObj.no);
 
                     $.each(gameObj.round, function (key, roundObj) {
                         var roundNo = roundObj.round;
@@ -145,6 +234,7 @@ $(document).ready(function () {
                         }
                         if(roundCode == 0){
                             setRoundPanelHighLight(roundNo);
+                            $('input[name=round_no]').val(roundNo);
                         }
 
                         var start_at = transferTimestamp(roundObj.start_at);
@@ -161,18 +251,24 @@ $(document).ready(function () {
                     });
 
                     if(gameObj.msg.indexOf('New game will start in') >= 0){
+                        billing('game');
                         showFinalCode(gameObj.no);
+
                     }
 
                     if(gameObj.msg.indexOf('New game will start in') >= 0 ||
                         gameObj.msg.indexOf('will start in') >= 0){
                         blockAllInput();
                         clearChoose();
+                        billing('round');
                     }
 
                     $('#odds_numbers').text(gameObj.odds.numbers);
+                    $('input[name=odds_numbers]').val(gameObj.odds.numbers);
                     $('#odds_odd').text(gameObj.odds.odd);
+                    $('input[name=odds_odd]').val(gameObj.odds.odd);
                     $('#odds_even').text(gameObj.odds.even);
+                    $('input[name=odds_even]').val(gameObj.odds.even);
 
                     setTimer(gameObj.timer, gameObj.msg, getGameData);
                 }else{
@@ -180,20 +276,5 @@ $(document).ready(function () {
                 }
             }
         });
-
-        function showFinalCode(games_no){
-            $.ajax({
-                url: '/finalcode/'+games_no,
-                type: 'post',
-                error: function (xhr) {
-                    console.log(xhr);
-                    setTimeout(function(){showFinalCode(games_no);}, 1000);
-                },
-                success: function (response) {
-                    console.log(response);
-                    element_final_code.text(response);
-                }
-            });
-        }
     }
 });

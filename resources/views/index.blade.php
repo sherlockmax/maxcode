@@ -96,13 +96,13 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-xs-8 panel panel-danger">
+                                <div class="col-xs-8 panel panel-warning">
                                     <div class="panel-heading">
                                         Current state
                                     </div>
 
                                     <div class="panel-body">
-                                        <div style="color: orangered; font-size: x-large; text-align: center">
+                                        <div style="font-size: large; text-align: center">
                                             <label id="gameState" class="control-label">THE GAME IS NOT RUNNING</label>
                                         </div>
                                     </div>
@@ -113,7 +113,7 @@
                                     </div>
 
                                     <div class="panel-body">
-                                        <div style="color: orangered; font-size: x-large; text-align: center">
+                                        <div style="color: orangered; font-size: large; text-align: center">
                                             <label id="finalCode" class="control-label">?</label>
                                         </div>
                                     </div>
@@ -131,6 +131,11 @@
 
                         <div class="panel-body" style="text-align: center;">
                             <form action="{{ url('/bet') }}" method="POST" class="form-horizontal">
+                                <input type="hidden" name="games_no" value="000000000000">
+                                <input type="hidden" name="round_no" value="0">
+                                <input type="hidden" name="odds_odd" value="0">
+                                <input type="hidden" name="odds_even" value="0">
+                                <input type="hidden" name="odds_numbers" value="0">
                                 <div class="form-group">
                                     <div>
                                         <label>Part 1：Try to guess Round Code is Odd or Even?</label>
@@ -148,11 +153,11 @@
                                     <div id="numTypeController" class="row">
                                         <div class="col-xs-12 col-xs-offset-2">
                                             <label class="col-xs-4 btn btn-default">
-                                                <input type="radio" name="numType" id="num_odd" value="odd"><i class="fa fa-btn fa-hand-pointer-o"></i>Odd
+                                                <input type="radio" name="numType[]" id="numType_1" value="1"><i class="fa fa-btn fa-hand-pointer-o"></i>Odd
                                                 &nbsp;&nbsp;<span id="odds_odd" style="font-size: 14px; color: palevioletred">?</span>
                                             </label>
                                             <label class="col-xs-4 btn btn-default">
-                                                <input type="radio" name="numType" id="num_even" value="even"><i class="fa fa-btn  fa-hand-peace-o"></i>Even
+                                                <input type="radio" name="numType[]" id="numType_2" value="2"><i class="fa fa-btn  fa-hand-peace-o"></i>Even
                                                 &nbsp;&nbsp;<span id="odds_even" style="font-size: 14px; color: palevioletred">?</span>
                                             </label>
                                         </div>
@@ -178,7 +183,7 @@
                                     <div id="numbersController">
                                         @for ($i = config('gameset.CODE_RANGE_MIN'); $i <= config('gameset.CODE_RANGE_MAX'); $i++)
                                             <label style="width: 55px;margin-top: 3px" class="btn btn-default">
-                                                <input type="radio" name="numbers" id="num_{{$i}}" value="{{$i}}">
+                                                <input type="radio" name="numbers[]" id="num_{{$i}}" value="{{$i}}">
                                                 @if($i < 10)
                                                     {{"0$i"}}
                                                 @else
@@ -208,29 +213,42 @@
                 </div>
             </div>
             <div class="col-xs-3">
-                <div class="panel panel-primary" style="border: 0px !important;">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        Message
+                    </div>
+
+                    <div class="panel-body">
+                        {{$msg}}
+                    </div>
+                </div>
+
+                <div class="panel panel-primary">
                     <div class="panel-heading">
                         Your bet
                     </div>
 
-                    <div class="panel-body">
-                        <div> 111 </div>
-                        <div> 111 </div>
-                        <div> 111 </div>
-                        <div> 111 </div>
-                        <div> 111 </div>
-                        <div> 111 </div>
-                        <div> 111 </div>
-                        <div> 111 </div>
-                        <div> 111 </div>
-                        <div> 111 </div>
-                        <div> 111 </div>
-                        <div> 111 </div>
+                    <div id="bet_history_box" class="panel-body" style="margin-top: -20px">
+
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-
+    <div id="bet_details_ex" style="display: none">
+        <div class="row">
+            <div class="col-xs-6" id="games_no">201600000001</div>
+            <div class="col-xs-4" id="round">Round 0</div>
+            <div class="col-xs-2" id="code">0</div>
+        </div>
+        <div class="row">
+            <div style="text-align: center;" class="col-xs-4" id="guess"></div>
+            <div class="col-xs-4" id="bet">$ </div>
+            <div class="col-xs-4" id="win_cash">$ </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">&nbsp;</div>
+        </div>
     </div>
 @endsection

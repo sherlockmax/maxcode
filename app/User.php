@@ -27,4 +27,16 @@ class User extends Authenticatable
     public function getUserByAccount($account){
         return User::where('account', $account)->firstOrFail();
     }
+
+    public function setCashById($id, $cash){
+        User
+            ::where('id', $id)
+            ->increment('cash', $cash);
+    }
+
+    public function setCashByAccount($account, $cash){
+        User
+            ::where('account', $account)
+            ->increment('cash', $cash);
+    }
 }

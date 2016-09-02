@@ -20,11 +20,11 @@ class CreateBetDetailsTable extends Migration
             $table->integer('part')->comment = 'part number 1/2';
             $table->integer('guess');
             $table->integer('bet');
-            $table->integer('odds');
+            $table->decimal('odds', 5, 2);
             $table->integer('win_cash')->default(0);
             $table->integer('bet_at');
 
-            $table->unique(['games_no', 'round', 'user_id']);
+            $table->unique(['games_no', 'round', 'user_id', 'part']);
         });
     }
 

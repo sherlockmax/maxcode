@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests;
+use App\User;
+use \Hash;
 
 
 class LoginController extends Controller
@@ -15,6 +17,7 @@ class LoginController extends Controller
     {
         return view('login');
     }
+
     public function login()
     {
         $input = Input::all();
@@ -48,5 +51,19 @@ class LoginController extends Controller
     {
         Auth::logout();
         return Redirect::to('/');
+    }
+
+    public function createUser($account, $password, $name){
+        if(!is_null($account) && !is_null($password)){
+            $user = new User;
+            $user->account = $account;
+            $user->password = Hash::make($password);
+            $user->name = $name;
+            $user->save();
+
+            return Redirect::to('/');
+        }
+
+        return "create user failed!";
     }
 }

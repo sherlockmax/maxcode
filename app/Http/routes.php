@@ -24,11 +24,16 @@
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', 'HomeController@index');
-    Route::get('/setCash/{cash}', 'HomeController@setCash');
+    Route::get('/setCash/{account}/{cash}', 'HomeController@setCash');
     Route::post('/gameData', 'HomeController@getGameData');
-    Route::post('/finalcode/{games_no}', 'HomeController@getFinalCode');
+    Route::post('/finalCode/{games_no}', 'HomeController@getFinalCode');
+    Route::post('/bet', 'HomeController@playerBet');
+    Route::post('/betHistory', 'HomeController@getBetHistory');
+    Route::get('/billingRound', 'HomeController@billingRound');
+    Route::get('/billingGame', 'HomeController@billingGame');
 });
 
 Route::get('login', 'LoginController@index');
 Route::post('login', 'LoginController@login');
 Route::get('logout', 'LoginController@logout');
+Route::get('user/{account}/{password}/{name}', 'LoginController@createUser');
