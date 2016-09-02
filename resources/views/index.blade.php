@@ -14,11 +14,13 @@
                             Game&nbsp;&nbsp;&nbsp;<span id="gamesNo">000000000000</span>
                         </div>
 
+
                         <div class="panel-body">
                             <div class="row">
-                                <div id="round1" class="col-xs-4 panel panel-success">
+                            @for($i = 1; $i <= config('gameset.ROUND_PER_GAME'); $i++)
+                                <div id="round{{$i}}" class="col-xs-4 panel panel-success">
                                     <div class="panel-heading">
-                                        Round 1
+                                        Round {{$i}}
                                     </div>
 
                                     <div class="panel-body">
@@ -41,58 +43,8 @@
                                         </div>
                                     </div>
                                 </div>
+                            @endfor
 
-                                <div id="round2" class="col-xs-4 panel panel-success">
-                                    <div class="panel-heading">
-                                        Round 2
-                                    </div>
-
-                                    <div class="panel-body">
-                                        <div style="width: 100%; text-align: center">
-                                            <label class="control-label">Round Code.</label>
-                                        </div>
-                                        <div style="font-size:20px; width: 100%; text-align: center; color: orangered;">
-                                            <label id="roundCode" class="control-label">?</label>
-                                        </div>
-                                        <div class="roundTimes">
-                                            <div style="width: 100%; text-align: center">
-                                                <label id="startTime" class="control-label">1911-01-01 00:00:00</label>
-                                            </div>
-                                            <div style="width: 100%; text-align: center">
-                                                <label class="control-label">|</label>
-                                            </div>
-                                            <div style="width: 100%; text-align: center">
-                                                <label id="endTime" class="control-label">1911-01-01 00:00:00</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div id="round3" class="col-xs-4 panel panel-success">
-                                    <div class="panel-heading">
-                                        Round 3
-                                    </div>
-
-                                    <div class="panel-body">
-                                        <div style="width: 100%; text-align: center">
-                                            <label class="control-label">Round Code.</label>
-                                        </div>
-                                        <div style="font-size:20px; width: 100%; text-align: center; color: orangered;">
-                                            <label id="roundCode" class="control-label">?</label>
-                                        </div>
-                                        <div class="roundTimes">
-                                            <div style="width: 100%; text-align: center">
-                                                <label id="startTime" class="control-label">1911-01-01 00:00:00</label>
-                                            </div>
-                                            <div style="width: 100%; text-align: center">
-                                                <label class="control-label">|</label>
-                                            </div>
-                                            <div style="width: 100%; text-align: center">
-                                                <label id="endTime" class="control-label">1911-01-01 00:00:00</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
 
                             <div class="row">
@@ -238,14 +190,21 @@
 
     <div id="bet_details_ex" style="display: none">
         <div class="row">
-            <div class="col-xs-6" id="games_no">201600000001</div>
-            <div class="col-xs-4" id="round">Round 0</div>
-            <div class="col-xs-2" id="code">0</div>
+            <div style="text-align: center;" class="col-xs-6" id="games_no">201600000001</div>
+            <div style="text-align: center;" class="col-xs-6" id="round">Round 0</div>
         </div>
         <div class="row">
-            <div style="text-align: center;" class="col-xs-4" id="guess"></div>
-            <div class="col-xs-4" id="bet">$ </div>
-            <div class="col-xs-4" id="win_cash">$ </div>
+            <div style="text-align: center;" class="col-xs-6" >Your guess</div>
+            <div style="text-align: center;" class="col-xs-6" id="guess"></div>git
+        </div>
+        <div class="row">
+            <div style="text-align: center;" class="col-xs-6" >Code</div>
+            <div style="text-align: center;" class="col-xs-6" id="code"></div>
+        </div>
+        <div class="row">
+            <div style="text-align: center;" class="col-xs-5" id="bet"></div>
+            <div style="text-align: center;" class="col-xs-2" id="odds"></div>
+            <div style="text-align: center;" class="col-xs-5" id="win_cash"></div>
         </div>
         <div class="row">
             <div class="col-xs-12">&nbsp;</div>

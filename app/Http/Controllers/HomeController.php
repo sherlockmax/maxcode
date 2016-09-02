@@ -194,7 +194,7 @@ class HomeController extends Controller
             if($game){
                 $bet->final_code = $game->final_code;
             }else{
-                $bet->final_code = '?';
+                $bet->final_code = '??';
             }
 
             $bet_array[] = $bet;
@@ -254,5 +254,9 @@ class HomeController extends Controller
                 $user_model->setCashById($bet->user_id, $bet->win_cash);
             }
         }
+    }
+
+    public function getBigWinner(){
+
     }
 }

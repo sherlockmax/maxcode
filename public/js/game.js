@@ -182,10 +182,15 @@ $(document).ready(function () {
                         bet_detail_box.find('#round').text('Round ' + bet.round);
                         bet_detail_box.find('#bet').text('$ ' + bet.bet);
                         bet_detail_box.find('#win_cash').text('$ ' + bet.win_cash);
+                        bet_detail_box.find('#odds').text(bet.odds);
                         if (bet.part == 1) {
-                            bet_detail_box.find('#code').text(bet.round_code);
+                            var round_code = '??';
+                            if(bet.round_code != 0){
+                                round_code = pad(bet.round_code, 2);
+                            }
+                            bet_detail_box.find('#code').text('[' + round_code + ']');
                         } else {
-                            bet_detail_box.find('#code').text('[' + bet.final_code + ']');
+                            bet_detail_box.find('#code').text('[' + pad(bet.final_code, 2) + ']');
                         }
                         if (bet.part == 1) {
                             if (bet.guess % 2 == 0) {

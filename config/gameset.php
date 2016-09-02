@@ -3,7 +3,7 @@
 return [
     'TIME_OF_ROUND' => 60,
 
-    'ROUND_PER_GAME' => 3,
+    'ROUND_PER_GAME' => 6,
 
     'GAME_INTERVAL' => 10,
 
@@ -11,7 +11,7 @@ return [
 
     'CODE_RANGE_MIN' => 1,
 
-    'CODE_RANGE_MAX' => 40,
+    'CODE_RANGE_MAX' => 100,
 
     'STATE_RUNNING' => 0,
 
