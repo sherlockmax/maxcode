@@ -14,14 +14,15 @@ class CreateBetDetailsTable extends Migration
     {
         Schema::create('bet_details', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('user_id');
             $table->string('games_no');
             $table->integer('round');
-            $table->string('user_id');
-            $table->integer('num_type');
-            $table->integer('final_code');
+            $table->integer('part')->comment = 'part number 1/2';
+            $table->integer('guess');
             $table->integer('bet');
-            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
-            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->integer('odds');
+            $table->integer('win_cash')->default(0);
+            $table->integer('bet_at');
 
             $table->unique(['games_no', 'round', 'user_id']);
         });

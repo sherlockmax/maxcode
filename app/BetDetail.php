@@ -8,4 +8,6 @@ class BetDetail extends Model
 {
     //
     protected $table = 'bet_details';
+
+    public $timestamps = false;
 }
