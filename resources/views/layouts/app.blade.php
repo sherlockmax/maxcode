@@ -27,7 +27,7 @@
         <script>
             $(document).ready(function () {
                 BootstrapDialog.show({
-                    title: '即時訊息',
+                    title: '提示訊息',
                     message: '{{$msg}}',
                     type: BootstrapDialog.TYPE_INFO,
                     size: BootstrapDialog.SIZE_SMALL,

@@ -103,17 +103,17 @@ class HomeController extends Controller
 
         if($bet_part1 + $bet_part2 > $user->cash){
             $is_pass = false;
-            session()->put('msg',  "Your cash is not enough to play.");
+            session()->put('msg',  "您所擁有可下注金額不足。");
         }
 
         if(is_null($num_type) && is_null($number)){
             $is_pass = false;
-            session()->put('msg',  "Your need to choose one part to play at least .");
+            session()->put('msg',  "至少須選擇一種玩法進行下注。");
         }
 
         if((!is_null($num_type) && $bet_part1 <= 0) || (!is_null($number) && $bet_part2 <= 0)){
             $is_pass = false;
-            session()->put('msg',  "Your need put cash to play.");
+            session()->put('msg',  "請輸入下注金額。");
         }
 
         if($is_pass) {
@@ -139,9 +139,9 @@ class HomeController extends Controller
                         $user->cash = $user->cash - $bet_part2;
                         $user->save();
 
-                        session()->put('msg', "bet success.");
+                        session()->put('msg', "下注成功。");
                     }else{
-                        session()->put('msg', "You already bet, Do not bet agian.");
+                        session()->put('msg', "禁止於同一回合中重複下注相同的玩法。");
                     }
                 }
 
@@ -168,14 +168,14 @@ class HomeController extends Controller
                         $user->cash = $user->cash - $bet_part1;
                         $user->save();
 
-                        session()->put('msg', "bet success.");
+                        session()->put('msg', "下注成功。");
                     }else{
-                        session()->put('msg', "You already bet, Do not bet agian.");
+                        session()->put('msg', "禁止於同一回合中重複下注相同的玩法。");
                     }
                 }
 
             } else {
-                session()->put('msg', "The game is not running, please check and try again.");
+                session()->put('msg', "目前尚無進行中的遊戲，無法進行下注。");
             }
         }
 
