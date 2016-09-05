@@ -215,11 +215,9 @@ class HomeController extends Controller
         foreach($bet_details as $bet){
             $round = $round_model->getRoundByGameNoRound($bet->games_no, $bet->round);
             $round_code_type = $round->round_code % 2;
-            $win_cash = $bet->bet;
+            $win_cash = $bet->bet * -1;
             if($bet->guess % 2 == $round_code_type){
-                $win_cash = $win_cash + ($bet->bet * $bet->odds);
-            }else{
-                $win_cash = $bet->bet * -1;
+                $win_cash = $bet->bet * $bet->odds;
             }
 
             $bet->win_cash = $win_cash;
@@ -240,11 +238,9 @@ class HomeController extends Controller
         $bet_details = $bet_detail_model->getNotFinishedByPart(2);
         foreach($bet_details as $bet){
             $game = $game_model->getGameByNoState($bet->games_no, config('gameset.STATE_CLOSED'));
-            $win_cash = $bet->bet;
+            $win_cash = $bet->bet * -1;
             if($bet->guess == $game->final_code){
                 $win_cash = $win_cash + ($bet->bet * $bet->odds);
-            }else{
-                $win_cash = $bet->bet * -1;
             }
 
             $bet->win_cash = $win_cash;
