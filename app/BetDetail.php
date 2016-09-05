@@ -43,4 +43,16 @@ class BetDetail extends Model
             ->where('part', $part)
             ->first();
     }
+
+    public function getBigWinnerByGamesNo($games_no){
+        return DB::table('bet_details')
+            ->join('users', function ($join) {
+                $join->on('users.id', '=', 'bet_details.user_id');
+            })
+            ->where('bet_details.games_no', $games_no)
+            ->where('bet_details.part', 2)
+            ->where('bet_details.win_cash', '>', 0)
+            ->select(['bet_details.win_cash', 'bet_details.games_no', 'users.name', DB::raw('MAX(bet_details.win_cash) AS win_cash')])
+            ->first();
+    }
 }

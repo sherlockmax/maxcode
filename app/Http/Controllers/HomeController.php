@@ -70,15 +70,23 @@ class HomeController extends Controller
     }
 
     public function getFinalCode($games_no){
+        $data_array = ['final_code' => '?', 'big_winner' => '?' ];
         $final_code = '?';
         $game_model = new Game;
         $game_data = $game_model->getGameByNoState($games_no, config('gameset.STATE_CLOSED'));
 
         if($game_data){
-            $final_code = $game_data->final_code;
+            $data_array['final_code'] = $game_data->final_code;
+
+            $bet_detail_model = new BetDetail;
+            $big_winner = $bet_detail_model->getBigWinnerByGamesNo($games_no);
+            if($big_winner) {
+                $data_array['big_winner'] = $bet_detail_model->getBigWinnerByGamesNo($games_no);
+            }
+
         }
 
-        return $final_code;
+        return json_encode($data_array);
     }
 
     public function playerBet(Request $request){
@@ -250,9 +258,5 @@ class HomeController extends Controller
                 $user_model->setCashById($bet->user_id, $bet->win_cash);
             }
         }
-    }
-
-    public function getBigWinner(){
-
     }
 }
