@@ -11,7 +11,7 @@
                 <div class="row">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            Game&nbsp;&nbsp;&nbsp;<span id="gamesNo">000000000000</span>
+                            第&nbsp;&nbsp;&nbsp;<span id="gamesNo">000000000000</span>&nbsp;&nbsp;&nbsp;期
                         </div>
 
 
@@ -20,13 +20,10 @@
                             @for($i = 1; $i <= config('gameset.ROUND_PER_GAME'); $i++)
                                 <div id="round{{$i}}" class="col-xs-4 panel panel-success">
                                     <div class="panel-heading">
-                                        Round {{$i}}
+                                        第&nbsp;{{$i}}&nbsp;回合
                                     </div>
 
                                     <div class="panel-body">
-                                        <div style="width: 100%; text-align: center">
-                                            <label class="control-label">Round Code.</label>
-                                        </div>
                                         <div style="font-size:20px; width: 100%; text-align: center; color: orangered;">
                                             <label id="roundCode" class="control-label">?</label>
                                         </div>
@@ -50,18 +47,18 @@
                             <div class="row">
                                 <div class="col-xs-8 panel panel-warning">
                                     <div class="panel-heading">
-                                        Current state
+                                        目前狀態
                                     </div>
 
                                     <div class="panel-body">
                                         <div style="font-size: large; text-align: center">
-                                            <label id="gameState" class="control-label">THE GAME IS NOT RUNNING</label>
+                                            <label id="gameState" class="control-label">維護中，暫不提供服務。</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-xs-4 panel panel-primary">
                                     <div class="panel-heading">
-                                        Final code
+                                        終極密碼
                                     </div>
 
                                     <div class="panel-body">
@@ -78,7 +75,7 @@
                 <div class="row">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            Playing
+                            下注表單
                         </div>
 
                         <div class="panel-body" style="text-align: center;">
@@ -90,11 +87,11 @@
                                 <input type="hidden" name="odds_numbers" value="0">
                                 <div class="form-group">
                                     <div>
-                                        <label>Part 1：Try to guess Round Code is Odd or Even?</label>
+                                        <label>玩法 1：選擇回合密碼為單或為雙?</label>
                                     </div>
                                     <div style="margin-bottom: 5px;">
                                         <label class="btn btn-default">
-                                            <i class="fa fa-btn fa-dollar"></i>Bet：
+                                            <i class="fa fa-btn fa-dollar"></i>下注金額：
                                             @if (Auth::user()->cash < 1000)
                                                 <label style="color: darkred">Insufficient balance</label>
                                             @else
@@ -105,11 +102,11 @@
                                     <div id="numTypeController" class="row">
                                         <div class="col-xs-12 col-xs-offset-2">
                                             <label class="col-xs-4 btn btn-default">
-                                                <input type="radio" name="numType[]" id="numType_1" value="1"><i class="fa fa-btn fa-hand-pointer-o"></i>Odd
+                                                <input type="radio" name="numType[]" id="numType_1" value="1"><i class="fa fa-btn fa-hand-pointer-o"></i>單
                                                 &nbsp;&nbsp;<span id="odds_odd" style="font-size: 14px; color: palevioletred">?</span>
                                             </label>
                                             <label class="col-xs-4 btn btn-default">
-                                                <input type="radio" name="numType[]" id="numType_2" value="2"><i class="fa fa-btn  fa-hand-peace-o"></i>Even
+                                                <input type="radio" name="numType[]" id="numType_2" value="2"><i class="fa fa-btn  fa-hand-peace-o"></i>雙
                                                 &nbsp;&nbsp;<span id="odds_even" style="font-size: 14px; color: palevioletred">?</span>
                                             </label>
                                         </div>
@@ -117,16 +114,16 @@
                                 </div>
                                 <div class="form-group">
                                     <div>
-                                        <label>Part 2：Try to guess Final Code</label>
+                                        <label>玩法 2：選擇終極密碼</label>
                                     </div>
                                     <div>
-                                        Odds：<label id="odds_numbers" style="font-size: 14px; color: palevioletred">?</label>
+                                        賠率：<label id="odds_numbers" style="font-size: 14px; color: palevioletred">?</label>
                                     </div>
                                     <div style="margin-bottom: 5px;">
                                         <label class="btn btn-default">
-                                            <i class="fa fa-btn fa-dollar"></i>Bet：
+                                            <i class="fa fa-btn fa-dollar"></i>下注金額：
                                             @if (Auth::user()->cash < 1000)
-                                                <label style="color: darkred">Insufficient balance</label>
+                                                <label style="color: darkred">所擁有可下注金額不足</label>
                                             @else
                                                 <input type="number" name="bet_part2" min="0" step="1000" value="0">
                                             @endif
@@ -151,10 +148,10 @@
                                     @else
                                         <div class="col-xs-12 col-xs-offset-2">
                                             <button type="button" id="btn_reset" class="col-xs-4 btn btn-warning">
-                                                <i class="fa fa-btn fa-refresh"></i>Reset
+                                                <i class="fa fa-btn fa-refresh"></i>重新填寫
                                             </button>
                                             <button type="submit" id="btn_submit" class="col-xs-4 btn btn-success">
-                                                <i class="fa fa-btn fa-paper-plane"></i>Submit
+                                                <i class="fa fa-btn fa-paper-plane"></i>確認下注
                                             </button>
                                         </div>
                                     @endif
@@ -167,7 +164,7 @@
             <div class="col-xs-3">
                 <div class="panel panel-danger">
                     <div class="panel-heading">
-                        Message
+                        訊息
                     </div>
 
                     <div class="panel-body">
@@ -177,7 +174,7 @@
 
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        Your bet
+                        本期下注資訊
                     </div>
 
                     <div id="bet_history_box" class="panel-body" style="margin-top: -20px">
@@ -190,21 +187,18 @@
 
     <div id="bet_details_ex" style="display: none">
         <div class="row">
-            <div style="text-align: center;" class="col-xs-6" id="games_no">201600000001</div>
-            <div style="text-align: center;" class="col-xs-6" id="round">Round 0</div>
+            <div style="text-align: center;" class="col-xs-6">
+                第&nbsp;<span id="round"></span>&nbsp;回合
+            </div>
+            <div style="text-align: center;" class="col-xs-6" id="odds"></div>
         </div>
         <div class="row">
-            <div style="text-align: center;" class="col-xs-6" >Your guess</div>
-            <div style="text-align: center;" class="col-xs-6" id="guess"></div>git
-        </div>
-        <div class="row">
-            <div style="text-align: center;" class="col-xs-6" >Code</div>
+            <div style="text-align: center;" class="col-xs-6" id="guess"></div>
             <div style="text-align: center;" class="col-xs-6" id="code"></div>
         </div>
         <div class="row">
-            <div style="text-align: center;" class="col-xs-5" id="bet"></div>
-            <div style="text-align: center;" class="col-xs-2" id="odds"></div>
-            <div style="text-align: center;" class="col-xs-5" id="win_cash"></div>
+            <div style="text-align: center;" class="col-xs-6" id="bet"></div>
+            <div style="text-align: center;" class="col-xs-6" id="win_cash"></div>
         </div>
         <div class="row">
             <div class="col-xs-12">&nbsp;</div>

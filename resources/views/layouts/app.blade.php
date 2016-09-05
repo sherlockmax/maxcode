@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Final Code</title>
+    <title>邁克斯密碼</title>
     <link rel="icon" href="favicon.png" type="image/x-icon" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="{{ URL::asset('js/main.js') }}"></script>
@@ -25,19 +25,21 @@
         <div class="navbar-header">
             <!-- Branding Image -->
             <a class="navbar-brand" href="{{ url('/') }}">
-                Final Code
+                邁克斯密碼
             </a>
         </div>
         <ul class="nav navbar-nav navbar-left">
-            <li><a href="javascript:void(0);"><i class="fa fa-btn fa-user"></i>play rule</a></li>
+            <li><a href="javascript:void(0);"><i class="fa fa-btn fa-envelope"></i>最新消息</a></li>
+            <li><a href="javascript:void(0);"><i class="fa fa-btn fa-question-circle"></i>玩法介紹</a></li>
+            <li><a href="{{ url('/') }}"><i class="fa fa-btn fa-gamepad"></i>遊戲大廳</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             @if(Auth::check())
                 <li><a href="javascript:void(0);"><i class="fa fa-btn fa-user"></i>{{ Auth::user()->name}}.</a></li>
                 <li><a href="javascript:void(0);"><i class="fa fa-btn fa-dollar"></i><span id="userCash">{{ Auth::user()->cash}}</span></a></li>
-                <li><a href="/logout"><i class="fa fa-btn fa-sign-out"></i>Log out</a></li>
+                <li><a href="/logout"><i class="fa fa-btn fa-sign-out"></i>登出</a></li>
             @else
-                <li><a href="/login"><i class="fa fa-btn fa-sign-in"></i>Log in</a></li>
+                <li><a href="/login"><i class="fa fa-btn fa-sign-in"></i>登入</a></li>
             @endif
         </ul>
     </div>

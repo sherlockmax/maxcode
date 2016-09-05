@@ -165,7 +165,7 @@ $(document).ready(function () {
                 var bet_detail = jQuery.parseJSON(response);
                 $('#userCash').text(bet_detail.cash);
                 $.each(bet_detail, function(key, bet){
-                    if(key != 'cash') {
+                    if(key != 'cash' && bet.games_no == $('form').find('input[name=games_no]').val()) {
                         var bet_detail_box = $('#bet_details_ex').clone();
                         bet_detail_box.removeAttr('id');
                         if (bet.win_cash == 0) {
@@ -178,8 +178,7 @@ $(document).ready(function () {
                             bet_detail_box.find('div:first()').addClass('bg-danger');
                         }
 
-                        bet_detail_box.find('#games_no').text(bet.games_no);
-                        bet_detail_box.find('#round').text('Round ' + bet.round);
+                        bet_detail_box.find('#round').text(bet.round);
                         bet_detail_box.find('#bet').text('$ ' + bet.bet);
                         bet_detail_box.find('#win_cash').text('$ ' + bet.win_cash);
                         bet_detail_box.find('#odds').text(bet.odds);
@@ -224,6 +223,7 @@ $(document).ready(function () {
                 if(gameObj.timer > -1) {
                     element_game_no.text(gameObj.no);
                     $('input[name=games_no]').val(gameObj.no);
+                    $('span#games_no').text(gameObj.no);
 
                     $.each(gameObj.round, function (key, roundObj) {
                         var roundNo = roundObj.round;
@@ -277,7 +277,7 @@ $(document).ready(function () {
 
                     setTimer(gameObj.timer, gameObj.msg, getGameData);
                 }else{
-                    element_state.text('The game is not running!');
+                    element_state.text('維護中，暫不提供服務。');
                 }
             }
         });
