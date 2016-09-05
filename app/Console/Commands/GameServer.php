@@ -151,7 +151,7 @@ class GameServer
             }
 
             if($this->current_max - $this->current_min <= 1){
-                $this->memo = 'current max and min code\'s range are left 1 numbers';
+                $this->memo = 'current max and min code\'s range are left 1 number';
                 break;
             }
 

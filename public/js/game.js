@@ -161,13 +161,14 @@ $(document).ready(function () {
             },
             success: function (response) {
                 //console.log(response);
-                $('#bet_history_box').html("");
+                $('#bet_history_part_1 #bet_history_box').html("");
+                $('#bet_history_part_2 #bet_history_box').html("");
                 var bet_detail = jQuery.parseJSON(response);
-                var bet_count = 0;
+                var bet_count_part1 = 0;
+                var bet_count_part2 = 0;
                 $('#userCash').text(bet_detail.cash);
                 $.each(bet_detail, function(key, bet){
                     if(key != 'cash' && bet.games_no == $('form').find('input[name=games_no]').val()) {
-                        bet_count++;
                         var bet_detail_box = $('#bet_details_ex').clone();
                         bet_detail_box.removeAttr('id');
                         if (bet.win_cash == 0) {
@@ -184,32 +185,37 @@ $(document).ready(function () {
                         bet_detail_box.find('#bet').text('$ ' + bet.bet);
                         bet_detail_box.find('#win_cash').text('$ ' + bet.win_cash);
                         bet_detail_box.find('#odds').text(bet.odds);
-                        if (bet.part == 1) {
-                            var round_code = '??';
-                            if(bet.round_code != 0){
-                                round_code = pad(bet.round_code, 2);
-                            }
-                            bet_detail_box.find('#code').text('[' + round_code + ']');
-                        } else {
-                            bet_detail_box.find('#code').text('[' + pad(bet.final_code, 2) + ']');
-                        }
-                        if (bet.part == 1) {
+                        if(bet.part == 1){
+                            bet_count_part1++;
                             if (bet.guess % 2 == 0) {
                                 bet_detail_box.find('#guess').text('雙');
                             } else {
                                 bet_detail_box.find('#guess').text('單');
                             }
-                        } else {
-                            bet_detail_box.find('#guess').text(bet.guess);
+                            var round_code = '??';
+                            if(bet.round_code != 0){
+                                round_code = pad(bet.round_code, 2);
+                            }
+                            bet_detail_box.find('#code').text('[' + round_code + ']');
+
+                            $('#bet_history_part_1 #bet_history_box').append(bet_detail_box);
                         }
 
-                        $('#bet_history_box').append(bet_detail_box);
+                        if (bet.part == 2) {
+                            bet_count_part2++;
+                            bet_detail_box.find('#guess').text(pad(bet.guess, 2));
+                            bet_detail_box.find('#code').text(pad('[' + bet.final_code + ']', 2));
+                            $('#bet_history_part_2 #bet_history_box').append(bet_detail_box);
+                        }
+
                         bet_detail_box.show();
                     }
                 });
-                console.log(bet_count);
-                if(bet_count <= 0){
-                    $('#bet_history_box').html("您尚未對本期遊戲進行下注");
+                if(bet_count_part1 <= 0){
+                    $('#bet_history_part_1 #bet_history_box').html("您尚未對本期遊戲進行下注");
+                }
+                if(bet_count_part2 <= 0){
+                    $('#bet_history_part_2 #bet_history_box').html("您尚未對本期遊戲進行下注");
                 }
             }
         });

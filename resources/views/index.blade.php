@@ -162,9 +162,19 @@
                 </div>
             </div>
             <div class="col-xs-3">
-                <div class="panel panel-primary">
+                <div id="bet_history_part_1" class="panel panel-primary">
                     <div class="panel-heading">
-                        本期下注資訊
+                        本期下注資訊&nbsp;-&nbsp;玩法&nbsp;1
+                    </div>
+
+                    <div id="bet_history_box" class="panel-body">
+                        您尚未對本期遊戲進行下注
+                    </div>
+                </div>
+
+                <div id="bet_history_part_2" class="panel panel-primary">
+                    <div class="panel-heading">
+                        本期下注資訊&nbsp;-&nbsp;玩法&nbsp;2
                     </div>
 
                     <div id="bet_history_box" class="panel-body">

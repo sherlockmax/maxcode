@@ -52,9 +52,9 @@
             </a>
         </div>
         <ul class="nav navbar-nav navbar-left">
-            <li><a href="javascript:void(0);"><i class="fa fa-btn fa-envelope"></i>最新消息</a></li>
-            <li><a href="javascript:void(0);"><i class="fa fa-btn fa-question-circle"></i>玩法介紹</a></li>
             <li><a href="{{ url('/') }}"><i class="fa fa-btn fa-gamepad"></i>遊戲大廳</a></li>
+            <li><a href="javascript:void(0);"><i class="fa fa-btn fa-history"></i>注單歷史</a></li>
+            <li><a href="javascript:void(0);"><i class="fa fa-btn fa-question-circle"></i>玩法介紹</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             @if(Auth::check())
