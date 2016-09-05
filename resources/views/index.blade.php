@@ -162,23 +162,13 @@
                 </div>
             </div>
             <div class="col-xs-3">
-                <div class="panel panel-danger">
-                    <div class="panel-heading">
-                        訊息
-                    </div>
-
-                    <div class="panel-body">
-                        {{$msg}}
-                    </div>
-                </div>
-
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         本期下注資訊
                     </div>
 
-                    <div id="bet_history_box" class="panel-body" style="margin-top: -20px">
-
+                    <div id="bet_history_box" class="panel-body">
+                        您尚未對本期遊戲進行下注
                     </div>
                 </div>
             </div>
@@ -193,11 +183,11 @@
             <div style="text-align: center;" class="col-xs-6" id="odds"></div>
         </div>
         <div class="row">
-            <div style="text-align: center;" class="col-xs-6" id="guess"></div>
+            <div style="text-align: center; color:blue;" class="col-xs-6" id="guess"></div>
             <div style="text-align: center;" class="col-xs-6" id="code"></div>
         </div>
         <div class="row">
-            <div style="text-align: center;" class="col-xs-6" id="bet"></div>
+            <div style="text-align: center; color:blue;" class="col-xs-6" id="bet"></div>
             <div style="text-align: center;" class="col-xs-6" id="win_cash"></div>
         </div>
         <div class="row">

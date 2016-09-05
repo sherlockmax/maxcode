@@ -108,7 +108,7 @@ $(document).ready(function () {
         if(seconds >= 0){
             seconds--;
             var new_msg = msg.replace("{sec}", seconds + 1);
-            element_state.text(new_msg);
+            element_state.html(new_msg);
             setTimeout(function() {
                 setTimer(seconds, msg, next_step_function);
             }, 1000);
@@ -163,9 +163,11 @@ $(document).ready(function () {
                 //console.log(response);
                 $('#bet_history_box').html("");
                 var bet_detail = jQuery.parseJSON(response);
+                var bet_count = 0;
                 $('#userCash').text(bet_detail.cash);
                 $.each(bet_detail, function(key, bet){
                     if(key != 'cash' && bet.games_no == $('form').find('input[name=games_no]').val()) {
+                        bet_count++;
                         var bet_detail_box = $('#bet_details_ex').clone();
                         bet_detail_box.removeAttr('id');
                         if (bet.win_cash == 0) {
@@ -193,9 +195,9 @@ $(document).ready(function () {
                         }
                         if (bet.part == 1) {
                             if (bet.guess % 2 == 0) {
-                                bet_detail_box.find('#guess').text('Even');
+                                bet_detail_box.find('#guess').text('雙');
                             } else {
-                                bet_detail_box.find('#guess').text('Odd');
+                                bet_detail_box.find('#guess').text('單');
                             }
                         } else {
                             bet_detail_box.find('#guess').text(bet.guess);
@@ -205,6 +207,10 @@ $(document).ready(function () {
                         bet_detail_box.show();
                     }
                 });
+                console.log(bet_count);
+                if(bet_count <= 0){
+                    $('#bet_history_box').html("您尚未對本期遊戲進行下注");
+                }
             }
         });
     }
@@ -247,7 +253,7 @@ $(document).ready(function () {
                         $('#round' + roundNo + ' #startTime').text(start_at);
                         $('#round' + roundNo + ' #endTime').text(end_at);
 
-                        if(gameObj.msg.indexOf('will end in') >= 0){
+                        if(gameObj.msg.indexOf('結束下注') >= 0){
                             unblockAllInput();
                             if(roundObj.round_code == 0){
                                 openNumbersByRange(roundObj.current_min, roundObj.current_max);
@@ -255,14 +261,14 @@ $(document).ready(function () {
                         }
                     });
 
-                    if(gameObj.msg.indexOf('New game will start in') >= 0){
+                    if(gameObj.msg.indexOf('新的一期') >= 0){
                         billing('game');
                         showFinalCode(gameObj.no);
 
                     }
 
-                    if(gameObj.msg.indexOf('New game will start in') >= 0 ||
-                        gameObj.msg.indexOf('will start in') >= 0){
+                    if(gameObj.msg.indexOf('新的一期') >= 0 ||
+                        gameObj.msg.indexOf('開放下注') >= 0){
                         blockAllInput();
                         clearChoose();
                         billing('round');

@@ -12,9 +12,9 @@ use Illuminate\Support\Facades\Redirect;
 
 class HomeController extends Controller
 {
-    const MESSAGE_ROUND_RUNNING = 'Round {index} will end in {sec} seconds.';
-    const MESSAGE_ROUND_END = 'Round {index} will start in {sec} seconds.';
-    const MESSAGE_GAME_END = 'New game will start in {sec} seconds.';
+    const MESSAGE_ROUND_RUNNING = '第&nbsp;{index}&nbsp;回合將在&nbsp;{sec}&nbsp;秒後結束下注';
+    const MESSAGE_ROUND_END = '第&nbsp;{index}&nbsp;回合將在&nbsp;{sec}&nbsp;秒後開放下注';
+    const MESSAGE_GAME_END = '新的一期將在&nbsp;{sec}&nbsp;秒後開始';
 
     public function index()
     {
