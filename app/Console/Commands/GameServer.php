@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Game;
 use App\Round;
 use \DB;
-use \Artisan;
+use \App;
 
 class GameServer
 {
@@ -137,6 +137,8 @@ class GameServer
             $round_code = $this->roundClosed();
             $this->echoGameData("Round Closed");
 
+            App::make('App\Http\Controllers\HomeController')->billingRound();
+
             if($round_code == $final_code){
                 $this->memo = 'round code eq final code';
                 break;
@@ -164,6 +166,8 @@ class GameServer
 
         $this->gameClosed();
         $this->echoGameData("Game Closed");
+
+        App::make('App\Http\Controllers\HomeController')->billingGame();
 
         sleep(config('gameset.GAME_INTERVAL'));
         $this->startServer();

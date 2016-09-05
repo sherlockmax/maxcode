@@ -132,26 +132,6 @@ $(document).ready(function () {
         });
     }
 
-    function billing(type){
-        if(type == 'round'){
-            $.ajax({
-                url: '/billingRound',
-                type: 'get',
-                success: function (response) {
-                    showBetHistory();
-                }
-            });
-        }else{
-            $.ajax({
-                url: '/billingGame',
-                type: 'get',
-                success: function (response) {
-                    showBetHistory();
-                }
-            });
-        }
-    }
-
     function showBetHistory(){
         $.ajax({
             url: '/betHistory',
@@ -229,6 +209,7 @@ $(document).ready(function () {
                 console.log(xhr);
             },
             success: function (response) {
+                showBetHistory();
                 var gameObj = jQuery.parseJSON(response);
                 //console.log(response);
 
@@ -268,7 +249,6 @@ $(document).ready(function () {
                     });
 
                     if(gameObj.msg.indexOf('新的一期') >= 0){
-                        billing('game');
                         showFinalCode(gameObj.no);
 
                     }
@@ -277,7 +257,6 @@ $(document).ready(function () {
                         gameObj.msg.indexOf('開放下注') >= 0){
                         blockAllInput();
                         clearChoose();
-                        billing('round');
                     }
 
                     $('#odds_numbers').text(gameObj.odds.numbers);

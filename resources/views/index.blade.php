@@ -114,10 +114,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div>
-                                        <label>玩法 2：選擇終極密碼</label>
-                                    </div>
-                                    <div>
-                                        賠率：<label id="odds_numbers" style="font-size: 14px; color: palevioletred">?</label>
+                                        <label>玩法 2：選擇終極密碼&nbsp;&nbsp;&nbsp;(賠率：<label id="odds_numbers" style="font-size: 14px; color: palevioletred">?</label>)</label>
                                     </div>
                                     <div style="margin-bottom: 5px;">
                                         <label class="btn btn-default">
