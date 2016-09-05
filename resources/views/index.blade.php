@@ -201,4 +201,16 @@
             <div class="col-xs-12">&nbsp;</div>
         </div>
     </div>
+
+    <div id="big_winner_card" style="display: none">
+        <div id="content">
+            <div>恭喜玩家：<span id="big_winner_name">XXX</span></div>
+            <div>於第 <span id="big_winner_no">200000000002</span> 期</div>
+            <div>成為最大贏家</div>
+            <div>共獲得獎金 <span id="big_winner_win_cash">0</span> 元</div>
+        </div>
+        <div id="buttonBox">
+            <button id="btn_close_big_winner_card" class="btn btn-default">關閉視窗</button>
+        </div>
+    </div>
 @endsection

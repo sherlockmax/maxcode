@@ -23,6 +23,10 @@ $(document).ready(function () {
         clearChoose();
     });
 
+    $('#btn_close_big_winner_card').click(function() {
+       $('#big_winner_card').hide();
+    });
+
     element_all_round.click(function(){
         $('.roundTimes').slideToggle("slow");
     });
@@ -48,6 +52,8 @@ $(document).ready(function () {
         element_all_radio.attr('disabled', 'disabled');
         element_all_button.attr('disabled', 'disabled');
         element_all_label.addClass('disabled');
+
+        $('#btn_close_big_winner_card').attr('disabled', false);
     }
 
     function unblockAllInput(){
@@ -126,8 +132,16 @@ $(document).ready(function () {
                 setTimeout(function(){showFinalCode(games_no);}, 1000);
             },
             success: function (response) {
-                //console.log(response);
-                element_final_code.text(response);
+                var datas = jQuery.parseJSON(response);
+                element_final_code.text(datas.final_code);
+
+                if(datas.big_winner != '?') {
+                    $('#big_winner_name').text(datas.big_winner.name);
+                    $('#big_winner_no').text(datas.big_winner.games_no);
+                    $('#big_winner_win_cash').text(datas.big_winner.win_cash);
+
+                    $('#big_winner_card').show('pulsate', 600);
+                }
             }
         });
     }

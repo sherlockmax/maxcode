@@ -41,3 +41,28 @@ input[type=number]{
     padding-top: 5px;
     padding-bottom: 5px;
 }
+
+#big_winner_card{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -225px;
+    margin-top: -160px;
+    z-index: 99;
+    width: 450px;
+    height: 320px;
+    vertical-align: middle;
+    background-image: url("/images/congratulations.png");
+    padding: 120px 110px;
+}
+
+#big_winner_card #buttonBox{
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    text-align: right;
+}
+
+#big_winner_card #content{
+    text-align: left;
+}
