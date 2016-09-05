@@ -80,7 +80,7 @@ class HomeController extends Controller
 
             $bet_detail_model = new BetDetail;
             $big_winner = $bet_detail_model->getBigWinnerByGamesNo($games_no);
-            if($big_winner) {
+            if(!is_null($big_winner->name)) {
                 $data_array['big_winner'] = $bet_detail_model->getBigWinnerByGamesNo($games_no);
             }
 
@@ -96,7 +96,7 @@ class HomeController extends Controller
         $bet_part1 = $request->input('bet_part1');
         $num_type = $request->input('numType')[0];
         $bet_part2 = $request->input('bet_part2');
-        $number = $request->input('numbers')[0];
+        $numbers = $request->input('numbers');
         $odds_odd = $request->input('odds_odd');
         $odds_even = $request->input('odds_even');
         $odds_numbers = $request->input('odds_numbers');
@@ -114,12 +114,12 @@ class HomeController extends Controller
             session()->put('msg',  "您所擁有可下注金額不足。");
         }
 
-        if(is_null($num_type) && is_null($number)){
+        if(is_null($num_type) && is_null($numbers)){
             $is_pass = false;
             session()->put('msg',  "至少須選擇一種玩法進行下注。");
         }
 
-        if((!is_null($num_type) && $bet_part1 <= 0) || (!is_null($number) && $bet_part2 <= 0)){
+        if((!is_null($num_type) && $bet_part1 <= 0) || (!is_null($numbers) && $bet_part2 <= 0)){
             $is_pass = false;
             session()->put('msg',  "請輸入下注金額。");
         }
@@ -127,12 +127,9 @@ class HomeController extends Controller
         if($is_pass) {
             if ($game && $round) {
 
-                if((!is_null($number) && $bet_part2 > 0)){
-                    $bet_detail_model = new BetDetail;
-
-                    $detail = $bet_detail_model->getByUniqueField($games_no, $user->id, $round_no, 2);
-
-                    if(is_null($detail)) {
+                if((!is_null($numbers) && $bet_part2 > 0)){
+                    foreach($numbers as $number) {
+                        $bet_detail_model = new BetDetail;
                         $bet_detail_model->user_id = $user->id;
                         $bet_detail_model->games_no = $games_no;
                         $bet_detail_model->round = $round_no;
@@ -146,40 +143,31 @@ class HomeController extends Controller
 
                         $user->cash = $user->cash - $bet_part2;
                         $user->save();
-
-                        session()->put('msg', "下注成功。");
-                    }else{
-                        session()->put('msg', "禁止於同一回合中重複下注相同的玩法。");
                     }
+
+                    session()->put('msg', "下注成功。");
                 }
 
                 if((!is_null($num_type) && $bet_part1 > 0)){
                     $bet_detail_model = new BetDetail;
-
-                    $detail = $bet_detail_model->getByUniqueField($games_no, $user->id, $round_no, 1);
-
-                    if(is_null($detail)) {
-                        $bet_detail_model->user_id = $user->id;
-                        $bet_detail_model->games_no = $games_no;
-                        $bet_detail_model->round = $round_no;
-                        $bet_detail_model->bet_at = time();
-                        $bet_detail_model->win_cash = 0;
-                        $bet_detail_model->part = 1;
-                        $bet_detail_model->guess = $num_type;
-                        $bet_detail_model->bet = $bet_part1;
-                        $bet_detail_model->odds = $odds_odd;
-                        if($num_type%2 == 0){
-                            $bet_detail_model->odds = $odds_even;
-                        }
-                        $bet_detail_model->save();
-
-                        $user->cash = $user->cash - $bet_part1;
-                        $user->save();
-
-                        session()->put('msg', "下注成功。");
-                    }else{
-                        session()->put('msg', "禁止於同一回合中重複下注相同的玩法。");
+                    $bet_detail_model->user_id = $user->id;
+                    $bet_detail_model->games_no = $games_no;
+                    $bet_detail_model->round = $round_no;
+                    $bet_detail_model->bet_at = time();
+                    $bet_detail_model->win_cash = 0;
+                    $bet_detail_model->part = 1;
+                    $bet_detail_model->guess = $num_type;
+                    $bet_detail_model->bet = $bet_part1;
+                    $bet_detail_model->odds = $odds_odd;
+                    if($num_type%2 == 0){
+                        $bet_detail_model->odds = $odds_even;
                     }
+                    $bet_detail_model->save();
+
+                    $user->cash = $user->cash - $bet_part1;
+                    $user->save();
+
+                    session()->put('msg', "下注成功。");
                 }
 
             } else {

@@ -129,7 +129,7 @@
                                     <div id="numbersController">
                                         @for ($i = config('gameset.CODE_RANGE_MIN'); $i <= config('gameset.CODE_RANGE_MAX'); $i++)
                                             <label style="width: 55px;margin-top: 3px" class="btn btn-default">
-                                                <input type="radio" name="numbers[]" id="num_{{$i}}" value="{{$i}}">
+                                                <input type="checkbox" name="numbers[]" id="num_{{$i}}" value="{{$i}}">
                                                 @if($i < 10)
                                                     {{"0$i"}}
                                                 @else

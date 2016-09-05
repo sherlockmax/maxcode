@@ -91,6 +91,9 @@ $(document).ready(function () {
         //reset all radio (unchecked)
         $('input[type=radio]').attr('checked', false);
 
+        //reset all checkbox (unchecked)
+        $('input[type=checkbox]').attr('checked', false);
+
         //reset all label (removeClass "active")
         $('div[id*=Controller]').find("label").removeClass("active");
 

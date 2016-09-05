@@ -9,6 +9,9 @@ body {
 input[type=radio]{
     display: none;
 }
+input[type=checkbox]{
+    display: none;
+}
 .active{
     background-color: slategray !important;
     color: #FFFF00 !important;

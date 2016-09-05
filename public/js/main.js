@@ -4,12 +4,12 @@
 
 $(document).ready(function(){
 
-    function auroReplace(str){
+    function autoReplace(str){
         return str.replace("]", "").replace("[", "");
     }
 
     $('input[type=radio]').click(function(){
-        var element_name = auroReplace($(this).attr("name"));
+        var element_name = autoReplace($(this).attr("name"));
         var radioId = "num_" + $(this).val();
         if(element_name != 'numbers'){
             radioId = "numType_" + $(this).val();
@@ -22,6 +22,18 @@ $(document).ready(function(){
 
         $('#' + radioId).attr('checked', true);
         $('#' + radioId).parent("label").addClass("active");
+    });
+
+    $('input[type=checkbox]').click(function(){
+        var element_name = autoReplace($(this).attr("name"));
+        var checkboxId = "num_" + $(this).val();
+        if($('#'+checkboxId)[0].checked){
+            $('#' + checkboxId).attr('checked', true);
+            $('#' + checkboxId).parent("label").addClass("active");
+        }else{
+            $('#' + checkboxId).attr('checked', false);
+            $('#' + checkboxId).parent("label").removeClass("active");
+        }
     });
 
     $('input[type=number]').keydown( function(e) {
