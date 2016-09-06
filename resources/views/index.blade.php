@@ -104,13 +104,13 @@
                                     <div id="numTypeController" class="row">
                                         <div class="col-xs-12 col-xs-offset-2">
                                             <label class="col-xs-4 btn btn-default">
-                                                <input type="radio" name="numType[]" id="numType_1" value="1"><i
+                                                <input type="checkbox" name="numType[]" id="numType_1" value="1"><i
                                                         class="fa fa-btn fa-hand-pointer-o"></i>單
                                                 &nbsp;&nbsp;<span id="odds_odd"
                                                                   style="font-size: 14px; color: palevioletred">?</span>
                                             </label>
                                             <label class="col-xs-4 btn btn-default">
-                                                <input type="radio" name="numType[]" id="numType_2" value="2"><i
+                                                <input type="checkbox" name="numType[]" id="numType_2" value="2"><i
                                                         class="fa fa-btn  fa-hand-peace-o"></i>雙
                                                 &nbsp;&nbsp;<span id="odds_even"
                                                                   style="font-size: 14px; color: palevioletred">?</span>

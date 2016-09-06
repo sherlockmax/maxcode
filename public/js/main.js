@@ -27,6 +27,11 @@ $(document).ready(function () {
     $('input[type=checkbox]').click(function () {
         var element_name = autoReplace($(this).attr("name"));
         var checkboxId = "num_" + $(this).val();
+
+        if (element_name != 'numbers') {
+            checkboxId = "numType_" + $(this).val();
+        }
+
         if ($('#' + checkboxId)[0].checked) {
             $('#' + checkboxId).attr('checked', true);
             $('#' + checkboxId).parent("label").addClass("active");
