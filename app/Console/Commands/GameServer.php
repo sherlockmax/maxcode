@@ -159,7 +159,7 @@ class GameServer
 
             $round_count = Round::where('games_no', $this->game_no)->count();
 
-            if ($round_count < configt('gameset.ROUND_PER_GAME')) {
+            if ($round_count < config('gameset.ROUND_PER_GAME')) {
                 sleep(config('gameset.ROUND_INTERVAL'));
             }
         }
