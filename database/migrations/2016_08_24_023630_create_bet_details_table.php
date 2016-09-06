@@ -24,7 +24,8 @@ class CreateBetDetailsTable extends Migration
             $table->integer('win_cash')->default(0);
             $table->integer('bet_at');
 
-            $table->index(['user_id', 'games_no', 'round']);
+            $table->index(['games_no', 'round']);
+            $table->index(['user_id']);
         });
     }
 
