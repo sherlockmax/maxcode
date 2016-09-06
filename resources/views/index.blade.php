@@ -172,7 +172,7 @@
                         本期下注資訊&nbsp;-&nbsp;玩法&nbsp;1
                     </div>
 
-                    <div id="bet_history_box" class="panel-body" style="max-height: 355gipx; overflow: auto">
+                    <div id="bet_history_box" class="panel-body" style="max-height: 355px; overflow: auto">
                         您尚未對本期遊戲進行下注
                     </div>
                 </div>
