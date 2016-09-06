@@ -20,10 +20,10 @@ class GameServer
 
     private function getRandCode($min = 0, $max = 0)
     {
-        if($min == 0){
+        if ($min == 0) {
             $min = config('gameset.CODE_RANGE_MIN');
         }
-        if($max == 0){
+        if ($max == 0) {
             $max = config('gameset.CODE_RANGE_MAX');
         }
         return mt_rand($min, $max);
@@ -55,7 +55,7 @@ class GameServer
     private function gameClosed()
     {
         $game = Game::where('no', $this->game_no);
-        if(is_null($this->memo)){
+        if (is_null($this->memo)) {
             $this->memo = 'no winner';
         }
         $game->update(['state' => config('gameset.STATE_CLOSED'), 'memo' => $this->memo]);
@@ -139,27 +139,27 @@ class GameServer
 
             App::make('App\Http\Controllers\HomeController')->billingRound();
 
-            if($round_code == $final_code){
+            if ($round_code == $final_code) {
                 $this->memo = 'round code eq final code';
                 break;
             }
 
-            if($round_code < $final_code){
+            if ($round_code < $final_code) {
                 $this->current_min = $round_code + 1;
             }
 
-            if($round_code > $final_code){
+            if ($round_code > $final_code) {
                 $this->current_max = $round_code - 1;
             }
 
-            if($this->current_max - $this->current_min <= 1){
+            if ($this->current_max - $this->current_min <= 1) {
                 $this->memo = 'current max and min code\'s range are left 1 number';
                 break;
             }
 
             $round_count = Round::where('games_no', $this->game_no)->count();
 
-            if ($round_count < config('gameset.ROUND_PER_GAME')) {
+            if ($round_count < configt('gameset.ROUND_PER_GAME')) {
                 sleep(config('gameset.ROUND_INTERVAL'));
             }
         }
@@ -188,7 +188,7 @@ class GameServer
             $game = Game::where('no', $this->game_no)->first();
             $rounds = Round::where('games_no', $this->game_no)->get();
 
-            if($game) {
+            if ($game) {
                 print("  game $game->no -------------\n");
                 print("  final code: $game->final_code\n");
                 print("  state:      $game->state\n");
@@ -209,8 +209,8 @@ class GameServer
                 print("  }\n");
             }
             flush();
-        }else{
-            print("$title " . Date("Y-m-d H:i:s") . " -------------\n");
+        } else {
+            print(Date("Y-m-d H:i:s") . "  $title -------------\n");
         }
     }
 }

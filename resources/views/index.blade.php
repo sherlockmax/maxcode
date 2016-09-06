@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('gameScript')
-<script src="{{ URL::asset('js/game.js') }}"></script>
+    <script src="{{ URL::asset('js/game.js') }}"></script>
 @endsection
 
 @section('content')
@@ -17,30 +17,32 @@
 
                         <div class="panel-body">
                             <div class="row">
-                            @for($i = 1; $i <= config('gameset.ROUND_PER_GAME'); $i++)
-                                <div id="round{{$i}}" class="col-xs-4 panel panel-success">
-                                    <div class="panel-heading">
-                                        第&nbsp;{{$i}}&nbsp;回合
-                                    </div>
+                                @for($i = 1; $i <= config('gameset.ROUND_PER_GAME'); $i++)
+                                    <div id="round{{$i}}" class="col-xs-4 panel panel-success">
+                                        <div class="panel-heading">
+                                            第&nbsp;{{$i}}&nbsp;回合
+                                        </div>
 
-                                    <div class="panel-body">
-                                        <div style="font-size:20px; width: 100%; text-align: center; color: orangered;">
-                                            <label id="roundCode" class="control-label">?</label>
-                                        </div>
-                                        <div class="roundTimes">
-                                            <div style="width: 100%; text-align: center">
-                                                <label id="startTime" class="control-label">1911-01-01 00:00:00</label>
+                                        <div class="panel-body">
+                                            <div style="font-size:20px; width: 100%; text-align: center; color: orangered;">
+                                                <label id="roundCode" class="control-label">?</label>
                                             </div>
-                                            <div style="width: 100%; text-align: center">
-                                                <label class="control-label">|</label>
-                                            </div>
-                                            <div style="width: 100%; text-align: center">
-                                                <label id="endTime" class="control-label">1911-01-01 00:00:00</label>
+                                            <div class="roundTimes">
+                                                <div style="width: 100%; text-align: center">
+                                                    <label id="startTime" class="control-label">1911-01-01
+                                                        00:00:00</label>
+                                                </div>
+                                                <div style="width: 100%; text-align: center">
+                                                    <label class="control-label">|</label>
+                                                </div>
+                                                <div style="width: 100%; text-align: center">
+                                                    <label id="endTime" class="control-label">1911-01-01
+                                                        00:00:00</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endfor
+                                @endfor
 
                             </div>
 
@@ -102,19 +104,24 @@
                                     <div id="numTypeController" class="row">
                                         <div class="col-xs-12 col-xs-offset-2">
                                             <label class="col-xs-4 btn btn-default">
-                                                <input type="radio" name="numType[]" id="numType_1" value="1"><i class="fa fa-btn fa-hand-pointer-o"></i>單
-                                                &nbsp;&nbsp;<span id="odds_odd" style="font-size: 14px; color: palevioletred">?</span>
+                                                <input type="radio" name="numType[]" id="numType_1" value="1"><i
+                                                        class="fa fa-btn fa-hand-pointer-o"></i>單
+                                                &nbsp;&nbsp;<span id="odds_odd"
+                                                                  style="font-size: 14px; color: palevioletred">?</span>
                                             </label>
                                             <label class="col-xs-4 btn btn-default">
-                                                <input type="radio" name="numType[]" id="numType_2" value="2"><i class="fa fa-btn  fa-hand-peace-o"></i>雙
-                                                &nbsp;&nbsp;<span id="odds_even" style="font-size: 14px; color: palevioletred">?</span>
+                                                <input type="radio" name="numType[]" id="numType_2" value="2"><i
+                                                        class="fa fa-btn  fa-hand-peace-o"></i>雙
+                                                &nbsp;&nbsp;<span id="odds_even"
+                                                                  style="font-size: 14px; color: palevioletred">?</span>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div>
-                                        <label>玩法 2：選擇終極密碼&nbsp;&nbsp;&nbsp;(賠率：<label id="odds_numbers" style="font-size: 14px; color: palevioletred">?</label>)</label>
+                                        <label>玩法 2：選擇終極密碼&nbsp;&nbsp;&nbsp;(賠率：<label id="odds_numbers"
+                                                                                       style="font-size: 14px; color: palevioletred">?</label>)</label>
                                     </div>
                                     <div style="margin-bottom: 5px;">
                                         <label class="btn btn-default">
@@ -141,7 +148,8 @@
                                 </div>
                                 <div class="row form-group">
                                     @if (Auth::user()->cash < 1000)
-                                        <label style="color: orangered; font-size: large">Your cash must greater than $ 1000</label>
+                                        <label style="color: orangered; font-size: large">Your cash must greater than $
+                                            1000</label>
                                     @else
                                         <div class="col-xs-12 col-xs-offset-2">
                                             <button type="button" id="btn_reset" class="col-xs-4 btn btn-warning">

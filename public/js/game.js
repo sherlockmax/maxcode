@@ -19,27 +19,27 @@ $(document).ready(function () {
     getGameData();
     showBetHistory();
 
-    $('#btn_reset').click(function(){
+    $('#btn_reset').click(function () {
         clearChoose();
     });
 
-    $('#btn_close_big_winner_card').click(function() {
-       $('#big_winner_card').hide();
+    $('#btn_close_big_winner_card').click(function () {
+        $('#big_winner_card').hide();
     });
 
-    element_all_round.click(function(){
+    element_all_round.click(function () {
         $('.roundTimes').slideToggle("slow");
     });
 
-    function pad (str, max) {
+    function pad(str, max) {
         str = str.toString();
         return str.length < max ? pad("0" + str, max) : str;
     }
 
-    function transferTimestamp(timestamp){
-        var date = new Date(timestamp*1000);
+    function transferTimestamp(timestamp) {
+        var date = new Date(timestamp * 1000);
         var y = pad(date.getFullYear(), 4);
-        var m = pad(date.getMonth()+1, 2);
+        var m = pad(date.getMonth() + 1, 2);
         var d = pad(date.getDate(), 2);
         var H = pad(date.getHours(), 2);
         var i = pad(date.getMinutes(), 2);
@@ -48,7 +48,7 @@ $(document).ready(function () {
         return y + "-" + m + "-" + d + " " + H + ":" + i + ":" + s;
     }
 
-    function blockAllInput(){
+    function blockAllInput() {
         element_all_radio.attr('disabled', 'disabled');
         element_all_button.attr('disabled', 'disabled');
         element_all_label.addClass('disabled');
@@ -56,7 +56,7 @@ $(document).ready(function () {
         $('#btn_close_big_winner_card').attr('disabled', false);
     }
 
-    function unblockAllInput(){
+    function unblockAllInput() {
         element_all_radio.attr('disabled', false);
         element_all_button.attr('disabled', false);
         element_all_label.removeClass('disabled');
@@ -87,7 +87,7 @@ $(document).ready(function () {
         element_final_code.text('?');
     }
 
-    function clearChoose(){
+    function clearChoose() {
         //reset all radio (unchecked)
         $('input[type=radio]').attr('checked', false);
 
@@ -101,44 +101,46 @@ $(document).ready(function () {
         $('input[name*=bet_]').val(0);
     }
 
-    function openNumbersByRange(min, max){
+    function openNumbersByRange(min, max) {
         $('#numbersController').find('input[id^=num_]').attr('disabled', false);
         $('#numbersController').find('label').removeClass('disabled');
         var button_max = $('#numbersController').find('input[id^=num_]').length;
-        for(var i = 1; i <= button_max; i++){
-            if( i < min || i > max ){
-                $('#numbersController #num_'+i).attr('disabled', 'disabled');
-                $('#numbersController #num_'+i).closest('label').addClass('disabled');
+        for (var i = 1; i <= button_max; i++) {
+            if (i < min || i > max) {
+                $('#numbersController #num_' + i).attr('disabled', 'disabled');
+                $('#numbersController #num_' + i).closest('label').addClass('disabled');
             }
         }
     }
 
-    function setTimer(seconds, msg, next_step_function){
-        if(seconds >= 0){
+    function setTimer(seconds, msg, next_step_function) {
+        if (seconds >= 0) {
             seconds--;
             var new_msg = msg.replace("{sec}", seconds + 1);
             element_state.html(new_msg);
-            setTimeout(function() {
+            setTimeout(function () {
                 setTimer(seconds, msg, next_step_function);
             }, 1000);
-        }else{
+        } else {
             next_step_function();
         }
     }
 
-    function showFinalCode(games_no){
+    function showFinalCode(games_no) {
         $.ajax({
-            url: '/finalCode/'+games_no,
+            url: '/finalCode/' + games_no,
             type: 'post',
             error: function (xhr) {
                 console.log(xhr);
-                setTimeout(function(){showFinalCode(games_no);}, 1000);
+                setTimeout(function () {
+                    showFinalCode(games_no);
+                }, 1000);
             },
             success: function (response) {
                 var datas = jQuery.parseJSON(response);
                 element_final_code.text(datas.final_code);
 
-                if(datas.big_winner != '?') {
+                if (datas.big_winner != '?') {
                     $('#big_winner_name').text(datas.big_winner.name);
                     $('#big_winner_no').text(datas.big_winner.games_no);
                     $('#big_winner_win_cash').text(datas.big_winner.win_cash);
@@ -149,7 +151,7 @@ $(document).ready(function () {
         });
     }
 
-    function showBetHistory(){
+    function showBetHistory() {
         $.ajax({
             url: '/betHistory',
             type: 'post',
@@ -164,8 +166,8 @@ $(document).ready(function () {
                 var bet_count_part1 = 0;
                 var bet_count_part2 = 0;
                 $('#userCash').text(bet_detail.cash);
-                $.each(bet_detail, function(key, bet){
-                    if(key != 'cash' && bet.games_no == $('form').find('input[name=games_no]').val()) {
+                $.each(bet_detail, function (key, bet) {
+                    if (key != 'cash' && bet.games_no == $('form').find('input[name=games_no]').val()) {
                         var bet_detail_box = $('#bet_details_ex').clone();
                         bet_detail_box.removeAttr('id');
                         if (bet.win_cash == 0) {
@@ -182,7 +184,7 @@ $(document).ready(function () {
                         bet_detail_box.find('#bet').text('$ ' + bet.bet);
                         bet_detail_box.find('#win_cash').text('$ ' + bet.win_cash);
                         bet_detail_box.find('#odds').text(bet.odds);
-                        if(bet.part == 1){
+                        if (bet.part == 1) {
                             bet_count_part1++;
                             if (bet.guess % 2 == 0) {
                                 bet_detail_box.find('#guess').text('雙');
@@ -190,7 +192,7 @@ $(document).ready(function () {
                                 bet_detail_box.find('#guess').text('單');
                             }
                             var round_code = '??';
-                            if(bet.round_code != 0){
+                            if (bet.round_code != 0) {
                                 round_code = pad(bet.round_code, 2);
                             }
                             bet_detail_box.find('#code').text('[' + round_code + ']');
@@ -208,21 +210,22 @@ $(document).ready(function () {
                         bet_detail_box.show();
                     }
                 });
-                if(bet_count_part1 <= 0){
+                if (bet_count_part1 <= 0) {
                     $('#bet_history_part_1 #bet_history_box').html("您尚未對本期遊戲進行下注");
                 }
-                if(bet_count_part2 <= 0){
+                if (bet_count_part2 <= 0) {
                     $('#bet_history_part_2 #bet_history_box').html("您尚未對本期遊戲進行下注");
                 }
             }
         });
     }
 
-    function getGameData(){
+    function getGameData() {
         $.ajax({
             url: '/gameData',
             type: 'post',
             error: function (xhr) {
+                BootstrapDialog.alert('無法與伺服器取得連接。');
                 console.log(xhr);
             },
             success: function (response) {
@@ -230,7 +233,9 @@ $(document).ready(function () {
                 var gameObj = jQuery.parseJSON(response);
                 //console.log(response);
 
-                if(gameObj.timer > -1) {
+                console.log(gameObj.size_round);
+
+                if (gameObj.timer > -1) {
                     element_game_no.text(gameObj.no);
                     $('input[name=games_no]').val(gameObj.no);
                     $('span#games_no').text(gameObj.no);
@@ -239,7 +244,7 @@ $(document).ready(function () {
                         var roundNo = roundObj.round;
                         var roundCode = roundObj.round_code;
 
-                        if(roundNo == 1 && roundCode == 0){
+                        if (roundNo == 1 && roundCode == 0) {
                             clearRoundData();
                         }
 
@@ -247,7 +252,7 @@ $(document).ready(function () {
                             resetAllPanelHighLight();
                             $('#round' + roundNo + ' #roundCode').text(roundCode);
                         }
-                        if(roundCode == 0){
+                        if (roundCode == 0) {
                             setRoundPanelHighLight(roundNo);
                             $('input[name=round_no]').val(roundNo);
                         }
@@ -257,21 +262,21 @@ $(document).ready(function () {
                         $('#round' + roundNo + ' #startTime').text(start_at);
                         $('#round' + roundNo + ' #endTime').text(end_at);
 
-                        if(gameObj.msg.indexOf('結束下注') >= 0){
+                        if (gameObj.msg.indexOf('結束下注') >= 0) {
                             unblockAllInput();
-                            if(roundObj.round_code == 0){
+                            if (roundObj.round_code == 0) {
                                 openNumbersByRange(roundObj.current_min, roundObj.current_max);
                             }
                         }
                     });
 
-                    if(gameObj.msg.indexOf('新的一期') >= 0){
+                    if (gameObj.msg.indexOf('新的一期') >= 0) {
                         showFinalCode(gameObj.no);
 
                     }
 
-                    if(gameObj.msg.indexOf('新的一期') >= 0 ||
-                        gameObj.msg.indexOf('開放下注') >= 0){
+                    if (gameObj.msg.indexOf('新的一期') >= 0 ||
+                        gameObj.msg.indexOf('開放下注') >= 0) {
                         blockAllInput();
                         clearChoose();
                     }
@@ -284,7 +289,7 @@ $(document).ready(function () {
                     $('input[name=odds_even]').val(gameObj.odds.even);
 
                     setTimer(gameObj.timer - 1, gameObj.msg, getGameData);
-                }else{
+                } else {
                     element_state.text('維護中，暫不提供服務。');
                 }
             }

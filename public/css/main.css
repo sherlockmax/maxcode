@@ -3,20 +3,25 @@ body {
     margin: 0 auto;
     font-family: 'Lato';
 }
+
 .fa-btn {
     margin-right: 10px;
 }
-input[type=radio]{
+
+input[type=radio] {
     display: none;
 }
-input[type=checkbox]{
+
+input[type=checkbox] {
     display: none;
 }
-.active{
+
+.active {
     background-color: slategray !important;
     color: #FFFF00 !important;
 }
-input[type=number]{
+
+input[type=number] {
     padding-left: 13px;
     margin: 0 auto;
     font-family: 'Lato';
@@ -26,26 +31,26 @@ input[type=number]{
     font-size: medium;
 }
 
-#numbersController{
+#numbersController {
     max-width: 600px;
     margin: 0 auto;
 }
 
-.panel{
+.panel {
     margin-top: 3px !important;
     margin-bottom: 3px !important;
 }
 
-#numbersController > label.disabled{
+#numbersController > label.disabled {
     text-decoration: line-through;
 }
 
-.panel-body{
+.panel-body {
     padding-top: 5px;
     padding-bottom: 5px;
 }
 
-#big_winner_card{
+#big_winner_card {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -59,13 +64,13 @@ input[type=number]{
     padding: 120px 110px;
 }
 
-#big_winner_card #buttonBox{
+#big_winner_card #buttonBox {
     position: absolute;
     bottom: 5px;
     right: 5px;
     text-align: right;
 }
 
-#big_winner_card #content{
+#big_winner_card #content {
     text-align: left;
 }

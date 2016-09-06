@@ -1,19 +1,21 @@
 <?php
 
-if ( ! function_exists('floor_dec')) {
-    function floor_dec($v, $precision){
+if (!function_exists('floor_dec')) {
+    function floor_dec($v, $precision)
+    {
         $c = pow(10, $precision);
-        return fill_zero(floor($v*$c)/$c, 2);
+        return fill_zero(floor($v * $c) / $c, 2);
     }
 }
 
-if ( ! function_exists('numTypeCount')) {
-    function numTypeCount($min, $max){
+if (!function_exists('numTypeCount')) {
+    function numTypeCount($min, $max)
+    {
         $counts = ['odd' => 0, 'even' => 0];
-        for($i = $min; $i <= $max; $i++){
-            if($i % 2 == 0){
+        for ($i = $min; $i <= $max; $i++) {
+            if ($i % 2 == 0) {
                 $counts['even']++;
-            }else{
+            } else {
                 $counts['odd']++;
             }
         }
@@ -22,14 +24,16 @@ if ( ! function_exists('numTypeCount')) {
     }
 }
 
-if( ! function_exists('fill_zero')){
-    function fill_zero($resource, $max){
-        return sprintf('%01.'.$max.'f', $resource);
+if (!function_exists('fill_zero')) {
+    function fill_zero($resource, $max)
+    {
+        return sprintf('%01.' . $max . 'f', $resource);
     }
 }
 
-if( ! function_exists('calcOdds')){
-    function calcOdds($min, $max){
+if (!function_exists('calcOdds')) {
+    function calcOdds($min, $max)
+    {
         $result = [
             'numbers' => fill_zero(0.0, 2),
             'odd' => fill_zero(0.0, 2),

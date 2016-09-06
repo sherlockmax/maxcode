@@ -1,6 +1,8 @@
 <?php
 namespace App\Providers;
+
 use Illuminate\Support\ServiceProvider;
+
 class HelperServiceProvider extends ServiceProvider
 {
     /**
@@ -11,6 +13,7 @@ class HelperServiceProvider extends ServiceProvider
     public function boot()
     {
     }
+
     /**
      * Register the application services.
      *
@@ -18,8 +21,7 @@ class HelperServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        foreach (glob(app_path().'/Helpers/*.php') as $filename)
-        {
+        foreach (glob(app_path() . '/Helpers/*.php') as $filename) {
             require_once($filename);
         }
     }

@@ -23,8 +23,8 @@ class LoginController extends Controller
         $input = Input::all();
 
         $rules = [
-            'account'=>'required',
-            'password'=>'required'
+            'account' => 'required',
+            'password' => 'required'
         ];
 
         $validator = Validator::make($input, $rules);
@@ -39,7 +39,7 @@ class LoginController extends Controller
                 return Redirect::intended('/');
             }
             return Redirect::to('/login')
-                ->withErrors(['fail'=>'Account or password is wrong!']);
+                ->withErrors(['fail' => 'Account or password is wrong!']);
         }
 
         return Redirect::to('/login')
@@ -53,8 +53,9 @@ class LoginController extends Controller
         return Redirect::to('/');
     }
 
-    public function createUser($account, $password, $name){
-        if(!is_null($account) && !is_null($password)){
+    public function createUser($account, $password, $name)
+    {
+        if (!is_null($account) && !is_null($password)) {
             $user = new User;
             $user->account = $account;
             $user->password = Hash::make($password);

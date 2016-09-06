@@ -10,13 +10,15 @@ class Game extends Model
 
     public $timestamps = false;
 
-    public function getCurrentGame($today){
+    public function getCurrentGame($today)
+    {
         return Game
             ::where('no', 'like', "$today%")
             ->orderBy('no', 'desc')->first();
     }
 
-    public function getGameByNoState($no, $state){
+    public function getGameByNoState($no, $state)
+    {
         return Game
             ::where('no', $no)
             ->where('state', $state)

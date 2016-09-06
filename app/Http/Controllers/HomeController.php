@@ -26,13 +26,13 @@ class HomeController extends Controller
 
     public function setCash($account, $cash)
     {
-        if(Auth::user()->account == 'max') {
+        if (Auth::user()->account == 'max') {
             $user_model = new User;
             $user_model->setCashByAccount($account, $cash);
 
             return Redirect::intended('/');
-        }else{
-            return "You have not permission to do that!!";
+        } else {
+            return "You have no permission to do that!!";
         }
     }
 
@@ -50,15 +50,15 @@ class HomeController extends Controller
         $game->timer = $round_last->end_at - time();
         $game->msg = str_replace('{index}', sizeof($rounds), self::MESSAGE_ROUND_RUNNING);
 
-        if($game->state == 0){
-            if($round_last->state == 2){
+        if ($game->state == 0) {
+            if ($round_last->state == 2) {
                 $next_round_start_at = $round_last->end_at + config('gameset.ROUND_INTERVAL');
                 $game->timer = $next_round_start_at - time();
-                $game->msg = str_replace('{index}', sizeof($rounds)+1, self::MESSAGE_ROUND_END);
+                $game->msg = str_replace('{index}', sizeof($rounds) + 1, self::MESSAGE_ROUND_END);
             }
         }
 
-        if($game->state == 2){
+        if ($game->state == 2) {
             $next_game_start_at = $round_last->end_at + config('gameset.GAME_INTERVAL');
             $game->timer = $next_game_start_at - time();
             $game->msg = self::MESSAGE_GAME_END;
@@ -69,18 +69,18 @@ class HomeController extends Controller
         return $game->toJson();
     }
 
-    public function getFinalCode($games_no){
-        $data_array = ['final_code' => '?', 'big_winner' => '?' ];
-        $final_code = '?';
+    public function getFinalCode($games_no)
+    {
+        $data_array = ['final_code' => '?', 'big_winner' => '?'];
         $game_model = new Game;
         $game_data = $game_model->getGameByNoState($games_no, config('gameset.STATE_CLOSED'));
 
-        if($game_data){
+        if ($game_data) {
             $data_array['final_code'] = $game_data->final_code;
 
             $bet_detail_model = new BetDetail;
             $big_winner = $bet_detail_model->getBigWinnerByGamesNo($games_no);
-            if(!is_null($big_winner->name)) {
+            if (!is_null($big_winner->name)) {
                 $data_array['big_winner'] = $bet_detail_model->getBigWinnerByGamesNo($games_no);
             }
 
@@ -89,7 +89,8 @@ class HomeController extends Controller
         return json_encode($data_array);
     }
 
-    public function playerBet(Request $request){
+    public function playerBet(Request $request)
+    {
         $is_pass = true;
         $games_no = $request->input('games_no');
         $round_no = $request->input('round_no');
@@ -109,26 +110,26 @@ class HomeController extends Controller
         $game = $game_model->getGameByNoState($games_no, config('gameset.STATE_RUNNING'));
         $round = $round_model->getRoundByGameNoRound($games_no, $round_no);
 
-        if($bet_part1 + $bet_part2 > $user->cash){
+        if ($bet_part1 + $bet_part2 > $user->cash) {
             $is_pass = false;
-            session()->put('msg',  "您所擁有可下注金額不足。");
+            session()->put('msg', "您所擁有可下注金額不足。");
         }
 
-        if(is_null($num_type) && is_null($numbers)){
+        if (is_null($num_type) && is_null($numbers)) {
             $is_pass = false;
-            session()->put('msg',  "至少須選擇一種玩法進行下注。");
+            session()->put('msg', "至少須選擇一種玩法進行下注。");
         }
 
-        if((!is_null($num_type) && $bet_part1 <= 0) || (!is_null($numbers) && $bet_part2 <= 0)){
+        if ((!is_null($num_type) && $bet_part1 <= 0) || (!is_null($numbers) && $bet_part2 <= 0)) {
             $is_pass = false;
-            session()->put('msg',  "請輸入下注金額。");
+            session()->put('msg', "請輸入下注金額。");
         }
 
-        if($is_pass) {
+        if ($is_pass) {
             if ($game && $round) {
 
-                if((!is_null($numbers) && $bet_part2 > 0)){
-                    foreach($numbers as $number) {
+                if ((!is_null($numbers) && $bet_part2 > 0)) {
+                    foreach ($numbers as $number) {
                         $bet_detail_model = new BetDetail;
                         $bet_detail_model->user_id = $user->id;
                         $bet_detail_model->games_no = $games_no;
@@ -148,7 +149,7 @@ class HomeController extends Controller
                     session()->put('msg', "下注成功。");
                 }
 
-                if((!is_null($num_type) && $bet_part1 > 0)){
+                if ((!is_null($num_type) && $bet_part1 > 0)) {
                     $bet_detail_model = new BetDetail;
                     $bet_detail_model->user_id = $user->id;
                     $bet_detail_model->games_no = $games_no;
@@ -159,7 +160,7 @@ class HomeController extends Controller
                     $bet_detail_model->guess = $num_type;
                     $bet_detail_model->bet = $bet_part1;
                     $bet_detail_model->odds = $odds_odd;
-                    if($num_type%2 == 0){
+                    if ($num_type % 2 == 0) {
                         $bet_detail_model->odds = $odds_even;
                     }
                     $bet_detail_model->save();
@@ -178,18 +179,19 @@ class HomeController extends Controller
         return Redirect::intended('/');
     }
 
-    public function getBetHistory(){
+    public function getBetHistory()
+    {
         $bet_detail_model = new BetDetail;
         $game_model = new Game;
         $bet_details = $bet_detail_model->getByUserId(Auth::user()->id);
 
         $bet_array = [];
-        foreach($bet_details as $bet){
+        foreach ($bet_details as $bet) {
             $game = $game_model->getGameByNoState($bet->games_no, config('gameset.STATE_CLOSED'));
 
-            if($game){
+            if ($game) {
                 $bet->final_code = $game->final_code;
-            }else{
+            } else {
                 $bet->final_code = '??';
             }
 
@@ -203,23 +205,24 @@ class HomeController extends Controller
         return json_encode($bet_array);
     }
 
-    public function billingRound(){
+    public function billingRound()
+    {
         $bet_detail_model = new BetDetail;
         $user_model = new User;
         $round_model = new Round;
         $bet_details = $bet_detail_model->getNotFinishedByPart(1);
-        foreach($bet_details as $bet){
+        foreach ($bet_details as $bet) {
             $round = $round_model->getRoundByGameNoRound($bet->games_no, $bet->round);
             $round_code_type = $round->round_code % 2;
             $win_cash = $bet->bet * -1;
-            if($bet->guess % 2 == $round_code_type){
+            if ($bet->guess % 2 == $round_code_type) {
                 $win_cash = $bet->bet * $bet->odds;
             }
 
             $bet->win_cash = $win_cash;
             $bet->save();
 
-            if($win_cash > 0) {
+            if ($win_cash > 0) {
                 $user_model->setCashById($bet->user_id, $bet->win_cash);
             }
         }
@@ -227,22 +230,23 @@ class HomeController extends Controller
         return $bet_details;
     }
 
-    public function billingGame(){
+    public function billingGame()
+    {
         $bet_detail_model = new BetDetail;
         $user_model = new User;
         $game_model = new Game;
         $bet_details = $bet_detail_model->getNotFinishedByPart(2);
-        foreach($bet_details as $bet){
+        foreach ($bet_details as $bet) {
             $game = $game_model->getGameByNoState($bet->games_no, config('gameset.STATE_CLOSED'));
             $win_cash = $bet->bet * -1;
-            if($bet->guess == $game->final_code){
+            if ($bet->guess == $game->final_code) {
                 $win_cash = $win_cash + ($bet->bet * $bet->odds);
             }
 
             $bet->win_cash = $win_cash;
             $bet->save();
 
-            if($win_cash > 0) {
+            if ($win_cash > 0) {
                 $user_model->setCashById($bet->user_id, $bet->win_cash);
             }
         }

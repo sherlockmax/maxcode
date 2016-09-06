@@ -10,13 +10,15 @@ class Round extends Model
 
     public $timestamps = false;
 
-    public function getRoundByGameNo($game_no){
+    public function getRoundByGameNo($game_no)
+    {
         return Round
             ::where('games_no', $game_no)
             ->orderBy('round', 'asc')->get();
     }
 
-    public function getRoundByGameNoRound($game_no, $round){
+    public function getRoundByGameNoRound($game_no, $round)
+    {
         return Round
             ::where('games_no', $game_no)
             ->orderBy('round', $round)

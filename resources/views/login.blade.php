@@ -16,7 +16,8 @@
                             </div>
                             <div>
                                 <label class="btn btn-default">
-                                    <label for="account" style="width: 150px"><i class="fa fa-btn fa-user"></i>Account</label>
+                                    <label for="account" style="width: 150px"><i
+                                                class="fa fa-btn fa-user"></i>Account</label>
                                     <input id="account" type="text" name="account" value="">
                                 </label>
                             </div>

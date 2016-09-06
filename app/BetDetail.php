@@ -13,7 +13,8 @@ class BetDetail extends Model
 
     public $timestamps = false;
 
-    public function getByUserId($user_id){
+    public function getByUserId($user_id)
+    {
         return DB::table('bet_details')
             ->join('rounds', function ($join) {
                 $join->on('rounds.games_no', '=', 'bet_details.games_no')
@@ -28,14 +29,16 @@ class BetDetail extends Model
             ->get();
     }
 
-    public function getNotFinishedByPart($part){
+    public function getNotFinishedByPart($part)
+    {
         return BetDetail
             ::where('win_cash', 0)
             ->where('part', $part)
             ->get();
     }
 
-    public function getByUniqueField($games_no, $user_id, $round, $part){
+    public function getByUniqueField($games_no, $user_id, $round, $part)
+    {
         return BetDetail
             ::where('games_no', $games_no)
             ->where('user_id', $user_id)
@@ -44,7 +47,8 @@ class BetDetail extends Model
             ->first();
     }
 
-    public function getBigWinnerByGamesNo($games_no){
+    public function getBigWinnerByGamesNo($games_no)
+    {
         return DB::table('bet_details')
             ->join('users', function ($join) {
                 $join->on('users.id', '=', 'bet_details.user_id');
@@ -52,7 +56,12 @@ class BetDetail extends Model
             ->where('bet_details.games_no', $games_no)
             ->where('bet_details.part', 2)
             ->where('bet_details.win_cash', '>', 0)
-            ->select(['bet_details.win_cash', 'bet_details.games_no', 'users.name', DB::raw('MAX(bet_details.win_cash) AS win_cash')])
+            ->select([
+                'bet_details.win_cash',
+                'bet_details.games_no',
+                'users.name',
+                DB::raw('MAX(bet_details.win_cash) AS win_cash')
+            ])
             ->first();
     }
 }
