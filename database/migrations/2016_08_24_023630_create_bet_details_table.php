@@ -23,6 +23,8 @@ class CreateBetDetailsTable extends Migration
             $table->decimal('odds', 5, 2);
             $table->integer('win_cash')->default(0);
             $table->integer('bet_at');
+
+            $table->index(['user_id', 'games_no', 'round']);
         });
     }
 

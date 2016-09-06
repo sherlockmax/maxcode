@@ -10,10 +10,10 @@ class UserTableSeeder extends Seeder
     {
         DB::table('users')->delete();
         User::create([
-            'account' => 'finalgod',
-            'name' => 'Final God',
+            'account' => 'max',
+            'name' => 'Max',
             'password' => Hash::make('123456'),
-            'cash' => 10000,
+            'cash' => 1050226,
         ]);
     }
 }

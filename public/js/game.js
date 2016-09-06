@@ -232,9 +232,6 @@ $(document).ready(function () {
                 showBetHistory();
                 var gameObj = jQuery.parseJSON(response);
                 //console.log(response);
-
-                console.log(gameObj.size_round);
-
                 if (gameObj.timer > -1) {
                     element_game_no.text(gameObj.no);
                     $('input[name=games_no]').val(gameObj.no);
