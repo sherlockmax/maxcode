@@ -8,6 +8,18 @@ $(document).ready(function () {
         return str.replace("]", "").replace("[", "");
     }
 
+    $('#btn_games_no_search').click(function(){
+        location.href = '/record/' + $('#input_game_no_search').val();
+    });
+
+    $('#btn_games_no_last').click(function(){
+        location.href = '/record/' + $('#input_games_no_last').val();
+    });
+
+    $('#btn_games_no_next').click(function(){
+        location.href = '/record/' + $('#input_games_no_next').val();
+    });
+
     $('input[type=radio]').click(function () {
         var element_name = autoReplace($(this).attr("name"));
         var radioId = "num_" + $(this).val();

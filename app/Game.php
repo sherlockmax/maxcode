@@ -24,4 +24,26 @@ class Game extends Model
             ->where('state', $state)
             ->first();
     }
+
+    public function getLastClosedGameNo()
+    {
+        return Game
+            ::where('state', config('gameset.STATE_CLOSED'))
+            ->max('no');
+    }
+
+    public function getGameByNo($no)
+    {
+        return Game
+            ::where('no', $no)
+            ->first();
+    }
+
+    public function getClosedGameById($id)
+    {
+        return Game
+            ::where('id', $id)
+            ->where('state', config('gameset.STATE_CLOSED'))
+            ->first();
+    }
 }

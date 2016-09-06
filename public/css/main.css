@@ -74,3 +74,13 @@ input[type=number] {
 #big_winner_card #content {
     text-align: left;
 }
+
+.bet_datas:nth-child(odd){
+    background: lightcyan;
+}
+
+.bet_datas:hover{
+    background: #337ab7;
+    color: white;
+    border: 1px solid white;
+}

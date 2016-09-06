@@ -54,3 +54,38 @@ if (!function_exists('calcOdds')) {
         return $result;
     }
 }
+
+if (!function_exists('formatTimestamp')) {
+    function formatTimestamp($timestamp)
+    {
+        $date = new DateTime();
+        $date->setTimestamp($timestamp);
+        return $date->format('Y-m-d H:i:s');
+    }
+}
+
+if (!function_exists('formatGuess')) {
+    function formatGuess($guess, $part)
+    {
+        if ($part == 1) {
+            if ($guess % 2) {
+                return "雙";
+            } else {
+                return "單";
+            }
+        } else {
+            return $guess;
+        }
+    }
+}
+
+if (!function_exists('formatPart')) {
+    function formatPart($part)
+    {
+        if ($part == 1) {
+            return "單雙";
+        } else {
+            return "選號";
+        }
+    }
+}

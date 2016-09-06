@@ -64,4 +64,11 @@ class BetDetail extends Model
             ])
             ->first();
     }
+
+    public function getByUserGameNo($user_id, $games_no){
+        return BetDetail
+            ::where('games_no', $games_no)
+            ->where('user_id', $user_id)
+            ->get();
+    }
 }
