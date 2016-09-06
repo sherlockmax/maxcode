@@ -283,7 +283,7 @@ $(document).ready(function () {
                     $('#odds_even').text(gameObj.odds.even);
                     $('input[name=odds_even]').val(gameObj.odds.even);
 
-                    setTimer(gameObj.timer, gameObj.msg, getGameData);
+                    setTimer(gameObj.timer - 1, gameObj.msg, getGameData);
                 }else{
                     element_state.text('維護中，暫不提供服務。');
                 }
