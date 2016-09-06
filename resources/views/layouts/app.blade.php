@@ -57,7 +57,7 @@
         <ul class="nav navbar-nav navbar-left">
             @if(Auth::check())
                 <li><a href="{{ url('/') }}"><i class="fa fa-btn fa-gamepad"></i>遊戲大廳</a></li>
-                <li><a href="javascript:void(0);"><i class="fa fa-btn fa-history"></i>注單歷史</a></li>
+                <li><a href="{{ url('/record') }}"><i class="fa fa-btn fa-history"></i>注單歷史</a></li>
                 <li><a href="javascript:void(0);"><i class="fa fa-btn fa-question-circle"></i>玩法介紹</a></li>
             @endif
         </ul>
