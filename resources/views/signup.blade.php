@@ -5,27 +5,38 @@
         <div class="col-sm-offset-2 col-sm-8">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    登入表單
+                    註冊表單
                 </div>
 
                 <div class="panel-body" style="text-align: center;">
-                    {{ Form::open(array('url' => '/login')) }}
+                    {{ Form::open(array('url' => '/signup')) }}
                         <div class="form-group">
-                            <div>
-                                <label>登入去玩...</label>
-                            </div>
                             <div>
                                 <label class="btn btn-default">
                                     <i class="fa fa-btn fa-user" style="margin-left: 20px"></i>
-                                    {{Form::label('account', '帳號', array('style' => 'margin-right: 30px'))}}
+                                    {{Form::label('account', '帳　　號', array('style' => 'margin-right: 30px'))}}
                                     {{Form::text('account')}}
                                 </label>
                             </div>
                             <div>
                                 <label class="btn btn-default">
+                                    <i class="fa fa-btn fa-font" style="margin-left: 20px"></i>
+                                    {{Form::label('name', '暱　　稱', array('style' => 'margin-right: 30px'))}}
+                                    {{Form::text('name')}}
+                                </label>
+                            </div>
+                            <div>
+                                <label class="btn btn-default">
                                     <i class="fa fa-btn fa-yelp" style="margin-left: 20px"></i>
-                                    {{Form::label('password', '密碼', array('style' => 'margin-right: 30px'))}}
+                                    {{Form::label('password', '密　　碼', array('style' => 'margin-right: 30px'))}}
                                     {{Form::password('password')}}
+                                </label>
+                            </div>
+                            <div>
+                                <label class="btn btn-default">
+                                    <i class="fa fa-btn fa-yelp" style="margin-left: 20px"></i>
+                                    {{Form::label('password_check', '密碼確認', array('style' => 'margin-right: 30px'))}}
+                                    {{Form::password('password_check')}}
                                 </label>
                             </div>
                             @if(count($errors) > 0)
@@ -41,13 +52,12 @@
                                 <i class="fa fa-btn fa-refresh"></i>重新填寫
                             </button>
                             <button style="width: 200px" type="submit" id="btn_reset" class="btn btn-success">
-                                <i class="fa fa-btn fa-sign-in"></i>登入
+                                <i class="fa fa-btn fa-user-plus"></i>成為會員
                             </button>
                         </div>
                     {{ Form::close() }}
                 </div>
             </div>
-
         </div>
 
 

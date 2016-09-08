@@ -191,7 +191,7 @@ $(document).ready(function () {
                 console.log(xhr);
             },
             success: function (response) {
-                console.log(response);
+                //console.log(response);
                 $('#bet_history_part_1 #bet_history_box').html("");
                 $('#bet_history_part_2 #bet_history_box').html("");
                 var bet_detail = jQuery.parseJSON(response);
@@ -300,7 +300,6 @@ $(document).ready(function () {
 
                     if (gameObj.msg.indexOf('新的一期') >= 0) {
                         showFinalCode(gameObj.no);
-
                     }
 
                     if (gameObj.msg.indexOf('新的一期') >= 0 ||

@@ -17,7 +17,7 @@
 
                         <div class="panel-body">
                             <div class="row">
-                                @for($i = 1; $i <= config('gameset.ROUND_PER_GAME'); $i++)
+                                @for($i = 1; $i <= gameSettings('ROUND_PER_GAME'); $i++)
                                     <div id="round{{$i}}" class="col-xs-4 panel panel-success">
                                         <div class="panel-heading">
                                             第&nbsp;{{$i}}&nbsp;回合
@@ -191,7 +191,7 @@
                                         </label>
                                     </div>
                                     <div id="numbersController">
-                                        @for ($i = config('gameset.CODE_RANGE_MIN'); $i <= config('gameset.CODE_RANGE_MAX'); $i++)
+                                        @for ($i = gameSettings('CODE_RANGE_MIN'); $i <= gameSettings('CODE_RANGE_MAX'); $i++)
                                             <label style="width: 55px;margin-top: 3px" class="btn btn-default">
                                                 <input type="checkbox" name="numbers[]" id="num_{{$i}}" value="{{$i}}">
                                                 @if($i < 10)

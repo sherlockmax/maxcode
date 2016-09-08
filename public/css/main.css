@@ -43,6 +43,7 @@ input[type=number] {
 
 #numbersController > label.disabled {
     text-decoration: line-through;
+    background: rgba(0, 0, 0, 0.38);
 }
 
 .panel-body {

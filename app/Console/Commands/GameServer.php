@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Game;
 use App\Round;
+use App\Settings;
 use \DB;
 use \App;
 
@@ -21,10 +22,10 @@ class GameServer
     private function getRandCode($min = 0, $max = 0)
     {
         if ($min == 0) {
-            $min = config('gameset.CODE_RANGE_MIN');
+            $min = gameSettings('CODE_RANGE_MIN');
         }
         if ($max == 0) {
-            $max = config('gameset.CODE_RANGE_MAX');
+            $max = gameSettings('CODE_RANGE_MAX');
         }
         return mt_rand($min, $max);
     }
@@ -42,7 +43,7 @@ class GameServer
         $game = new Game;
         $game->no = $this->game_no;
         $game->final_code = $this->getRandCode();
-        $game->state = config('gameset.STATE_RUNNING');
+        $game->state = gameSettings('STATE_RUNNING');
         $game->start_at = time();
         $game->memo = '';
         $game->save();
@@ -58,21 +59,21 @@ class GameServer
         if (is_null($this->memo)) {
             $this->memo = 'no winner';
         }
-        $game->update(['state' => config('gameset.STATE_CLOSED'), 'memo' => $this->memo]);
+        $game->update(['state' => gameSettings('STATE_CLOSED'), 'memo' => $this->memo]);
         $this->memo = null;
     }
 
     private function roundStart()
     {
         $start_timestamp = time();
-        $end_timestamp = $start_timestamp + config('gameset.TIME_OF_ROUND');
+        $end_timestamp = $start_timestamp + gameSettings('TIME_OF_ROUND');
 
         $round_no = Round::where('games_no', $this->game_no)->count();
 
         $round = new Round;
         $round->games_no = $this->game_no;
         $round->round = $round_no + 1;
-        $round->state = config('gameset.STATE_RUNNING');
+        $round->state = gameSettings('STATE_RUNNING');
         $round->round_code = 0;
         $round->current_min = $this->current_min;
         $round->current_max = $this->current_max;
@@ -93,7 +94,7 @@ class GameServer
             ::where('games_no', $this->game_no)
             ->where('round', $round_no);
         $round->update([
-            'state' => config('gameset.STATE_CLOSED'),
+            'state' => gameSettings('STATE_CLOSED'),
             'round_code' => $round_code
         ]);
 
@@ -103,11 +104,11 @@ class GameServer
     private function init()
     {
         DB::table('games')
-            ->where('state', '!=', config('gameset.STATE_CLOSED'))
-            ->update(['state' => config('gameset.STATE_CLOSED')]);
+            ->where('state', '!=', gameSettings('STATE_CLOSED'))
+            ->update(['state' => gameSettings('STATE_CLOSED')]);
         DB::table('rounds')
-            ->where('state', '!=', config('gameset.STATE_CLOSED'))
-            ->update(['state' => config('gameset.STATE_CLOSED')]);
+            ->where('state', '!=', gameSettings('STATE_CLOSED'))
+            ->update(['state' => gameSettings('STATE_CLOSED')]);
 
         $this->game_date = Date("Ymd");
         $game = Game::where('no', 'like', $this->game_date . '%')->orderBy('no', 'desc');
@@ -119,20 +120,21 @@ class GameServer
 
     private function startServer()
     {
+        updateSettings();
         $final_code = $this->gameStart();
         $this->echoGameData("Game Start");
 
-        $this->current_min = config('gameset.CODE_RANGE_MIN');
-        $this->current_max = config('gameset.CODE_RANGE_MAX');
+        $this->current_min = gameSettings('CODE_RANGE_MIN');
+        $this->current_max = gameSettings('CODE_RANGE_MAX');
 
         $round_count = 0;
 
-        while ($round_count < config('gameset.ROUND_PER_GAME')) {
+        while ($round_count < gameSettings('ROUND_PER_GAME')) {
 
             $this->roundStart();
             $this->echoGameData("Round Start");
 
-            sleep(config('gameset.TIME_OF_ROUND'));
+            sleep(gameSettings('TIME_OF_ROUND'));
 
             $round_code = $this->roundClosed();
             $this->echoGameData("Round Closed");
@@ -159,8 +161,8 @@ class GameServer
 
             $round_count = Round::where('games_no', $this->game_no)->count();
 
-            if ($round_count < config('gameset.ROUND_PER_GAME')) {
-                sleep(config('gameset.ROUND_INTERVAL'));
+            if ($round_count < gameSettings('ROUND_PER_GAME')) {
+                sleep(gameSettings('ROUND_INTERVAL'));
             }
         }
 
@@ -169,12 +171,14 @@ class GameServer
 
         App::make('App\Http\Controllers\HomeController')->billingGame();
 
-        sleep(config('gameset.GAME_INTERVAL'));
+        sleep(gameSettings('GAME_INTERVAL'));
         $this->startServer();
     }
 
     public function run()
     {
+        updateSettings();
+
         $this->init();
 
         $this->startServer();

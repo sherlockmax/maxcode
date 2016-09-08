@@ -28,7 +28,7 @@ class Game extends Model
     public function getLastClosedGameNo()
     {
         return Game
-            ::where('state', config('gameset.STATE_CLOSED'))
+            ::where('state', gameSettings('STATE_CLOSED'))
             ->max('no');
     }
 
@@ -43,7 +43,7 @@ class Game extends Model
     {
         return Game
             ::where('id', $id)
-            ->where('state', config('gameset.STATE_CLOSED'))
+            ->where('state', gameSettings('STATE_CLOSED'))
             ->first();
     }
 }

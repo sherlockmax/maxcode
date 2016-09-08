@@ -33,7 +33,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/record/{games_no}', 'RecordController@record');
 });
 
-Route::get('login', 'LoginController@index');
-Route::post('login', 'LoginController@login');
-Route::get('logout', 'LoginController@logout');
-Route::get('user/{account}/{password}/{name}', 'LoginController@createUser');
+Route::get('/login', 'LoginController@index');
+Route::post('/login', 'LoginController@login');
+Route::get('/signup', 'LoginController@signUpPage');
+Route::post('/signup', 'LoginController@signup');
+Route::get('/logout', 'LoginController@logout');

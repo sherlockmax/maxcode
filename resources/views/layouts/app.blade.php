@@ -55,20 +55,18 @@
             </a>
         </div>
         <ul class="nav navbar-nav navbar-left">
-            @if(Auth::check())
                 <li><a href="{{ url('/') }}"><i class="fa fa-btn fa-gamepad"></i>遊戲大廳</a></li>
                 <li><a href="{{ url('/record') }}"><i class="fa fa-btn fa-history"></i>注單歷史</a></li>
                 <li><a href="javascript:void(0);"><i class="fa fa-btn fa-question-circle"></i>玩法介紹</a></li>
-            @endif
         </ul>
         <ul class="nav navbar-nav navbar-right">
             @if(Auth::check())
                 <li><a href="javascript:void(0);"><i class="fa fa-btn fa-user"></i>{{ Auth::user()->name}}.</a></li>
                 <li><a href="javascript:void(0);"><i class="fa fa-btn fa-dollar"></i><span
                                 id="userCash">{{ Auth::user()->cash}}</span></a></li>
-                <li><a href="/logout"><i class="fa fa-btn fa-sign-out"></i>登出</a></li>
+                <li><a href="/logout"><i class="fa fa-btn fa-sign-out"></i>不賭了</a></li>
             @else
-                <li><a href="/login"><i class="fa fa-btn fa-sign-in"></i>登入</a></li>
+                <li><a href="/signup"><i class="fa fa-btn  fa-user-plus"></i>成為會員</a></li>
             @endif
         </ul>
     </div>

@@ -52,7 +52,7 @@ class HomeController extends Controller
 
         if ($game->state == 0) {
             if ($round_last->state == 2) {
-                $next_round_start_at = $round_last->end_at + config('gameset.ROUND_INTERVAL');
+                $next_round_start_at = $round_last->end_at + gameSettings('ROUND_INTERVAL');
                 $game->timer = $next_round_start_at - time();
                 $game->msg = str_replace('{index}', sizeof($rounds) + 1, self::MESSAGE_ROUND_END);
             }
@@ -242,7 +242,7 @@ class HomeController extends Controller
             $game = $game_model->getGameByNoState($bet->games_no, config('gameset.STATE_CLOSED'));
             $win_cash = $bet->bet * -1;
             if ($bet->guess == $game->final_code) {
-                $win_cash = $win_cash + ($bet->bet * $bet->odds);
+                $win_cash = $bet->bet * $bet->odds;
             }
 
             $bet->win_cash = $win_cash;

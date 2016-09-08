@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use Auth;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
-use App\Http\Requests;
+use Illuminate\Http\Request;
 use App\User;
 use \Hash;
 
@@ -18,33 +17,31 @@ class LoginController extends Controller
         return view('login');
     }
 
-    public function login()
+    public function login(Request $request)
     {
-        $input = Input::all();
+        $request->flashExcept('password');
+        $validator = Validator::make($request->all(), User::$login_rules, User::$messages);
 
-        $rules = [
-            'account' => 'required',
-            'password' => 'required'
-        ];
-
-        $validator = Validator::make($input, $rules);
-
-        if ($validator->passes()) {
+        if (!$validator->fails()) {
             $attempt = Auth::attempt([
-                'account' => $input['account'],
-                'password' => $input['password']
+                'account' => $request->account,
+                'password' => $request->password
             ]);
 
-            if ($attempt) {
-                return Redirect::intended('/');
+            if (!$attempt) {
+                $validator->after(function($validator) {
+                    $validator->errors()->add('field', '帳號或密碼不正確，請確認後再試一次。');
+                });
             }
-            return Redirect::to('/login')
-                ->withErrors(['fail' => 'Account or password is wrong!']);
         }
 
-        return Redirect::to('/login')
-            ->withErrors($validator)
-            ->withInput(Input::except('password'));
+        if($validator->fails()){
+            return Redirect::to('/login')
+                ->withErrors($validator)
+                ->withInput();
+        }else{
+            return Redirect::intended('/');
+        }
     }
 
     public function logout()
@@ -53,18 +50,32 @@ class LoginController extends Controller
         return Redirect::to('/');
     }
 
-    public function createUser($account, $password, $name)
-    {
-        if (!is_null($account) && !is_null($password)) {
-            $user = new User;
-            $user->account = $account;
-            $user->password = Hash::make($password);
-            $user->name = $name;
-            $user->save();
+    public function signUpPage(){
+        return view('signup');
+    }
 
-            return Redirect::to('/');
+    public function signUp(Request $request)
+    {
+        $request->flashExcept('password', 'password_check');
+        $validator = Validator::make($request->all(), User::$rules, User::$messages);
+
+        if($validator->fails()){
+
+            return Redirect::to('/signup')
+                ->withErrors($validator)
+                ->withInput();
+        }else{
+            $user = new User;
+            $user->account = $request->account;
+            $user->password = Hash::make($request->password);
+            $user->name = $request->name;
+            $user->cash = 1050226;
+            $user->insert();
+
+            return Redirect::to('/login')
+                ->withInput();
         }
 
-        return "create user failed!";
+
     }
 }

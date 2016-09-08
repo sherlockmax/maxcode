@@ -47,9 +47,9 @@ if (!function_exists('calcOdds')) {
         $one_of_odd_odd = floor_dec($numTypeCounts['odd'] / $numbers_count, 2);
         $one_of_even_odd = floor_dec($numTypeCounts['even'] / $numbers_count, 2);
 
-        $result['numbers'] = floor_dec(1 / $one_of_numbers_odd * 0.92, 2);
-        $result['odd'] = fill_zero(1 / $one_of_odd_odd * config('gameset.STANDARD_ODDS'), 2);
-        $result['even'] = fill_zero(1 / $one_of_even_odd * config('gameset.STANDARD_ODDS'), 2);
+        $result['numbers'] = floor_dec(1 / $one_of_numbers_odd * gameSettings('STANDARD_ODDS'), 2);
+        $result['odd'] = fill_zero(1 / $one_of_odd_odd * gameSettings('STANDARD_ODDS'), 2);
+        $result['even'] = fill_zero(1 / $one_of_even_odd * gameSettings('STANDARD_ODDS'), 2);
 
         return $result;
     }
@@ -86,6 +86,28 @@ if (!function_exists('formatPart')) {
             return "單雙";
         } else {
             return "選號";
+        }
+    }
+}
+
+if (!function_exists('updateSettings')) {
+    function updateSettings()
+    {
+        $settings_all = App\Settings::All();
+
+        foreach($settings_all as $setting){
+            Redis::set($setting->key, $setting->value);
+        }
+    }
+}
+
+if (!function_exists('gameSettings')) {
+    function gameSettings($key)
+    {
+        try {
+            return Redis::get($key);
+        }catch (\Mockery\CountValidator\Exception $e){
+            return config('gameset.'.$key);
         }
     }
 }
