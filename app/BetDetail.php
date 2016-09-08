@@ -24,7 +24,22 @@ class BetDetail extends Model
             ->orderBy('bet_details.games_no', 'DESC')
             ->orderBy('bet_details.round', 'DESC')
             ->orderBy('bet_details.part', 'ASC')
-            ->take(11)
+            ->select('bet_details.*', 'rounds.round_code')
+            ->get();
+    }
+
+    public function getByUserIdGamesNo($user_id, $games_no)
+    {
+        return DB::table('bet_details')
+            ->join('rounds', function ($join) {
+                $join->on('rounds.games_no', '=', 'bet_details.games_no')
+                    ->on('rounds.round', '=', 'bet_details.round');
+            })
+            ->where('bet_details.user_id', $user_id)
+           ->where('bet_details.games_no', $games_no)
+            ->orderBy('bet_details.games_no', 'DESC')
+            ->orderBy('bet_details.round', 'DESC')
+            ->orderBy('bet_details.part', 'ASC')
             ->select('bet_details.*', 'rounds.round_code')
             ->get();
     }
@@ -63,12 +78,5 @@ class BetDetail extends Model
                 DB::raw('MAX(bet_details.win_cash) AS win_cash')
             ])
             ->first();
-    }
-
-    public function getByUserGameNo($user_id, $games_no){
-        return BetDetail
-            ::where('games_no', $games_no)
-            ->where('user_id', $user_id)
-            ->get();
     }
 }

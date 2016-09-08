@@ -92,8 +92,17 @@
                     </div>
                 </div>
 
+                <div class="row" style="margin-top: 20px; border: 1px solid darkblue; border-radius: 4px; overflow: hidden;">
+                    <div class="col-xs-2" style="padding-top: 10px; padding-bottom: 10px; text-align: center; background: #337ab7; color: white">下注總數</div>
+                    <div class="col-xs-2" style="padding-top: 10px; padding-bottom: 10px; text-align: center" >{{$bet_detail_count}}</div>
+                    <div class="col-xs-2" style="padding-top: 10px; padding-bottom: 10px; text-align: center; background: #337ab7; color: white">下注總金額</div>
+                    <div class="col-xs-2" style="padding-top: 10px; padding-bottom: 10px; text-align: center" >{{$bet_total}}</div>
+                    <div class="col-xs-2" style="padding-top: 10px; padding-bottom: 10px; text-align: center; background: #337ab7; color: white">獎金總金額</div>
+                    <div class="col-xs-2" style="padding-top: 10px; padding-bottom: 10px; text-align: center" >{{$bet_win_total}}</div>
+                </div>
+
                 @if(!is_null($game))
-                    <div class="row" style="margin-top: 20px; border: 1px solid darkblue; border-radius: 6px; overflow: hidden;">
+                    <div class="row" style="margin-top: 20px; border: 1px solid darkblue; border-radius: 4px; overflow: hidden;">
                         @if(!is_null($bet_details) && sizeof($bet_details) > 0)
                             <div class="row bg-primary" style="padding-top: 10px; padding-bottom: 10px">
                                 <div style="text-align: center" class="col-xs-1">回合</div>
@@ -106,7 +115,7 @@
                             </div>
                             <div style="max-height: 400px; overflow-x: hidden; overflow-y: auto;">
                             @foreach($bet_details as $bet)
-                                <div class="row bet_datas" style="padding-top: 6px; padding-bottom: 6px; border-bottom: 1px solid lightslategray">
+                                <div class="row bet_datas" style="padding-top: 6px; padding-bottom: 4px; border-bottom: 1px solid lightslategray">
                                     <div style="text-align: center" class="col-xs-1">{{$bet->round}}</div>
                                     <div style="text-align: center" class="col-xs-1">{{formatPart($bet->part)}}</div>
                                     <div style="text-align: center" class="col-xs-1">{{formatGuess($bet->guess, $bet->part)}}</div>

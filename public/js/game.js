@@ -14,21 +14,52 @@ $(document).ready(function () {
     var element_all_label = $('input').closest('label');
     var element_all_button = $('button');
 
-    $('.roundTimes').hide();
+    $('div[id^=money_keyboard_]').hide();
     blockAllInput();
     getGameData();
     showBetHistory();
 
+    $('#choose_all').click(function(){
+        $('#numbersController input[type=checkbox]').each(function(){
+            if(!$(this).attr('disabled'))
+            {
+                $(this).attr('checked', 'checked');
+                $(this).closest('label').addClass('active');
+            }
+        });
+    });
+
     $('#btn_reset').click(function () {
         clearChoose();
+    });
+
+    $('div[id^=show_keyboard_]').click(function(){
+        if(!$('input[name^=bet_]').attr("disabled")) {
+            var key = $(this).attr('id').split('_')[2];
+            $('#money_keyboard_' + key).slideDown();
+        }
     });
 
     $('#btn_close_big_winner_card').click(function () {
         $('#big_winner_card').hide();
     });
 
-    element_all_round.click(function () {
-        $('.roundTimes').slideToggle("slow");
+    $('div[id^=money_keyboard_] button').click(function(){
+        var key = $(this).parent().parent().attr('id').split('_')[2];
+        var action = $(this).text();
+        if(action == 'OK'){
+            $('#money_keyboard_'+key).slideUp();
+        }
+
+        if(action == 'Del'){
+            $('input[name=bet_part'+key+']').val(parseInt(0));
+        }
+
+        if(action >= 0 && action <= 9){
+            var tmp = $('input[name=bet_part'+key+']').val();
+
+            $('input[name=bet_part'+key+']').val(parseInt( tmp + action ));
+        }
     });
 
     function pad(str, max) {
@@ -52,6 +83,8 @@ $(document).ready(function () {
         element_all_radio.attr('disabled', 'disabled');
         element_all_button.attr('disabled', 'disabled');
         element_all_label.addClass('disabled');
+
+        $('div[id^=money_keyboard_]').hide();
 
         $('#btn_close_big_winner_card').attr('disabled', false);
     }
@@ -114,9 +147,8 @@ $(document).ready(function () {
     }
 
     function setTimer(seconds, msg, next_step_function) {
-        if (seconds >= 0) {
-            seconds--;
-            var new_msg = msg.replace("{sec}", seconds + 1);
+        if (seconds > 0) {
+            var new_msg = msg.replace("{sec}", seconds--);
             element_state.html(new_msg);
             setTimeout(function () {
                 setTimer(seconds, msg, next_step_function);
@@ -153,13 +185,13 @@ $(document).ready(function () {
 
     function showBetHistory() {
         $.ajax({
-            url: '/betHistory',
+            url: '/betHistory/' + $('input[name=games_no]').val(),
             type: 'post',
             error: function (xhr) {
                 console.log(xhr);
             },
             success: function (response) {
-                //console.log(response);
+                console.log(response);
                 $('#bet_history_part_1 #bet_history_box').html("");
                 $('#bet_history_part_2 #bet_history_box').html("");
                 var bet_detail = jQuery.parseJSON(response);
@@ -193,7 +225,7 @@ $(document).ready(function () {
                             }
                             var round_code = '??';
                             if (bet.round_code != 0) {
-                                round_code = pad(bet.round_code, 2);
+                                round_code = bet.round_code;
                             }
                             bet_detail_box.find('#code').text('[' + round_code + ']');
 
@@ -229,7 +261,6 @@ $(document).ready(function () {
                 console.log(xhr);
             },
             success: function (response) {
-                showBetHistory();
                 var gameObj = jQuery.parseJSON(response);
                 //console.log(response);
                 if (gameObj.timer > -1) {
@@ -285,10 +316,12 @@ $(document).ready(function () {
                     $('#odds_even').text(gameObj.odds.even);
                     $('input[name=odds_even]').val(gameObj.odds.even);
 
-                    setTimer(gameObj.timer - 1, gameObj.msg, getGameData);
+                    setTimer(gameObj.timer, gameObj.msg, getGameData);
                 } else {
                     element_state.text('維護中，暫不提供服務。');
                 }
+
+                showBetHistory();
             }
         });
     }

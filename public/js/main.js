@@ -20,6 +20,12 @@ $(document).ready(function () {
         location.href = '/record/' + $('#input_games_no_next').val();
     });
 
+    $('div[id^=round]').click(function () {
+        $('.roundTimes').slideToggle("slow");
+    });
+
+    $('.roundTimes').hide();
+
     $('input[type=radio]').click(function () {
         var element_name = autoReplace($(this).attr("name"));
         var radioId = "num_" + $(this).val();

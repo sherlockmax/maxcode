@@ -181,11 +181,11 @@ class HomeController extends Controller
         return Redirect::intended('/');
     }
 
-    public function getBetHistory()
+    public function getBetHistory($game_no)
     {
         $bet_detail_model = new BetDetail;
         $game_model = new Game;
-        $bet_details = $bet_detail_model->getByUserId(Auth::user()->id);
+        $bet_details = $bet_detail_model->getByUserIdGamesNo(Auth::User()->id, $game_no);
 
         $bet_array = [];
         foreach ($bet_details as $bet) {

@@ -93,12 +93,39 @@
                                     </div>
                                     <div style="margin-bottom: 5px;">
                                         <label class="btn btn-default">
-                                            <i class="fa fa-btn fa-dollar"></i>下注金額：
-                                            @if (Auth::user()->cash < 1000)
-                                                <label style="color: darkred">Insufficient balance</label>
-                                            @else
-                                                <input type="number" name="bet_part1" min="0" step="1000" value="0">
-                                            @endif
+                                            <div id="show_keyboard_1" class="row" style="padding-left: 15px; padding-right: 10px">
+                                                <i class="fa fa-btn fa-dollar"></i>下注金額：
+                                                @if (Auth::user()->cash < 1000)
+                                                    <label style="color: darkred">所擁有可下注金額不足</label>
+                                                @else
+                                                    <input title="" type="text" name="bet_part1" value="0" style="text-align: center;" readonly>
+                                                @endif
+                                                <i class="fa fa-btn fa-keyboard-o" style="margin-left: 15px;"></i>
+                                            </div>
+                                            <div class="row">
+                                                <div id="money_keyboard_1" class="col-xs-offset-1 col-xs-10">
+                                                    <div class="row" style="margin-top: 15px">
+                                                        <button type="button" class="btn btn-default col-xs-4">7</button>
+                                                        <button type="button" class="btn btn-default col-xs-4">8</button>
+                                                        <button type="button" class="btn btn-default col-xs-4">9</button>
+                                                    </div>
+                                                    <div class="row">
+                                                        <button type="button" class="btn btn-default col-xs-4">4</button>
+                                                        <button type="button" class="btn btn-default col-xs-4">5</button>
+                                                        <button type="button" class="btn btn-default col-xs-4">6</button>
+                                                    </div>
+                                                    <div class="row">
+                                                        <button type="button" class="btn btn-default col-xs-4">1</button>
+                                                        <button type="button" class="btn btn-default col-xs-4">2</button>
+                                                        <button type="button" class="btn btn-default col-xs-4">3</button>
+                                                    </div>
+                                                    <div class="row">
+                                                        <button type="button" class="btn btn-default col-xs-4">Del</button>
+                                                        <button type="button" class="btn btn-default col-xs-4">0</button>
+                                                        <button type="button" class="btn btn-default col-xs-4">OK</button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </label>
                                     </div>
                                     <div id="numTypeController" class="row">
@@ -125,12 +152,42 @@
                                     </div>
                                     <div style="margin-bottom: 5px;">
                                         <label class="btn btn-default">
-                                            <i class="fa fa-btn fa-dollar"></i>下注金額：
-                                            @if (Auth::user()->cash < 1000)
-                                                <label style="color: darkred">所擁有可下注金額不足</label>
-                                            @else
-                                                <input type="number" name="bet_part2" min="0" step="1000" value="0">
-                                            @endif
+                                            <div id="show_keyboard_2" class="row" style="padding-left: 15px; padding-right: 10px">
+                                                <i class="fa fa-btn fa-dollar"></i>下注金額：
+                                                @if (Auth::user()->cash < 1000)
+                                                    <label style="color: darkred">所擁有可下注金額不足</label>
+                                                @else
+                                                    <input title="" type="text" name="bet_part2" value="0" style="text-align: center;" readonly>
+                                                @endif
+                                                <i class="fa fa-btn fa-keyboard-o" style="margin-left: 15px;"></i>
+                                            </div>
+                                            <div class="row">
+                                                <div id="money_keyboard_2" class="col-xs-offset-1 col-xs-10">
+                                                    <div class="row" style="margin-top: 15px">
+                                                        <button type="button" class="btn btn-default col-xs-4">7</button>
+                                                        <button type="button" class="btn btn-default col-xs-4">8</button>
+                                                        <button type="button" class="btn btn-default col-xs-4">9</button>
+                                                    </div>
+                                                    <div class="row">
+                                                        <button type="button" class="btn btn-default col-xs-4">4</button>
+                                                        <button type="button" class="btn btn-default col-xs-4">5</button>
+                                                        <button type="button" class="btn btn-default col-xs-4">6</button>
+                                                    </div>
+                                                    <div class="row">
+                                                        <button type="button" class="btn btn-default col-xs-4">1</button>
+                                                        <button type="button" class="btn btn-default col-xs-4">2</button>
+                                                        <button type="button" class="btn btn-default col-xs-4">3</button>
+                                                    </div>
+                                                    <div class="row">
+                                                        <button type="button" class="btn btn-default col-xs-4">Del</button>
+                                                        <button type="button" class="btn btn-default col-xs-4">0</button>
+                                                        <button type="button" class="btn btn-default col-xs-4">OK</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </label>
+                                        <label id="choose_all" class="btn btn-default">
+                                            全選
                                         </label>
                                     </div>
                                     <div id="numbersController">
@@ -148,8 +205,7 @@
                                 </div>
                                 <div class="row form-group">
                                     @if (Auth::user()->cash < 1000)
-                                        <label style="color: orangered; font-size: large">Your cash must greater than $
-                                            1000</label>
+                                        <label style="color: orangered; font-size: large">可下注的金額必須大於＄1000才能下注</label>
                                     @else
                                         <div class="col-xs-12 col-xs-offset-2">
                                             <button type="button" id="btn_reset" class="col-xs-4 btn btn-warning">
@@ -169,7 +225,7 @@
             <div class="col-xs-3">
                 <div id="bet_history_part_1" class="panel panel-primary">
                     <div class="panel-heading">
-                        本期下注資訊&nbsp;-&nbsp;玩法&nbsp;1
+                        本期下注資訊&nbsp;-&nbsp;單雙
                     </div>
 
                     <div id="bet_history_box" class="panel-body" style="max-height: 355px; overflow: auto">
@@ -179,7 +235,7 @@
 
                 <div id="bet_history_part_2" class="panel panel-primary">
                     <div class="panel-heading">
-                        本期下注資訊&nbsp;-&nbsp;玩法&nbsp;2
+                        本期下注資訊&nbsp;-&nbsp;選號
                     </div>
 
                     <div id="bet_history_box" class="panel-body" style="max-height: 355px; overflow: auto">

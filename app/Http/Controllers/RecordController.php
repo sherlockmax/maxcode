@@ -30,6 +30,9 @@ class RecordController extends Controller
         $view->game = null;
         $view->rounds = null;
         $view->bet_details = null;
+        $view->bet_detail_count = 0;
+        $view->bet_total = 0;
+        $view->bet_win_total = 0;
 
         if (is_null($game)) {
             $view->msg = "查無該期遊戲資料。";
@@ -43,7 +46,18 @@ class RecordController extends Controller
 
 
                 $bet_detail_model = new BetDetail;
-                $view->bet_details = $bet_detail_model->getByUserGameNo(Auth::user()->id, $game->no);
+                $bet_details = $bet_detail_model->getByUserIdGamesNo(Auth::user()->id, $game->no);
+                if(!is_null($bet_details)){
+                    $view->bet_details = $bet_details;
+                    $view->bet_detail_count = sizeof($bet_details);
+
+                    foreach($bet_details as $bet){
+                        $view->bet_total += $bet->bet;
+                        if($bet->win_cash > 0){
+                            $view->bet_win_total += $bet->win_cash;
+                        }
+                    }
+                }
             } else {
                 $view->msg = "該期遊戲尚未結束，無法查詢。";
             }
