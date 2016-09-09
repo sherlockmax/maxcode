@@ -69,14 +69,14 @@ class BetDetail extends Model
                 $join->on('users.id', '=', 'bet_details.user_id');
             })
             ->where('bet_details.games_no', $games_no)
-            ->where('bet_details.part', 2)
             ->where('bet_details.win_cash', '>', 0)
+            ->groupBy('users.id')
             ->select([
-                'bet_details.win_cash',
                 'bet_details.games_no',
                 'users.name',
-                DB::raw('MAX(bet_details.win_cash) AS win_cash')
+                DB::raw('SUM(bet_details.win_cash) AS win_cash')
             ])
+            ->orderBy('win_cash', 'DESC')
             ->first();
     }
 }

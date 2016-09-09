@@ -147,14 +147,14 @@ $(document).ready(function () {
     }
 
     function setTimer(seconds, msg, next_step_function) {
-        if (seconds > 0) {
-            var new_msg = msg.replace("{sec}", seconds--);
-            element_state.html(new_msg);
+        var new_msg = msg.replace("{sec}", seconds--);
+        element_state.html(new_msg);
+        if (seconds > -1) {
             setTimeout(function () {
                 setTimer(seconds, msg, next_step_function);
             }, 1000);
         } else {
-            next_step_function();
+            setTimeout(next_step_function, 1000);
         }
     }
 
@@ -178,6 +178,8 @@ $(document).ready(function () {
                     $('#big_winner_win_cash').text(datas.big_winner.win_cash);
 
                     $('#big_winner_card').show('pulsate', 600);
+
+
                 }
             }
         });
@@ -257,8 +259,14 @@ $(document).ready(function () {
             url: '/gameData',
             type: 'post',
             error: function (xhr) {
-                BootstrapDialog.alert('無法與伺服器取得連接。');
-                console.log(xhr);
+
+                console.log(xhr.responseText);
+                if('Unauthorized.' == xhr.responseText){
+                    //location.href = "/";
+                    BootstrapDialog.alert('請重新登入。');
+                }else{
+                    BootstrapDialog.alert('無法與伺服器取得連接。');
+                }
             },
             success: function (response) {
                 var gameObj = jQuery.parseJSON(response);
@@ -309,11 +317,8 @@ $(document).ready(function () {
                     }
 
                     $('#odds_numbers').text(gameObj.odds.numbers);
-                    $('input[name=odds_numbers]').val(gameObj.odds.numbers);
                     $('#odds_odd').text(gameObj.odds.odd);
-                    $('input[name=odds_odd]').val(gameObj.odds.odd);
                     $('#odds_even').text(gameObj.odds.even);
-                    $('input[name=odds_even]').val(gameObj.odds.even);
 
                     setTimer(gameObj.timer, gameObj.msg, getGameData);
                 } else {

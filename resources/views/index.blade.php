@@ -84,9 +84,6 @@
                             <form action="{{ url('/bet') }}" method="POST" class="form-horizontal">
                                 <input type="hidden" name="games_no" value="000000000000">
                                 <input type="hidden" name="round_no" value="0">
-                                <input type="hidden" name="odds_odd" value="0">
-                                <input type="hidden" name="odds_even" value="0">
-                                <input type="hidden" name="odds_numbers" value="0">
                                 <div class="form-group">
                                     <div>
                                         <label>玩法 1：選擇回合密碼為單或為雙?</label>
@@ -130,13 +127,13 @@
                                     </div>
                                     <div id="numTypeController" class="row">
                                         <div class="col-xs-12 col-xs-offset-2">
-                                            <label class="col-xs-4 btn btn-default">
+                                            <label class="col-xs-4 btn btn-default" style="margin-left:-5px">
                                                 <input type="checkbox" name="numType[]" id="numType_1" value="1"><i
                                                         class="fa fa-btn fa-hand-pointer-o"></i>單
                                                 &nbsp;&nbsp;<span id="odds_odd"
                                                                   style="font-size: 14px; color: palevioletred">?</span>
                                             </label>
-                                            <label class="col-xs-4 btn btn-default">
+                                            <label class="col-xs-4 btn btn-default" style="margin-left:5px">
                                                 <input type="checkbox" name="numType[]" id="numType_2" value="2"><i
                                                         class="fa fa-btn  fa-hand-peace-o"></i>雙
                                                 &nbsp;&nbsp;<span id="odds_even"
@@ -186,9 +183,6 @@
                                                 </div>
                                             </div>
                                         </label>
-                                        <label id="choose_all" class="btn btn-default">
-                                            全選
-                                        </label>
                                     </div>
                                     <div id="numbersController">
                                         @for ($i = gameSettings('CODE_RANGE_MIN'); $i <= gameSettings('CODE_RANGE_MAX'); $i++)
@@ -205,13 +199,16 @@
                                 </div>
                                 <div class="row form-group">
                                     @if (Auth::user()->cash < 1000)
-                                        <label style="color: orangered; font-size: large">可下注的金額必須大於＄1000才能下注</label>
+                                        <label style="color: orangered; font-size: large">請確認所用有的金額是否可下注</label>
                                     @else
                                         <div class="col-xs-12 col-xs-offset-2">
-                                            <button type="button" id="btn_reset" class="col-xs-4 btn btn-warning">
+                                            <button type="button" id="btn_reset" class="col-xs-3 btn btn-warning" style="margin-left:-10px">
                                                 <i class="fa fa-btn fa-refresh"></i>清除選擇
                                             </button>
-                                            <button type="submit" id="btn_submit" class="col-xs-4 btn btn-success">
+                                            <button type="button" id="choose_all" class="col-xs-2 btn btn-info" style="margin-left:5px">
+                                                選號全選
+                                            </button>
+                                            <button type="submit" id="btn_submit" class="col-xs-3 btn btn-success" style="margin-left:5px">
                                                 <i class="fa fa-btn fa-paper-plane"></i>確認下注
                                             </button>
                                         </div>

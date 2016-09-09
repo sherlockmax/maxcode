@@ -57,7 +57,7 @@ class User extends Authenticatable
     {
         User
             ::where('id', $id)
-            ->update(['cash' => $cash]);
+            ->increment('cash', $cash);
     }
 
     public function setCashByAccount($account, $cash)

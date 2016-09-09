@@ -31,6 +31,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/betHistory/{game_no}', 'HomeController@getBetHistory');
     Route::get('/record', 'RecordController@index');
     Route::get('/record/{games_no}', 'RecordController@record');
+    Route::get('/settings', 'HomeController@settings');
 });
 
 Route::get('/login', 'LoginController@index');
