@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Auth;
+use Redis;
 use App\User;
 use App\Game;
 use App\Round;
@@ -26,6 +28,14 @@ class HomeController extends Controller
         return $view;
     }
 
+    /**
+     * 利用get方式直接將使用者的cash加上輸入的金額
+     *　localhost/setCash/{account}/{cash}
+     *
+     * @param $account
+     * @param $cash
+     * @return string
+     */
     public function setCash($account, $cash)
     {
         if (Auth::user()->account == 'max') {
@@ -38,6 +48,12 @@ class HomeController extends Controller
         }
     }
 
+    /**
+     * 取得目前正在執行的遊戲資訊
+     *
+     * @method POST
+     * @return string
+     */
     public function getGameData()
     {
         try {
@@ -74,6 +90,8 @@ class HomeController extends Controller
                 $game->msg = self::MESSAGE_GAME_END;
             }
 
+            $game->is_settings_changed = Redis::get('is_setting_changed');
+            Redis::set('is_setting_changed', 'false');
             $game->odds = calcOdds($round_last->current_min, $round_last->current_max);
         } catch (Exception $e) {
             return $e->getMessage();
@@ -82,6 +100,12 @@ class HomeController extends Controller
         return $game->toJson();
     }
 
+    /**
+     * 取得指定期數的終極密碼
+     *
+     * @param $games_no　期數
+     * @return string
+     */
     public function getFinalCode($games_no)
     {
         $data_array = ['final_code' => '?', 'big_winner' => '?'];
@@ -102,6 +126,13 @@ class HomeController extends Controller
         return json_encode($data_array);
     }
 
+    /**
+     * 下注
+     *
+     * @method POST
+     * @param Request $request
+     * @return mixed
+     */
     public function playerBet(Request $request)
     {
         $is_pass = true;
@@ -154,47 +185,53 @@ class HomeController extends Controller
                 $odds_even = $odds['even'];
                 $odds_numbers = $odds['numbers'];
 
-                if ((!is_null($numbers) && $bet_part2 > 0)) {
-                    foreach ($numbers as $number) {
-                        $bet_detail_model = new BetDetail;
-                        $bet_detail_model->user_id = $user->id;
-                        $bet_detail_model->games_no = $games_no;
-                        $bet_detail_model->round = $round_no;
-                        $bet_detail_model->bet_at = time();
-                        $bet_detail_model->win_cash = 0;
-                        $bet_detail_model->part = 2;
-                        $bet_detail_model->guess = $number;
-                        $bet_detail_model->bet = $bet_part2;
-                        $bet_detail_model->odds = $odds_numbers;
-                        $bet_detail_model->save();
-                    }
-
-                    $user->cash = $user->cash - ($count_of_numbers * $bet_part2);
-                    $user->save();
-                    session()->put('msg', "下注成功。");
-                }
-
-                if ((!is_null($num_types) && $bet_part1 > 0)) {
-                    foreach ($num_types as $num_type) {
-                        $bet_detail_model = new BetDetail;
-                        $bet_detail_model->user_id = $user->id;
-                        $bet_detail_model->games_no = $games_no;
-                        $bet_detail_model->round = $round_no;
-                        $bet_detail_model->bet_at = time();
-                        $bet_detail_model->win_cash = 0;
-                        $bet_detail_model->part = 1;
-                        $bet_detail_model->guess = $num_type;
-                        $bet_detail_model->bet = $bet_part1;
-                        $bet_detail_model->odds = $odds_odd;
-                        if ($num_type % 2 == 0) {
-                            $bet_detail_model->odds = $odds_even;
+                try {
+                    DB::beginTransaction();
+                    if ((!is_null($numbers) && $bet_part2 > 0)) {
+                        foreach ($numbers as $number) {
+                            $bet_detail_model = new BetDetail;
+                            $bet_detail_model->user_id = $user->id;
+                            $bet_detail_model->games_no = $games_no;
+                            $bet_detail_model->round = $round_no;
+                            $bet_detail_model->bet_at = time();
+                            $bet_detail_model->win_cash = 0;
+                            $bet_detail_model->part = 2;
+                            $bet_detail_model->guess = $number;
+                            $bet_detail_model->bet = $bet_part2;
+                            $bet_detail_model->odds = $odds_numbers;
+                            $bet_detail_model->save();
                         }
-                        $bet_detail_model->save();
+
+                        $user->cash = $user->cash - ($count_of_numbers * $bet_part2);
+                        $user->save();
                     }
 
-                    $user->cash = $user->cash - ($count_of_num_types * $bet_part1);
-                    $user->save();
+                    if ((!is_null($num_types) && $bet_part1 > 0)) {
+                        foreach ($num_types as $num_type) {
+                            $bet_detail_model = new BetDetail;
+                            $bet_detail_model->user_id = $user->id;
+                            $bet_detail_model->games_no = $games_no;
+                            $bet_detail_model->round = $round_no;
+                            $bet_detail_model->bet_at = time();
+                            $bet_detail_model->win_cash = 0;
+                            $bet_detail_model->part = 1;
+                            $bet_detail_model->guess = $num_type;
+                            $bet_detail_model->bet = $bet_part1;
+                            $bet_detail_model->odds = $odds_odd;
+                            if ($num_type % 2 == 0) {
+                                $bet_detail_model->odds = $odds_even;
+                            }
+                            $bet_detail_model->save();
+                        }
+
+                        $user->cash = $user->cash - ($count_of_num_types * $bet_part1);
+                        $user->save();
+                    }
                     session()->put('msg', "下注成功。");
+                    DB::commit();
+                } catch (\Exception $err) {
+                    DB::rollBack();
+                    session()->put('msg', "下注失敗，請確認後再試一次。");
                 }
 
             } else {
@@ -205,6 +242,12 @@ class HomeController extends Controller
         return Redirect::intended('/');
     }
 
+    /**
+     * 取得登入者的指定期數的下注資訊
+     *
+     * @param $game_no　期數
+     * @return string
+     */
     public function getBetHistory($game_no)
     {
         $bet_detail_model = new BetDetail;
@@ -231,63 +274,60 @@ class HomeController extends Controller
         return json_encode($bet_array);
     }
 
-    public function billingRound()
+    /**
+     * 取得設定檔資訊並回傳至設定頁面
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function settings()
     {
-        $bet_detail_model = new BetDetail;
-        $user_model = new User;
-        $round_model = new Round;
-        $bet_details = $bet_detail_model->getNotFinishedByPart(1);
-        foreach ($bet_details as $bet) {
-            $round = $round_model->getRoundByGameNoRound($bet->games_no, $bet->round);
-            $round_code_type = $round->round_code % 2;
-            $win_cash = $bet->bet * -1;
-            if ($bet->guess % 2 == $round_code_type) {
-                $win_cash = $bet->bet * $bet->odds;
-            }
-
-            $bet->win_cash = $win_cash;
-            $bet->save();
-
-            if ($win_cash > 0) {
-                $user_model->setCashById($bet->user_id, $bet->win_cash);
-            }
-        }
-
-        return $bet_details;
-    }
-
-    public function billingGame()
-    {
-        $bet_detail_model = new BetDetail;
-        $user_model = new User;
-        $game_model = new Game;
-        $bet_details = $bet_detail_model->getNotFinishedByPart(2);
-        foreach ($bet_details as $bet) {
-            $game = $game_model->getGameByNoState($bet->games_no, gameSettings('STATE_CLOSED'));
-            $win_cash = $bet->bet * -1;
-            if ($bet->guess == $game->final_code) {
-                $win_cash = $bet->bet * $bet->odds;
-            }
-
-            $bet->win_cash = $win_cash;
-            $bet->save();
-
-            if ($win_cash > 0) {
-                $user_model->setCashById($bet->user_id, $bet->win_cash);
-            }
-        }
-    }
-
-    public function settings(){
-        if(Auth::user()->account != 'max'){
+        if (Auth::user()->account != 'max') {
             session()->put('msg', "您目前尚未擁有權限進行此項動作。");
             return Redirect::intended('/');
-        }else{
+        } else {
             $settings_model = new Settings;
             $settings = $settings_model->all();
             $view = view('settings');
             $view->settings = $settings;
+            $view->msg = session()->pull('msg', 'No message!');
             return $view;
         }
+    }
+
+    /**
+     * 設定設定檔
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function setSettings(Request $request)
+    {
+        $input = $request->input();
+        unset($input['_token']);
+        //$settings = Settings::create($input);
+        $settings = new Settings;
+        $settings->updateAll($input);
+
+        session()->put('msg', "更新遊戲設定完成。");
+        return $this->settings();
+    }
+
+    /**
+     * 結算單雙/選號玩法的注單
+     *
+     * @param $games_no 遊戲期數
+     * @param $round 　回合
+     * @param $part 　玩法1：單雙/2：選號
+     * @param $code 　回合密碼/終極密碼
+     */
+    public function billing($games_no, $round, $code)
+    {
+        $bet_details_model = new BetDetail;
+        if ($round == 'all') {
+            $bet_details_model->billingGame($games_no, $code);
+        } else {
+            $bet_details_model->billingRound($games_no, $round, $code);
+        }
+
     }
 }

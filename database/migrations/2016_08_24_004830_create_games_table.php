@@ -14,11 +14,11 @@ class CreateGamesTable extends Migration
     {
         Schema::create('games', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('no', 12);
-            $table->integer('final_code');
-            $table->integer('state')->comment = '0:running / 1:closing / 2:closed';
-            $table->integer('start_at');
-            $table->string('memo')->nullable();
+            $table->string('no', 12)->comment = '遊戲期數';
+            $table->integer('final_code')->comment = '終極密碼';
+            $table->integer('state')->comment = '0:執行中 / 1:結算中 / 2:已結束';
+            $table->integer('start_at')->comment = '遊戲開始時間戳記';
+            $table->string('memo')->nullable()->comment = '結束原因,小記';
 
             $table->unique('no');
         });

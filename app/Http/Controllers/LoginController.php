@@ -29,17 +29,17 @@ class LoginController extends Controller
             ]);
 
             if (!$attempt) {
-                $validator->after(function($validator) {
+                $validator->after(function ($validator) {
                     $validator->errors()->add('field', '帳號或密碼不正確，請確認後再試一次。');
                 });
             }
         }
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return Redirect::to('/login')
                 ->withErrors($validator)
                 ->withInput();
-        }else{
+        } else {
             return Redirect::intended('/');
         }
     }
@@ -50,7 +50,8 @@ class LoginController extends Controller
         return Redirect::to('/');
     }
 
-    public function signUpPage(){
+    public function signUpPage()
+    {
         return view('signup');
     }
 
@@ -59,18 +60,18 @@ class LoginController extends Controller
         $request->flashExcept('password', 'password_check');
         $validator = Validator::make($request->all(), User::$rules, User::$messages);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
 
             return Redirect::to('/signup')
                 ->withErrors($validator)
                 ->withInput();
-        }else{
+        } else {
             $user = new User;
             $user->account = $request->account;
             $user->password = Hash::make($request->password);
             $user->name = $request->name;
             $user->cash = 1050226;
-            $user->insert();
+            $user->save();
 
             return Redirect::to('/login')
                 ->withInput();

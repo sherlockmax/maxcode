@@ -13,14 +13,14 @@ class CreateRoundsTable extends Migration
     public function up()
     {
         Schema::create('rounds', function (Blueprint $table) {
-            $table->string('games_no', 12);
-            $table->integer('round');
-            $table->integer('round_code');
-            $table->integer('current_min');
-            $table->integer('current_max');
-            $table->integer('state')->comment = '0:running / 1:closing / 2:closed';
-            $table->integer('start_at');
-            $table->integer('end_at');
+            $table->string('games_no', 12)->comment = '遊戲期數';
+            $table->integer('round')->comment = '回合數';
+            $table->integer('round_code')->comment = '回合密碼';
+            $table->integer('current_min')->comment = '該回合選號最小值';
+            $table->integer('current_max')->comment = '該回合選號最大值';
+            $table->integer('state')->comment = '0:執行中 / 1:結算中 / 2:已結束';
+            $table->integer('start_at')->comment = '開始時間戳記';
+            $table->integer('end_at')->comment = '結束時間戳記';
 
             $table->primary(['games_no', 'round']);
         });

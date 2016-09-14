@@ -19,6 +19,13 @@ class GameServer
     private $current_max;
     private $memo;
 
+    /**
+     * 於指定範圍中，亂數取得一數
+     *
+     * @param int $min　最小值
+     * @param int $max　最大值
+     * @return int
+     */
     private function getRandCode($min = 0, $max = 0)
     {
         if ($min == 0) {
@@ -30,6 +37,11 @@ class GameServer
         return mt_rand($min, $max);
     }
 
+    /**
+     * 建立新的一期遊戲，將資料寫到資料庫後，回傳終極密碼
+     *
+     * @return int
+     */
     private function gameStart()
     {
         if ($this->game_date != Date('Ymd')) {
@@ -53,6 +65,9 @@ class GameServer
         return $game->final_code;
     }
 
+    /**
+     *　將該期遊戲結束，並寫入結束原因
+     */
     private function gameClosed()
     {
         $game = Game::where('no', $this->game_no);
@@ -63,6 +78,9 @@ class GameServer
         $this->memo = null;
     }
 
+    /**
+     * 建立新的回合，將資料寫到資料庫
+     */
     private function roundStart()
     {
         $start_timestamp = time();
@@ -82,6 +100,11 @@ class GameServer
         $round->save();
     }
 
+    /**
+     * 該回合結束，根據該回合選號範圍產生回合密碼，寫入資料庫後，回傳回合密碼
+     *
+     * @return int
+     */
     private function roundClosed()
     {
         $rand_min = $this->current_min;
@@ -101,6 +124,9 @@ class GameServer
         return $round_code;
     }
 
+    /**
+     * 初始化，關閉未關閉的期數，取得期數起始編號
+     */
     private function init()
     {
         DB::table('games')
@@ -118,6 +144,23 @@ class GameServer
         }
     }
 
+    /**
+     * 一期遊戲的流程
+     * 1.取得並更新設定檔至cache
+     * 2.建立新的一期遊戲
+     * 3.取得並設定選號範圍
+     * 4.建立新的回合
+     * 5.等待下注時間結束
+     * 6.結束該回合
+     * 7.結算該期遊戲該回合的單雙玩法注單
+     * 8.判斷該回合密碼是否等於終極密碼->是：13/否：9
+     * 9.依據回合密碼及終極密碼縮小選號範圍
+     * 10.判斷選號範圍是否只剩下一個號碼->是：13/否：11
+     * 11.判斷是否上有下一回合->是：4/否：12
+     * 12.結束該期遊戲
+     * 13.結算該期遊戲的選號玩法注單
+     * 14.繼續執行本function->1
+     */
     private function startServer()
     {
         updateSettings();
@@ -139,7 +182,13 @@ class GameServer
             $round_code = $this->roundClosed();
             $this->echoGameData("Round Closed");
 
-            App::make('App\Http\Controllers\HomeController')->billingRound();
+            $round_code_type = 1;
+            if ($round_code % 2 == 0) {
+                $round_code_type = 2;
+            }
+
+            App::make('App\Http\Controllers\HomeController')->billing($this->game_no, $round_count + 1,
+                $round_code_type);
 
             if ($round_code == $final_code) {
                 $this->memo = 'round code eq final code';
@@ -169,12 +218,15 @@ class GameServer
         $this->gameClosed();
         $this->echoGameData("Game Closed");
 
-        App::make('App\Http\Controllers\HomeController')->billingGame();
+        App::make('App\Http\Controllers\HomeController')->billing($this->game_no, 'all', $final_code);
 
         sleep(gameSettings('GAME_INTERVAL'));
         $this->startServer();
     }
 
+    /**
+     * 本排程起始執行function
+     */
     public function run()
     {
         updateSettings();
@@ -184,6 +236,11 @@ class GameServer
         $this->startServer();
     }
 
+    /**
+     * 於console中顯示目前遊戲資訊
+     *
+     * @param string $title　動作標題
+     */
     private function echoGameData($title = "")
     {
         if (self::IS_DEBUG_MODE) {

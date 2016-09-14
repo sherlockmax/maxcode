@@ -47,13 +47,13 @@ class RecordController extends Controller
 
                 $bet_detail_model = new BetDetail;
                 $bet_details = $bet_detail_model->getByUserIdGamesNo(Auth::user()->id, $game->no);
-                if(!is_null($bet_details)){
+                if (!is_null($bet_details)) {
                     $view->bet_details = $bet_details;
                     $view->bet_detail_count = sizeof($bet_details);
 
-                    foreach($bet_details as $bet){
+                    foreach ($bet_details as $bet) {
                         $view->bet_total += $bet->bet;
-                        if($bet->win_cash > 0){
+                        if ($bet->win_cash > 0) {
                             $view->bet_win_total += $bet->win_cash;
                         }
                     }

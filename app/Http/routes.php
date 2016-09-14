@@ -32,6 +32,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/record', 'RecordController@index');
     Route::get('/record/{games_no}', 'RecordController@record');
     Route::get('/settings', 'HomeController@settings');
+    Route::post('/settings', 'HomeController@setSettings');
 });
 
 Route::get('/login', 'LoginController@index');

@@ -2,21 +2,53 @@
  * Created by max on 16年8月24日.
  */
 
+function showMsg(msg) {
+    BootstrapDialog.show({
+        title: '提示訊息',
+        message: msg,
+        type: BootstrapDialog.TYPE_INFO,
+        size: BootstrapDialog.SIZE_SMALL,
+        buttons: [{
+            label: '確認',
+            action: function (dialogItself) {
+                dialogItself.close();
+            }
+        }]
+    });
+}
+
+function pad(str, max) {
+    str = str.toString();
+    return str.length < max ? pad("0" + str, max) : str;
+}
+
+function transferTimestamp(timestamp) {
+    var date = new Date(timestamp * 1000);
+    var y = pad(date.getFullYear(), 4);
+    var m = pad(date.getMonth() + 1, 2);
+    var d = pad(date.getDate(), 2);
+    var H = pad(date.getHours(), 2);
+    var i = pad(date.getMinutes(), 2);
+    var s = pad(date.getSeconds(), 2);
+
+    return y + "-" + m + "-" + d + " " + H + ":" + i + ":" + s;
+}
+
 $(document).ready(function () {
 
     function autoReplace(str) {
         return str.replace("]", "").replace("[", "");
     }
 
-    $('#btn_games_no_search').click(function(){
+    $('#btn_games_no_search').click(function () {
         location.href = '/record/' + $('#input_game_no_search').val();
     });
 
-    $('#btn_games_no_last').click(function(){
+    $('#btn_games_no_last').click(function () {
         location.href = '/record/' + $('#input_games_no_last').val();
     });
 
-    $('#btn_games_no_next').click(function(){
+    $('#btn_games_no_next').click(function () {
         location.href = '/record/' + $('#input_games_no_next').val();
     });
 
@@ -80,5 +112,18 @@ $(document).ready(function () {
 
             $(this).val(maxCash - otherBet);
         }
+    });
+
+
+    $('label[id^=startTime_]').each(function() {
+        var timestamp = $(this).attr("id").split("_")[1];
+
+        $(this).text(transferTimestamp(timestamp));
+    });
+
+    $('label[id^=endTime_]').each(function() {
+        var timestamp = $(this).attr("id").split("_")[1];
+
+        $(this).text(transferTimestamp(timestamp));
     });
 });

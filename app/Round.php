@@ -10,6 +10,12 @@ class Round extends Model
 
     public $timestamps = false;
 
+    /**
+     * 根據期數取得所有回合
+     *
+     * @param $game_no　遊戲期數
+     * @return mixed
+     */
     public function getRoundByGameNo($game_no)
     {
         return Round
@@ -17,6 +23,13 @@ class Round extends Model
             ->orderBy('round', 'asc')->get();
     }
 
+    /**
+     * 根據期數及回合取得回合
+     *
+     * @param $game_no　遊戲期數
+     * @param $round　回合
+     * @return mixed
+     */
     public function getRoundByGameNoRound($game_no, $round)
     {
         return Round

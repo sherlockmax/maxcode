@@ -76,16 +76,16 @@ input[type=number] {
     text-align: left;
 }
 
-.bet_datas:nth-child(odd){
+.bet_datas:nth-child(odd) {
     background: lightcyan;
 }
 
-.bet_datas:hover{
+.bet_datas:hover {
     background: #337ab7;
     color: white;
     border: 1px solid white;
 }
 
-div[id^=round]{
+div[id^=round] {
     cursor: pointer;
 }

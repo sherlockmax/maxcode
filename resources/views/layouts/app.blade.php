@@ -29,18 +29,7 @@
     @if(isset($msg) && $msg != 'No message!')
         <script>
             $(document).ready(function () {
-                BootstrapDialog.show({
-                    title: '提示訊息',
-                    message: '{{$msg}}',
-                    type: BootstrapDialog.TYPE_INFO,
-                    size: BootstrapDialog.SIZE_SMALL,
-                    buttons: [{
-                        label: '確認',
-                        action: function (dialogItself) {
-                            dialogItself.close();
-                        }
-                    }]
-                });
+                showMsg('{{$msg}}');
             });
         </script>
     @endif
@@ -58,8 +47,10 @@
             <li><a href="{{ url('/') }}"><i class="fa fa-btn fa-gamepad"></i>遊戲大廳</a></li>
             <li><a href="{{ url('/record') }}"><i class="fa fa-btn fa-history"></i>注單歷史</a></li>
             <li><a href="javascript:void(0);"><i class="fa fa-btn fa-question-circle"></i>玩法介紹</a></li>
-            @if(Auth::user()->account == 'max')
-                <li><a href="{{ url('/settings') }}"><i class="fa fa-btn fa-question-circle"></i>遊戲設定</a></li>
+            @if(Auth::check())
+                @if(Auth::user()->account == 'max')
+                    <li><a href="{{ url('/settings') }}"><i class="fa fa-btn fa-question-circle"></i>遊戲設定</a></li>
+                @endif
             @endif
         </ul>
         <ul class="nav navbar-nav navbar-right">

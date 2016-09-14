@@ -14,10 +14,10 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('account', 10);
-            $table->string('password', 60);
-            $table->string('name', 10);
-            $table->integer('cash')->unsigned();
+            $table->string('account', 10)->comment = '帳號';
+            $table->string('password', 60)->comment = '密碼';
+            $table->string('name', 10)->comment = '暱稱';
+            $table->integer('cash')->unsigned()->comment = '擁有現金';
             $table->rememberToken();
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));

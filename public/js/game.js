@@ -19,10 +19,10 @@ $(document).ready(function () {
     getGameData();
     showBetHistory();
 
-    $('#choose_all').click(function(){
-        $('#numbersController input[type=checkbox]').each(function(){
-            if(!$(this).attr('disabled'))
-            {
+    $('#choose_all').click(function () {
+        $('#numbersController input[type=checkbox]').each(function () {
+            if (!$(this).attr('disabled')) {
+                $(this).attr('checked', 'checked');
                 $(this).attr('checked', 'checked');
                 $(this).closest('label').addClass('active');
             }
@@ -33,8 +33,8 @@ $(document).ready(function () {
         clearChoose();
     });
 
-    $('div[id^=show_keyboard_]').click(function(){
-        if(!$('input[name^=bet_]').attr("disabled")) {
+    $('div[id^=show_keyboard_]').click(function () {
+        if (!$('input[name^=bet_]').attr("disabled")) {
             var key = $(this).attr('id').split('_')[2];
             $('#money_keyboard_' + key).slideDown();
         }
@@ -44,40 +44,23 @@ $(document).ready(function () {
         $('#big_winner_card').hide();
     });
 
-    $('div[id^=money_keyboard_] button').click(function(){
+    $('div[id^=money_keyboard_] button').click(function () {
         var key = $(this).parent().parent().attr('id').split('_')[2];
         var action = $(this).text();
-        if(action == 'OK'){
-            $('#money_keyboard_'+key).slideUp();
+        if (action == 'OK') {
+            $('#money_keyboard_' + key).slideUp();
         }
 
-        if(action == 'Del'){
-            $('input[name=bet_part'+key+']').val(parseInt(0));
+        if (action == 'Del') {
+            $('input[name=bet_part' + key + ']').val(parseInt(0));
         }
 
-        if(action >= 0 && action <= 9){
-            var tmp = $('input[name=bet_part'+key+']').val();
+        if (action >= 0 && action <= 9) {
+            var tmp = $('input[name=bet_part' + key + ']').val();
 
-            $('input[name=bet_part'+key+']').val(parseInt( tmp + action ));
+            $('input[name=bet_part' + key + ']').val(parseInt(tmp + action));
         }
     });
-
-    function pad(str, max) {
-        str = str.toString();
-        return str.length < max ? pad("0" + str, max) : str;
-    }
-
-    function transferTimestamp(timestamp) {
-        var date = new Date(timestamp * 1000);
-        var y = pad(date.getFullYear(), 4);
-        var m = pad(date.getMonth() + 1, 2);
-        var d = pad(date.getDate(), 2);
-        var H = pad(date.getHours(), 2);
-        var i = pad(date.getMinutes(), 2);
-        var s = pad(date.getSeconds(), 2);
-
-        return y + "-" + m + "-" + d + " " + H + ":" + i + ":" + s;
-    }
 
     function blockAllInput() {
         element_all_radio.attr('disabled', 'disabled');
@@ -178,8 +161,6 @@ $(document).ready(function () {
                     $('#big_winner_win_cash').text(datas.big_winner.win_cash);
 
                     $('#big_winner_card').show('pulsate', 600);
-
-
                 }
             }
         });
@@ -261,16 +242,20 @@ $(document).ready(function () {
             error: function (xhr) {
 
                 console.log(xhr.responseText);
-                if('Unauthorized.' == xhr.responseText){
-                    //location.href = "/";
-                    BootstrapDialog.alert('請重新登入。');
-                }else{
-                    BootstrapDialog.alert('無法與伺服器取得連接。');
+                if ('Unauthorized.' == xhr.responseText) {
+                    showMsg('請重新登入。');
+                } else {
+                    showMsg('無法與伺服器取得連接。');
                 }
             },
             success: function (response) {
                 var gameObj = jQuery.parseJSON(response);
                 //console.log(response);
+
+                if (gameObj.is_settings_changed == 'true') {
+                    location.reload();
+                }
+
                 if (gameObj.timer > -1) {
                     element_game_no.text(gameObj.no);
                     $('input[name=games_no]').val(gameObj.no);

@@ -90,12 +90,14 @@
                                     </div>
                                     <div style="margin-bottom: 5px;">
                                         <label class="btn btn-default">
-                                            <div id="show_keyboard_1" class="row" style="padding-left: 15px; padding-right: 10px">
+                                            <div id="show_keyboard_1" class="row"
+                                                 style="padding-left: 15px; padding-right: 10px">
                                                 <i class="fa fa-btn fa-dollar"></i>下注金額：
                                                 @if (Auth::user()->cash < 1000)
                                                     <label style="color: darkred">所擁有可下注金額不足</label>
                                                 @else
-                                                    <input title="" type="text" name="bet_part1" value="0" style="text-align: center;" readonly>
+                                                    <input title="" type="text" name="bet_part1" value="0"
+                                                           style="text-align: center;" readonly>
                                                 @endif
                                                 <i class="fa fa-btn fa-keyboard-o" style="margin-left: 15px;"></i>
                                             </div>
@@ -149,12 +151,14 @@
                                     </div>
                                     <div style="margin-bottom: 5px;">
                                         <label class="btn btn-default">
-                                            <div id="show_keyboard_2" class="row" style="padding-left: 15px; padding-right: 10px">
+                                            <div id="show_keyboard_2" class="row"
+                                                 style="padding-left: 15px; padding-right: 10px">
                                                 <i class="fa fa-btn fa-dollar"></i>下注金額：
                                                 @if (Auth::user()->cash < 1000)
                                                     <label style="color: darkred">所擁有可下注金額不足</label>
                                                 @else
-                                                    <input title="" type="text" name="bet_part2" value="0" style="text-align: center;" readonly>
+                                                    <input title="" type="text" name="bet_part2" value="0"
+                                                           style="text-align: center;" readonly>
                                                 @endif
                                                 <i class="fa fa-btn fa-keyboard-o" style="margin-left: 15px;"></i>
                                             </div>
@@ -202,13 +206,16 @@
                                         <label style="color: orangered; font-size: large">請確認所用有的金額是否可下注</label>
                                     @else
                                         <div class="col-xs-12 col-xs-offset-2">
-                                            <button type="button" id="btn_reset" class="col-xs-3 btn btn-warning" style="margin-left:-10px">
+                                            <button type="button" id="btn_reset" class="col-xs-3 btn btn-warning"
+                                                    style="margin-left:-10px">
                                                 <i class="fa fa-btn fa-refresh"></i>清除選擇
                                             </button>
-                                            <button type="button" id="choose_all" class="col-xs-2 btn btn-info" style="margin-left:5px">
+                                            <button type="button" id="choose_all" class="col-xs-2 btn btn-info"
+                                                    style="margin-left:5px">
                                                 選號全選
                                             </button>
-                                            <button type="submit" id="btn_submit" class="col-xs-3 btn btn-success" style="margin-left:5px">
+                                            <button type="submit" id="btn_submit" class="col-xs-3 btn btn-success"
+                                                    style="margin-left:5px">
                                                 <i class="fa fa-btn fa-paper-plane"></i>確認下注
                                             </button>
                                         </div>

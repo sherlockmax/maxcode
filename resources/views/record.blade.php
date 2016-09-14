@@ -72,15 +72,15 @@
                                                 </div>
                                                 <div class="roundTimes">
                                                     <div style="width: 100%; text-align: center">
-                                                        <label id="startTime"
-                                                               class="control-label">{{formatTimestamp($round->start_at)}}</label>
+                                                        <label id="startTime_{{$round->start_at}}"
+                                                               class="control-label"></label>
                                                     </div>
                                                     <div style="width: 100%; text-align: center">
                                                         <label class="control-label">|</label>
                                                     </div>
                                                     <div style="width: 100%; text-align: center">
-                                                        <label id="endTime"
-                                                               class="control-label">{{formatTimestamp($round->end_at)}}</label>
+                                                        <label id="endTime_{{$round->start_at}}"
+                                                               class="control-label"></label>
                                                     </div>
                                                 </div>
                                             </div>
