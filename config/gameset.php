@@ -36,4 +36,19 @@ return [
      * 標準賠率
      */
     'STANDARD_ODDS' => 0.92,
+
+    /**
+     * 遊戲狀態預設值：執行中
+     */
+    'STATE_RUNNING' => 0,
+
+    /**
+     * 遊戲狀態預設值：結算中
+     */
+    'STATE_CLOSING' => 1,
+
+    /**
+     * 遊戲狀態預設值：已結束
+     */
+    'STATE_CLOSED' => 2,
 ];

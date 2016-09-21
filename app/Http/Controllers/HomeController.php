@@ -90,10 +90,14 @@ class HomeController extends Controller
                 $game->msg = self::MESSAGE_GAME_END;
             }
 
-            $game->is_settings_changed = Redis::get('is_setting_changed');
-            Redis::set('is_setting_changed', 'false');
+            try{
+                $game->is_settings_changed = Redis::get('is_setting_changed');
+                Redis::set('is_setting_changed', 'false');
+            }catch (\Exception $e){
+                $game->is_settings_changed = false;
+            }
             $game->odds = calcOdds($round_last->current_min, $round_last->current_max);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
 

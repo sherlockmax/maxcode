@@ -136,21 +136,25 @@ if (!function_exists('updateSettings')) {
      */
     function updateSettings()
     {
-        $is_changed = false;
-        $settings_all = App\Settings::All();
-        foreach ($settings_all as $setting) {
-            $update_time_key = $setting->key . '_update';
-            if (Redis::get($update_time_key) != $setting->updated_at) {
-                Redis::set($setting->key, $setting->value);
-                Redis::set($update_time_key, $setting->updated_at);
-                $is_changed = true;
+        try {
+            $is_changed = false;
+            $settings_all = App\Settings::All();
+            foreach ($settings_all as $setting) {
+                $update_time_key = $setting->key . '_update';
+                if (Redis::get($update_time_key) != $setting->updated_at) {
+                    Redis::set($setting->key, $setting->value);
+                    Redis::set($update_time_key, $setting->updated_at);
+                    $is_changed = true;
+                }
             }
-        }
 
-        if ($is_changed) {
-            Redis::set('is_setting_changed', 'true');
-        } else {
-            Redis::set('is_setting_changed', 'false');
+            if ($is_changed) {
+                Redis::set('is_setting_changed', 'true');
+            } else {
+                Redis::set('is_setting_changed', 'false');
+            }
+        }catch (\Exception $e){
+            echo $e;
         }
     }
 }
@@ -165,8 +169,12 @@ if (!function_exists('gameSettings')) {
     function gameSettings($key)
     {
         try {
-            return Redis::get($key);
-        } catch (\Mockery\CountValidator\Exception $e) {
+            $setting = Redis::get($key);
+            if(is_null($setting)){
+                $setting = config('gameset.' . $key);
+            }
+            return $setting;
+        } catch (\Exception $e) {
             return config('gameset.' . $key);
         }
     }
