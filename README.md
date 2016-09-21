@@ -15,23 +15,29 @@ composer install
 composer update
 ```
 
-### 4.Database　初始化　(migrate)
+### 4.建立資料庫
+
+### 5.環境設定
+```
+將專案目錄下"example.env"的檔案名稱修改為".env",並修改參數以對應當前環境。
+```
+
+### 6.Database　初始化　(migrate)
 ```
 php ./artisan migrate --seed
 ```
 
-### 5.執行遊戲伺服器
+### 7.遊戲設定檔
 ```
-php ./artisan　schedule:run
+見最下方說明。
 ```
 
-### 6.進入網站
-
-# 環境設定
-
+### 8.執行遊戲伺服器
 ```
-請將專案目錄下"example.env"的檔案名稱修改為".env",並修改參數以對應當前環境。
+php ./artisan schedule:run
 ```
+
+### 9.完成，進入網站
 
 
 # 遊戲設定檔
