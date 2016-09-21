@@ -13,9 +13,13 @@ class CreateGrantWinCashTrigger extends Migration
     public function up()
     {
         DB::unprepared('
-        CREATE TRIGGER grant_win_cash AFTER UPDATE ON `bet_details` FOR EACH ROW
+        CREATE TRIGGER grant_win_cash BEFORE UPDATE ON `bet_details` FOR EACH ROW
             BEGIN
-                UPDATE `users` SET `cash` = `cash` + NEW.win_cash WHERE OLD.user_id = id AND OLD.is_grant = 0 AND NEW.win_cash > 0;
+                IF ( NEW.is_grant = 0 )
+                THEN
+                    SET NEW.is_grant = 1;
+                    UPDATE `users` SET `cash` = `cash` + NEW.win_cash WHERE OLD.user_id = id AND NEW.win_cash > 0;
+                END IF;
             END
         ');
     }
