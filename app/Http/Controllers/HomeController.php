@@ -181,63 +181,66 @@ class HomeController extends Controller
             $game = $game_model->getGameByNoState($games_no, gameSettings('STATE_RUNNING'));
             $round = $round_model->getRoundByGameNoRound($games_no, $round_no);
             if ($game && $round) {
-                $code_range_min = $round->current_min;
-                $code_range_max = $round->current_max;
-                $odds = calcOdds($code_range_min, $code_range_max);
+                if(time() < $round->end_at && time() >= $round->start_at) {
+                    $code_range_min = $round->current_min;
+                    $code_range_max = $round->current_max;
+                    $odds = calcOdds($code_range_min, $code_range_max);
 
-                $odds_odd = $odds['odd'];
-                $odds_even = $odds['even'];
-                $odds_numbers = $odds['numbers'];
+                    $odds_odd = $odds['odd'];
+                    $odds_even = $odds['even'];
+                    $odds_numbers = $odds['numbers'];
 
-                try {
-                    DB::beginTransaction();
-                    if ((!is_null($numbers) && $bet_part2 > 0)) {
-                        foreach ($numbers as $number) {
-                            $bet_detail_model = new BetDetail;
-                            $bet_detail_model->user_id = $user->id;
-                            $bet_detail_model->games_no = $games_no;
-                            $bet_detail_model->round = $round_no;
-                            $bet_detail_model->bet_at = time();
-                            $bet_detail_model->win_cash = 0;
-                            $bet_detail_model->part = 2;
-                            $bet_detail_model->guess = $number;
-                            $bet_detail_model->bet = $bet_part2;
-                            $bet_detail_model->odds = $odds_numbers;
-                            $bet_detail_model->save();
-                        }
-
-                        $user->cash = $user->cash - ($count_of_numbers * $bet_part2);
-                        $user->save();
-                    }
-
-                    if ((!is_null($num_types) && $bet_part1 > 0)) {
-                        foreach ($num_types as $num_type) {
-                            $bet_detail_model = new BetDetail;
-                            $bet_detail_model->user_id = $user->id;
-                            $bet_detail_model->games_no = $games_no;
-                            $bet_detail_model->round = $round_no;
-                            $bet_detail_model->bet_at = time();
-                            $bet_detail_model->win_cash = 0;
-                            $bet_detail_model->part = 1;
-                            $bet_detail_model->guess = $num_type;
-                            $bet_detail_model->bet = $bet_part1;
-                            $bet_detail_model->odds = $odds_odd;
-                            if ($num_type % 2 == 0) {
-                                $bet_detail_model->odds = $odds_even;
+                    try {
+                        DB::beginTransaction();
+                        if ((!is_null($numbers) && $bet_part2 > 0)) {
+                            foreach ($numbers as $number) {
+                                $bet_detail_model = new BetDetail;
+                                $bet_detail_model->user_id = $user->id;
+                                $bet_detail_model->games_no = $games_no;
+                                $bet_detail_model->round = $round_no;
+                                $bet_detail_model->bet_at = time();
+                                $bet_detail_model->win_cash = 0;
+                                $bet_detail_model->part = 2;
+                                $bet_detail_model->guess = $number;
+                                $bet_detail_model->bet = $bet_part2;
+                                $bet_detail_model->odds = $odds_numbers;
+                                $bet_detail_model->save();
                             }
-                            $bet_detail_model->save();
+
+                            $user->cash = $user->cash - ($count_of_numbers * $bet_part2);
+                            $user->save();
                         }
 
-                        $user->cash = $user->cash - ($count_of_num_types * $bet_part1);
-                        $user->save();
-                    }
-                    session()->put('msg', "下注成功。");
-                    DB::commit();
-                } catch (\Exception $err) {
-                    DB::rollBack();
-                    session()->put('msg', "下注失敗，請確認後再試一次。");
-                }
+                        if ((!is_null($num_types) && $bet_part1 > 0)) {
+                            foreach ($num_types as $num_type) {
+                                $bet_detail_model = new BetDetail;
+                                $bet_detail_model->user_id = $user->id;
+                                $bet_detail_model->games_no = $games_no;
+                                $bet_detail_model->round = $round_no;
+                                $bet_detail_model->bet_at = time();
+                                $bet_detail_model->win_cash = 0;
+                                $bet_detail_model->part = 1;
+                                $bet_detail_model->guess = $num_type;
+                                $bet_detail_model->bet = $bet_part1;
+                                $bet_detail_model->odds = $odds_odd;
+                                if ($num_type % 2 == 0) {
+                                    $bet_detail_model->odds = $odds_even;
+                                }
+                                $bet_detail_model->save();
+                            }
 
+                            $user->cash = $user->cash - ($count_of_num_types * $bet_part1);
+                            $user->save();
+                        }
+                        session()->put('msg', "下注成功。");
+                        DB::commit();
+                    } catch (\Exception $err) {
+                        DB::rollBack();
+                        session()->put('msg', "下注失敗，請確認後再試一次。");
+                    }
+                }else{
+                    session()->put('msg', "下注時間已結束。");
+                }
             } else {
                 session()->put('msg', "目前尚無進行中的遊戲，無法進行下注。");
             }
