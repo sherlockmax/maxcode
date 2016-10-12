@@ -46,10 +46,10 @@
         <ul class="nav navbar-nav navbar-left">
             <li><a href="{{ url('/') }}"><i class="fa fa-btn fa-gamepad"></i>遊戲大廳</a></li>
             <li><a href="{{ url('/record') }}"><i class="fa fa-btn fa-history"></i>注單歷史</a></li>
-            <li><a href="javascript:void(0);"><i class="fa fa-btn fa-question-circle"></i>玩法介紹</a></li>
+            <li><a href="javascript:void(0);"><i class="fa fa-btn fa-area-chart"></i>獎號統計</a></li>
             @if(Auth::check())
                 @if(Auth::user()->account == 'max')
-                    <li><a href="{{ url('/settings') }}"><i class="fa fa-btn fa-question-circle"></i>遊戲設定</a></li>
+                    <li><a href="{{ url('/settings') }}"><i class="fa fa-btn fa-cogs"></i>遊戲設定</a></li>
                 @endif
             @endif
         </ul>
