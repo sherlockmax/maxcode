@@ -76,4 +76,108 @@ class Game extends Model
             ->where('state', gameSettings('STATE_CLOSED'))
             ->first();
     }
+
+    public static function statisticsFinalCode($start_games_no, $end_games_no)
+    {
+        $state_closed = gameSettings('STATE_CLOSED');
+
+        $query = Game::where('state', $state_closed);
+
+        if($start_games_no != 'all'){
+            $query->where('no', '>=', $start_games_no);
+        }
+
+        if($end_games_no != 'all'){
+            $query->where('no', '<=', $end_games_no);
+        }
+
+        return $query
+            ->select(\DB::raw("`final_code`, COUNT(*) AS `times`"))
+            ->groupBy('final_code')
+            ->get();
+    }
+
+    public static function countOfClosedGames($start_games_no, $end_games_no)
+    {
+        $state_closed = gameSettings('STATE_CLOSED');
+
+        $query = Game::where('state', $state_closed);
+
+        if($start_games_no != 'all'){
+            $query->where('no', '>=', $start_games_no);
+        }
+
+        if($end_games_no != 'all'){
+            $query->where('no', '<=', $end_games_no);
+        }
+
+        return $query->count();
+    }
+
+    public static function getMaxClosedByColumnName($column_name, $start_games_no, $end_games_no)
+    {
+        $state_closed = gameSettings('STATE_CLOSED');
+
+        $query = Game::where('state', $state_closed);
+
+        if($start_games_no != 'all'){
+            $query->where('no', '>=', $start_games_no);
+        }
+
+        if($end_games_no != 'all'){
+            $query->where('no', '<=', $end_games_no);
+        }
+
+        return $query->max($column_name);
+    }
+
+    public static function getMinClosedByColumnName($column_name, $start_games_no, $end_games_no)
+    {
+        $state_closed = gameSettings('STATE_CLOSED');
+
+        $query = Game::where('state', $state_closed);
+
+        if($start_games_no != 'all'){
+            $query->where('no', '>=', $start_games_no);
+        }
+
+        if($end_games_no != 'all'){
+            $query->where('no', '<=', $end_games_no);
+        }
+
+        return $query->min($column_name);
+    }
+
+    public static function getLastNoByDate($date)
+    {
+        return Game
+            ::where('no', 'like', "$date%")
+            ->max('no');
+    }
+
+
+    public static function getDateList(){
+        $state_closed = gameSettings('STATE_CLOSED');
+
+        $result = Game
+            ::select(\DB::raw("SUBSTRING(`no`, 1, 8) AS `date`"))
+            ->where('state', $state_closed)
+            ->groupBy(\DB::raw("SUBSTRING(`no`, 1, 8)"))
+            ->get();
+
+        return $result;
+    }
+
+    public static function getGamesNoList($date){
+        $state_closed = gameSettings('STATE_CLOSED');
+
+        $result = Game
+            ::select(\DB::raw("SUBSTRING(`no`, 9, 4) AS `no`"))
+            ->where('state', $state_closed)
+            ->where('no', 'like', "$date%")
+            ->groupBy(\DB::raw("SUBSTRING(`no`, 9, 4)"))
+            ->get();
+
+        return $result;
+    }
 }
