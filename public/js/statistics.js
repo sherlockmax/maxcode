@@ -1,129 +1,180 @@
-/**
- * Created by max on 16年8月24日.
- */
-
-function showMsg(msg) {
-    BootstrapDialog.show({
-        title: '提示訊息',
-        message: msg,
-        type: BootstrapDialog.TYPE_INFO,
-        size: BootstrapDialog.SIZE_SMALL,
-        buttons: [{
-            label: '確認',
-            action: function (dialogItself) {
-                dialogItself.close();
-            }
-        }]
-    });
-}
-
-function pad(str, max) {
-    str = str.toString();
-    return str.length < max ? pad("0" + str, max) : str;
-}
-
-function transferTimestamp(timestamp) {
-    var date = new Date(timestamp * 1000);
-    var y = pad(date.getFullYear(), 4);
-    var m = pad(date.getMonth() + 1, 2);
-    var d = pad(date.getDate(), 2);
-    var H = pad(date.getHours(), 2);
-    var i = pad(date.getMinutes(), 2);
-    var s = pad(date.getSeconds(), 2);
-
-    return y + "-" + m + "-" + d + " " + H + ":" + i + ":" + s;
-}
-
 $(document).ready(function () {
+    var selectStartDate = $('select[name=startDate]');
+    var selectEndDate = $('select[name=endDate]');
+    var selectStartGamesNo = $('select[name=startGamesNo]');
+    var selectEndGamesNo = $('select[name=endGamesNo]');
 
-    function autoReplace(str) {
-        return str.replace("]", "").replace("[", "");
+    getStatistics('all', 'all', 'first', 'last');
+    getDateList(selectStartDate, selectStartGamesNo);
+    getDateList(selectEndDate, selectEndGamesNo);
+
+    $('#showAll').click(function(){
+        getStatistics('all', 'all', 'first', 'last');
+    });
+
+    $('#today').click(function(){
+        getStatistics('today', 'today', 'first', 'last');
+    });
+
+    $('#lastDate').click(function(){
+        var date = $('input[name=lastDateValue]').val();
+        getStatistics(date, date, 'first', 'last');
+    });
+
+    $('#nextDate').click(function(){
+        var date = $('input[name=nextDateValue]').val();
+        getStatistics(date, date, 'first', 'last');
+    });
+
+    $('#userChange').click(function(){
+        var date = $('input[name=userChangeDate]').val();
+        getStatistics(date, date, 'first', 'last');
+    });
+
+    $('#blockSearch').click(function(){
+        var startDate = $(selectStartDate).val();
+        var endDate = $(selectEndDate).val();
+        var startGamesNo = $(selectStartGamesNo).val();
+        var endGamesNo = $(selectEndGamesNo).val();
+
+        if(startDate+startGamesNo > endDate+endGamesNo){
+            showMsg("開始日+期數 不能大於 結束日+期數。");
+        }else{
+            getStatistics(startDate, endDate, startGamesNo, endGamesNo);
+        }
+    });
+
+    $(selectStartDate).change(function(){
+        var date = $(this).val();
+        getGamesNoList(date, selectStartGamesNo);
+    });
+
+    $(selectEndDate).change(function(){
+        var date = $(this).val();
+        getGamesNoList(date, selectEndGamesNo);
+    });
+
+    function getStatistics(startDate, endDate, startGameNo, endGameNo){
+        $.ajax({
+            url: '/statistics_final_code/',
+            type: 'post',
+            data: { startDate: startDate, endDate: endDate, startGameNo: startGameNo, endGameNo: endGameNo},
+            success: function (response) {
+                var obj = jQuery.parseJSON( response );
+                var numObjs = jQuery.parseJSON( obj.dataArray );
+                var numDatas = numObjs.dataPoints;
+                var biggestNum = -1;
+                var smallerNum = 41;
+                var biggestArray = [];
+                var smallerArray = [];
+                var avgArray = [];
+                var avgTimes = parseInt(obj.no_total / 40, 10);
+
+                $('#digitalContainer').html("");
+                $.each(numDatas, function(key, value){
+                    $('#digitalContainer').append(
+                        "<div class='btn-default' id='digital_"+value.label+"'>" +
+                        "<div>" + value.label + "</div>" +
+                        "<div>" + value.y + "&nbsp;次<div>" +
+                        "</div>"
+                    );
+                    if(value.y > biggestNum){
+                        biggestArray = [];
+                        biggestNum = value.y;
+                    }
+                    if(value.y == biggestNum){
+                        biggestArray.push(value.label);
+                    }
+
+                    if(value.y < smallerNum){
+                        smallerArray = [];
+                        smallerNum = value.y;
+                    }
+                    if(value.y == smallerNum){
+                        smallerArray.push(value.label);
+                    }
+                    if(value.y == avgTimes){
+                        avgArray.push(value.label);
+                    }
+
+                });
+
+                var x_interval = 1;
+                if(biggestNum > 20){
+                    x_interval = parseInt( biggestNum / 20, 10 );
+                }
+
+                var chart = new CanvasJS.Chart("chartContainer", {
+                    theme: "theme2",
+                    axisY:{
+                        interval: x_interval,
+                        lineThickness: 3
+                    },
+                    axisX:{
+                        interval: 1,
+                        lineThickness: 3
+                    },
+                    data: [jQuery.parseJSON( obj.dataArray )]
+                });
+                chart.render();
+
+                $('#date_min').text(transferTimestamp(obj.date_min));
+                $('#date_max').text(transferTimestamp(obj.date_max));
+                $('#no_min').text(obj.no_min);
+                $('#no_max').text(obj.no_max);
+                $('#no_total').text(obj.no_total);
+                $('input[name=lastDateValue]').val(obj.last_date);
+                $('input[name=nextDateValue]').val(obj.next_date);
+                $('input[name=userChangeDate]').val(obj.current_date);
+
+                $.each(smallerArray, function(key, value){
+                    $('#digital_' + value).addClass('btn-info');
+                });
+                $.each(biggestArray, function(key, value){
+                    $('#digital_' + value).addClass('btn-danger');
+                });
+                $.each(avgArray, function(key, value){
+                    $('#digital_' + value).removeClass('btn-default');
+                    $('#digital_' + value).addClass('bg-success');
+                });
+            }
+        });
     }
 
-    $('#btn_games_no_search').click(function () {
-        location.href = '/record/' + $('#input_game_no_search').val();
-    });
+    function getDateList(element, noElement) {
+        $.ajax({
+            url: '/dateList/',
+            type: 'post',
+            success: function (response) {
+                var objArray = jQuery.parseJSON( response );
+                fillOption(element, objArray);
 
-    $('#btn_games_no_last').click(function () {
-        location.href = '/record/' + $('#input_games_no_last').val();
-    });
-
-    $('#btn_games_no_next').click(function () {
-        location.href = '/record/' + $('#input_games_no_next').val();
-    });
-
-    $('div[id^=round]').click(function () {
-        $('.roundTimes').slideToggle("slow");
-    });
-
-    $('.roundTimes').hide();
-
-    $('input[type=radio]').click(function () {
-        var element_name = autoReplace($(this).attr("name"));
-        var radioId = "num_" + $(this).val();
-        if (element_name != 'numbers') {
-            radioId = "numType_" + $(this).val();
-        }
-
-        //reset all radio (unchecked)
-        $('input[name=' + element_name + ']').attr('checked', false);
-        //reset all label (removeClass "active")
-        $('#' + element_name + 'Controller').find("label").removeClass("active");
-
-        $('#' + radioId).attr('checked', true);
-        $('#' + radioId).parent("label").addClass("active");
-    });
-
-    $('input[type=checkbox]').click(function () {
-        var element_name = autoReplace($(this).attr("name"));
-        var checkboxId = "num_" + $(this).val();
-
-        if (element_name != 'numbers') {
-            checkboxId = "numType_" + $(this).val();
-        }
-
-        if ($('#' + checkboxId)[0].checked) {
-            $('#' + checkboxId).attr('checked', true);
-            $('#' + checkboxId).parent("label").addClass("active");
-        } else {
-            $('#' + checkboxId).attr('checked', false);
-            $('#' + checkboxId).parent("label").removeClass("active");
-        }
-    });
-
-    $('input[type=number]').keydown(function (e) {
-        return false;
-    });
-
-    $('.fa-btn').each(function () {
-        $(this).addClass('fa-lg');
-    });
-
-    $('input[name*=bet_]').change(function () {
-        var maxCash = parseInt($('#userCash').text());
-        var bet1 = parseInt($('input[name=bet_part1]').val());
-        var bet2 = parseInt($('input[name=bet_part2]').val());
-
-        if (bet1 + bet2 > maxCash) {
-            var otherBet = bet1;
-            if ($(this).attr('name') != 'bet_part2') {
-                otherBet = bet2;
+                var date = $(element).val();
+                getGamesNoList(date, noElement);
             }
+        });
+    }
 
-            $(this).val(maxCash - otherBet);
+    function getGamesNoList(date, element){
+        $.ajax({
+            url: '/gamesNoList/',
+            type: 'post',
+            data: { date: date},
+            success: function (response) {
+                var objArray = jQuery.parseJSON( response );
+                fillOption(element, objArray);
+            }
+        });
+    }
+
+    function fillOption(element, data_array){
+        if(true){
+            $(element).html("");
         }
-    });
 
+        $.each(data_array, function(key, value){
+            $(element).append("<option value='" + value + "'>" + value + "</option>");
+        });
+    }
 
-    $('label[id^=startTime_]').each(function() {
-        var timestamp = $(this).attr("id").split("_")[1];
-
-        $(this).text(transferTimestamp(timestamp));
-    });
-
-    $('label[id^=endTime_]').each(function() {
-        var timestamp = $(this).attr("id").split("_")[1];
-
-        $(this).text(transferTimestamp(timestamp));
-    });
 });
