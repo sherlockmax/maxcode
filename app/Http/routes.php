@@ -40,3 +40,6 @@ Route::post('/login', 'LoginController@login');
 Route::get('/signup', 'LoginController@signUpPage');
 Route::post('/signup', 'LoginController@signup');
 Route::get('/logout', 'LoginController@logout');
+
+//'statistics' => 'statistics/index',
+Route::get('/statistics', 'StatisticsController@index');
