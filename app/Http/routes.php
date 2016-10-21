@@ -41,5 +41,8 @@ Route::get('/signup', 'LoginController@signUpPage');
 Route::post('/signup', 'LoginController@signup');
 Route::get('/logout', 'LoginController@logout');
 
-//'statistics' => 'statistics/index',
+//statistics
 Route::get('/statistics', 'StatisticsController@index');
+Route::post('/statistics_final_code', 'StatisticsController@finalCode');
+Route::post('/dateList', 'StatisticsController@dateList');
+Route::post('/gamesNoList', 'StatisticsController@gamesNoList');
