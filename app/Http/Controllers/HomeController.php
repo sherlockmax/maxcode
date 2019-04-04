@@ -147,8 +147,8 @@ class HomeController extends Controller
         $bet_part2 = $request->input('bet_part2');
         $numbers = $request->input('numbers');
 
-        $count_of_numbers = sizeof($numbers);
-        $count_of_num_types = sizeof($num_types);
+        $count_of_numbers = is_array($numbers) ? sizeof($numbers) : 0;
+        $count_of_num_types = is_array($num_types) ? sizeof($num_types) : 0;
 
         $user = null;
 
