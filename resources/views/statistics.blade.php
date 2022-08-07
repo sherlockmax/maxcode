@@ -2,7 +2,7 @@
 
 @section('gameScript')
     <script src="{{ URL::asset('js/statistics.js') }}"></script>
-    <script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 @endsection
 
 @section('content')
